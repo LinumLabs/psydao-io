@@ -19,8 +19,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const { wallets } = getDefaultWallets();
 
 const wagmiConfig = getDefaultConfig({
-  appName: "Warpcore",
-  projectId: "fecb582c8c20d77350b81f9dc15776f9",
+  appName: process.env.NEXT_PUBLIC_APP_NAME || "",
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
   wallets: [
     ...wallets,
     {
