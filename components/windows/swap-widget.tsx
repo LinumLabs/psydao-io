@@ -4,8 +4,13 @@ import { ArrowDownIcon } from "@chakra-ui/icons";
 import { Window } from "components/window";
 import { TokenContainer } from "components/token-container";
 import { ConnectWalletButton } from "components/connect-button";
+import { getCountry, notAllowedCountries } from "data/countries";
 
 export const SwapWidget = () => {
+  const country = getCountry();
+
+  const isCountryNotAllowed = notAllowedCountries.includes(country ?? "");
+
   return (
     <Window
       id="highlight"
@@ -48,7 +53,7 @@ export const SwapWidget = () => {
             direction={"column"}
             alignItems={"start"}
             textAlign={"center"}
-            w={"fit-content"}
+            px={20}
           >
             <Image src="/windows/swap/placeholder.png" alt="" margin="0 auto" />
             <Text fontSize={"16px"} color={"#f3c1c1"}>
@@ -60,24 +65,36 @@ export const SwapWidget = () => {
             <Text fontSize={"16px"} color={"#f3c1c1"}>
               PSY remaining for sale: 85%
             </Text>
-            <Flex direction={"column"} alignItems={"center"} w={"full"} gap={4}>
-              <TokenContainer
-                amount="0.0"
-                header="From"
-                name="Ethereum"
-                symbol="ETH"
-              />
-              <Box>
-                <ArrowDownIcon />
-              </Box>
-              <TokenContainer
-                amount="0.0"
-                header="To (estimated)"
-                name="psyDAO"
-                symbol="PSY"
-              />
-              <ConnectWalletButton />
-            </Flex>
+            {isCountryNotAllowed ? (
+              <Text fontSize={"2xl"}>
+                You are not allowed to view this widget due to geolocation
+                restrictions
+              </Text>
+            ) : (
+              <Flex
+                direction={"column"}
+                alignItems={"center"}
+                w={"full"}
+                gap={4}
+              >
+                <TokenContainer
+                  amount="0.0"
+                  header="From"
+                  name="Ethereum"
+                  symbol="ETH"
+                />
+                <Box>
+                  <ArrowDownIcon />
+                </Box>
+                <TokenContainer
+                  amount="0.0"
+                  header="To (estimated)"
+                  name="psyDAO"
+                  symbol="PSY"
+                />
+                <ConnectWalletButton />
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </Window.Content>
