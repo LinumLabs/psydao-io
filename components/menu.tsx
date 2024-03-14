@@ -7,15 +7,20 @@ import {
   MenuItem,
   MenuList,
   useDisclosure,
+  Button,
 } from "@chakra-ui/react";
 import { RiCloseLine, RiMenuLine } from "react-icons/ri";
 
 import { Logo } from "components/icons";
-import { Open } from "components/window-manager";
+import { Open, Close } from "components/window-manager";
 import { MixpanelTracking } from "../services/mixpanel";
+import TermsAndConditionsModal from "./dialogs/TsAndCs";
+import { useState } from "react";
 
 export const Menu = () => {
   const disclosure = useDisclosure();
+
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <Box
@@ -159,7 +164,22 @@ export const Menu = () => {
               Become a Contributor
             </MenuItem>
           </Link>
+          <Open id="swap">
+            <MenuItem fontStyle="italic">Buy PSY</MenuItem>
+          </Open>
+          <Close id="swap">
+            <MenuItem
+              fontStyle="italic"
+              onClick={() => setModalOpen((prev) => !prev)}
+            >
+              Terms and Conditions
+            </MenuItem>
+          </Close>
         </MenuList>
+        <TermsAndConditionsModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen((prev) => !prev)}
+        />
       </ChakraMenu>
     </Box>
   );
