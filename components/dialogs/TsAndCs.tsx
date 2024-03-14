@@ -22,7 +22,13 @@ const TermsAndConditionsModal = (props: TsAndCsProps) => {
         right={5}
         onClick={props.onClose}
       />
-      <Flex direction={"column"} alignItems={"flex-start"} w="100%" gap={4}>
+      <Flex
+        direction={"column"}
+        alignItems={"flex-start"}
+        w="100%"
+        gap={4}
+        pb={4}
+      >
         <Flex direction={"column"} alignItems={"flex-start"}>
           <Text color="#9835BA" fontWeight={600} fontSize={"24px"}>
             psyDAO Token Sale
@@ -35,8 +41,8 @@ const TermsAndConditionsModal = (props: TsAndCsProps) => {
         <Flex
           direction={"column"}
           overflowY={"scroll"}
-          maxW={"600px"}
-          maxH={"500px"}
+          maxW={{ base: "400px", lg: "600px" }}
+          maxH={{ base: "300px", lg: "500px" }}
           gap={4}
         >
           <Text>

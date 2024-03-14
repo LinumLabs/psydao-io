@@ -24,6 +24,7 @@ export const ModalContainer = ({
         bg={"transparent"}
         background="rgba(25, 22, 59, 0.53)"
         backdropFilter="blur(8px)"
+        p={{ base: 2, sm: "auto" }}
         {...modalOverlayProps}
       />
       <ModalContent
@@ -32,7 +33,7 @@ export const ModalContainer = ({
         display="flex"
         maxWidth="auto"
         width="fit-content"
-        p={6}
+        p={{ base: 2, sm: 6 }}
         height="fit-content"
         margin="12px"
         color="black"
