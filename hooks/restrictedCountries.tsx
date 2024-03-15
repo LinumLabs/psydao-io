@@ -2,7 +2,20 @@ import Router from "next/router";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 
-const RESTRICTED_COUNTRIES = [""];
+const RESTRICTED_COUNTRIES = [
+  "USA",
+  "Belarus",
+  "Burma",
+  "the Ivory Coast",
+  "Cuba",
+  "the Democratic Republic of the Congo",
+  "Iran",
+  "Iraq",
+  "Liberia",
+  "North Korea",
+  "Syria",
+  "Zimbabwe",
+];
 
 export const useRestrictedCountries = () => {
   const [cookies, setCookie] = useCookies(["countryCode"]);
