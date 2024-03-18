@@ -4,8 +4,26 @@ import { ArrowDownIcon } from "@chakra-ui/icons";
 import { Window } from "components/window";
 import { TokenContainer } from "components/token-container";
 import { ConnectWalletButton } from "components/connect-button";
+import { useEthPrice } from "hooks/useEtherPrice";
+import { useEffect, useState } from "react";
+import { psyDAOTokenPrice } from "constants/constants";
 
 export const SwapWidget = () => {
+  const [ethAmount, setEthAmount] = useState<number>(0);
+  const [tokenAmount, setTokenAmount] = useState<string>("");
+
+  const ethPrice = useEthPrice();
+
+  useEffect(() => {
+    if (ethPrice) {
+      const usdValue = ethAmount * ethPrice;
+      const tokens = usdValue / psyDAOTokenPrice;
+      if (tokens) {
+        setTokenAmount(tokens.toFixed(2));
+      } else setTokenAmount("0.00");
+    }
+  }, [ethAmount, ethPrice]);
+
   return (
     <Window
       id="swap"
@@ -91,12 +109,14 @@ export const SwapWidget = () => {
                 name="Ethereum"
                 symbol="ETH"
                 image="/windows/swap/ETH.svg"
+                sender
+                setSenderAmount={setEthAmount}
               />
               <Box>
                 <ArrowDownIcon />
               </Box>
               <TokenContainer
-                amount="0.0"
+                amount={tokenAmount}
                 header="To (estimated)"
                 name="psyDAO"
                 symbol="PSY"
