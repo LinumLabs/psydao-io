@@ -1,5 +1,4 @@
-import Router from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 const RESTRICTED_COUNTRIES = [
@@ -18,13 +17,8 @@ const RESTRICTED_COUNTRIES = [
 ];
 
 export const useRestrictedCountries = () => {
+  const [isRestricted, setIsRestricted] = useState(false);
   const [cookies, setCookie] = useCookies(["countryCode"]);
-
-  const isRestricted =
-    cookies.countryCode &&
-    RESTRICTED_COUNTRIES.some(
-      (country) => country.code === cookies.countryCode
-    );
 
   useEffect(() => {
     const fetchCountryCode = async () => {
@@ -44,10 +38,15 @@ export const useRestrictedCountries = () => {
   }, [cookies.countryCode, setCookie]);
 
   useEffect(() => {
-    if (isRestricted) {
-      Router.push("/restricted");
+    if (
+      cookies?.countryCode &&
+      RESTRICTED_COUNTRIES.some(
+        (country) => country.code === cookies.countryCode
+      )
+    ) {
+      setIsRestricted(true);
     }
-  }, [isRestricted]);
+  }, [cookies]);
 
-  return null;
+  return isRestricted;
 };
