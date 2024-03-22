@@ -1,5 +1,6 @@
-import { Box, Flex, FlexProps, Text } from "@chakra-ui/react";
+import { Box, Flex, FlexProps, Input, Text } from "@chakra-ui/react";
 import Image from "next/image";
+import { Dispatch, SetStateAction } from "react";
 
 type TokenContainerProps = FlexProps & {
   image: string;
@@ -7,6 +8,7 @@ type TokenContainerProps = FlexProps & {
   symbol: string;
   header: string;
   amount: string;
+  setAmount?: Dispatch<SetStateAction<string>>;
 };
 
 export const TokenContainer = (props: TokenContainerProps) => {
@@ -50,13 +52,32 @@ export const TokenContainer = (props: TokenContainerProps) => {
           </Flex>
         </Box>
         <Flex gap={2} alignItems={"center"}>
-          <Text
-            fontWeight={600}
-            color={"#97929e"}
-            fontSize={{ base: "12px", sm: "16px" }}
-          >
-            {props.amount}
-          </Text>
+          {props.setAmount ? (
+            <Input
+              variant="flushed"
+              focusBorderColor="#f2bebe"
+              placeholder="0.00"
+              textAlign={"right"}
+              type="number"
+              fontWeight={600}
+              color={"#97929e"}
+              fontSize={{ base: "12px", sm: "16px" }}
+              onChange={(e) => {
+                if (props.setAmount) {
+                  props.setAmount(e.target.value);
+                }
+              }}
+            />
+          ) : (
+            <Text
+              textAlign={"right"}
+              fontSize={{ base: "12px", sm: "16px" }}
+              fontWeight={600}
+              color={"#97929e"}
+            >
+              {props.amount}
+            </Text>
+          )}
           <Text
             fontWeight={700}
             color={"black"}
