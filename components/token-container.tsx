@@ -8,7 +8,7 @@ type TokenContainerProps = FlexProps & {
   symbol: string;
   header: string;
   amount: string;
-  setAmount?: Dispatch<SetStateAction<string>>;
+  setAmount: Dispatch<SetStateAction<string>>;
 };
 
 export const TokenContainer = (props: TokenContainerProps) => {
@@ -52,32 +52,20 @@ export const TokenContainer = (props: TokenContainerProps) => {
           </Flex>
         </Box>
         <Flex gap={2} alignItems={"center"}>
-          {props.setAmount ? (
-            <Input
-              variant="flushed"
-              focusBorderColor="#f2bebe"
-              placeholder="0.00"
-              textAlign={"right"}
-              type="number"
-              fontWeight={600}
-              color={"#97929e"}
-              fontSize={{ base: "12px", sm: "16px" }}
-              onChange={(e) => {
-                if (props.setAmount) {
-                  props.setAmount(e.target.value);
-                }
-              }}
-            />
-          ) : (
-            <Text
-              textAlign={"right"}
-              fontSize={{ base: "12px", sm: "16px" }}
-              fontWeight={600}
-              color={"#97929e"}
-            >
-              {props.amount}
-            </Text>
-          )}
+          <Input
+            variant="flushed"
+            focusBorderColor="#f2bebe"
+            placeholder="0.00"
+            textAlign={"right"}
+            type="number"
+            fontWeight={600}
+            color={"#97929e"}
+            value={props.amount}
+            fontSize={{ base: "12px", sm: "16px" }}
+            onChange={(e) => {
+              props.setAmount(e.target.value);
+            }}
+          />
           <Text
             fontWeight={700}
             color={"black"}

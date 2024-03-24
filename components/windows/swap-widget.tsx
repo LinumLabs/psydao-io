@@ -12,8 +12,8 @@ export const SwapWidget = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const [isSwapped, setIsSwapped] = useState<boolean>(false);
-  const [ethAmount, setEthAmount] = useState<string>("0.00");
-  const [tokenAmount, setTokenAmount] = useState<string>("0.00");
+  const [ethAmount, setEthAmount] = useState<string>("");
+  const [tokenAmount, setTokenAmount] = useState<string>("");
 
   return (
     <Window
@@ -119,6 +119,7 @@ export const SwapWidget = () => {
                   </Box>
                   <TokenContainer
                     amount={isSwapped ? ethAmount : tokenAmount}
+                    setAmount={isSwapped ? setEthAmount : setTokenAmount}
                     header={isSwapped ? "Send" : "Receive"}
                     name={isSwapped ? "Ethereum" : "psyDAO"}
                     symbol={isSwapped ? "ETH" : "PSY"}
