@@ -119,7 +119,6 @@ export const SwapWidget = () => {
                   </Box>
                   <TokenContainer
                     amount={isSwapped ? ethAmount : tokenAmount}
-                    setAmount={isSwapped ? setEthAmount : setTokenAmount}
                     header={isSwapped ? "Send" : "Receive"}
                     name={isSwapped ? "Ethereum" : "psyDAO"}
                     symbol={isSwapped ? "ETH" : "PSY"}
