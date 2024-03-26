@@ -30,6 +30,9 @@ const TermsAndConditionsModal = (props: TsAndCsProps) => {
         w="100%"
         gap={4}
         pb={4}
+        height={"fit-content"}
+        maxW={{ base: "60vw", lg: "650px" }}
+        maxH={{ base: "50vh", lg: "45vh" }}
       >
         <Flex direction={"column"} alignItems={"flex-start"}>
           <Text color="#9835BA" fontWeight={600} fontSize={"24px"}>
@@ -43,9 +46,9 @@ const TermsAndConditionsModal = (props: TsAndCsProps) => {
         <Flex
           direction={"column"}
           overflowY={"scroll"}
-          maxW={{ base: "400px", lg: "600px" }}
-          maxH={{ base: "300px", lg: "500px" }}
           gap={4}
+          h={"full"}
+          w={"full"}
         >
           <Text>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
