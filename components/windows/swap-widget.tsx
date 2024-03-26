@@ -6,6 +6,8 @@ import { ConnectWalletButton } from "components/connect-button";
 import { useRestrictedCountries } from "hooks/restrictedCountries";
 import { RestrictedCountries } from "components/swap-widget/RestrictedCountries";
 import { useState } from "react";
+import { useAccount, useBalance } from "wagmi";
+import { formatUnits } from "viem";
 
 export const SwapWidget = () => {
   const isRescricted = useRestrictedCountries();
@@ -14,6 +16,15 @@ export const SwapWidget = () => {
   const [isSwapped, setIsSwapped] = useState<boolean>(false);
   const [ethAmount, setEthAmount] = useState<string>("");
   const [tokenAmount, setTokenAmount] = useState<string>("");
+  const { address } = useAccount();
+  const ethBalance = useBalance({
+    address: address,
+  });
+  const formattedEthBalance = parseFloat(
+    formatUnits(ethBalance.data ? ethBalance.data.value : BigInt(0), 18)
+  ).toPrecision(4);
+
+  console.log(address, formattedEthBalance);
 
   return (
     <Window
@@ -108,6 +119,7 @@ export const SwapWidget = () => {
                     name={isSwapped ? "psyDAO" : "Ethereum"}
                     symbol={isSwapped ? "PSY" : "ETH"}
                     image={`/windows/swap/${isSwapped ? "PSY" : "ETH"}.svg`}
+                    maxBalance={formattedEthBalance}
                   />
                   <Box>
                     <Image
