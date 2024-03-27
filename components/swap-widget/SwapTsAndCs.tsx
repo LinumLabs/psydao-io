@@ -20,7 +20,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
       <Flex
         flexWrap={"wrap"}
         alignItems={"center"}
-        justifyContent={"space-between"}
+        justifyContent={{ base: "center", md: "space-between" }}
         pb={6}
         gap={4}
       >
@@ -29,6 +29,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
             textColor="#9835BA"
             fontSize={{ base: "20px", sm: "32px" }}
             fontFamily={"Amiri"}
+            textAlign={{ base: "center", md: "left" }}
           >
             Before you start
           </Text>
@@ -52,7 +53,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
           customStyle={{ width: "fit-content", padding: "20px" }}
           onClick={handleAccept}
         >
-          I Accept
+          <Text fontSize={{ base: "14px", sm: "18px" }}>I Accept</Text>
         </LinearButton>
       </Flex>
       <Image
