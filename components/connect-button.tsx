@@ -10,7 +10,6 @@ import { displaySwapSuccess } from "./toasts/displaySwapSuccess";
 export const ConnectWalletButton = () => {
   const { buyToken, isBlackListWallet } = useBuyToken();
   const signIn = useSignInWallet();
-  const SALE_SUCCESSFUL = true;
 
   useEffect(() => {
     if (!isBlackListWallet && typeof isBlackListWallet === "boolean") {
@@ -25,7 +24,7 @@ export const ConnectWalletButton = () => {
         const connected = mounted && account && chain;
 
         const sendTransactionHandler = async () => {
-          displaySwapSuccess(SALE_SUCCESSFUL);
+          displaySwapSuccess(true);
           await buyToken();
           openAccountModal;
         };
