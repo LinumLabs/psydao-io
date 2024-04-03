@@ -4,10 +4,13 @@ import LinearButton from "./linear-button";
 import { useBuyToken } from "hooks/useBuyToken";
 import { useSignInWallet } from "hooks/useSignInWallet";
 import { useEffect } from "react";
+import { customToast } from "./toasts/SwapSuccess";
+import { displaySwapSuccess } from "./toasts/displaySwapSuccess";
 
 export const ConnectWalletButton = () => {
   const { buyToken, isBlackListWallet } = useBuyToken();
   const signIn = useSignInWallet();
+  const SALE_SUCCESSFUL = true;
 
   useEffect(() => {
     if (!isBlackListWallet && typeof isBlackListWallet === "boolean") {
@@ -22,6 +25,7 @@ export const ConnectWalletButton = () => {
         const connected = mounted && account && chain;
 
         const sendTransactionHandler = async () => {
+          displaySwapSuccess(SALE_SUCCESSFUL);
           await buyToken();
           openAccountModal;
         };

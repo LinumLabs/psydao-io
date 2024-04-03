@@ -24,8 +24,6 @@ export const SwapWidget = () => {
     formatUnits(ethBalance.data ? ethBalance.data.value : BigInt(0), 18)
   ).toPrecision(4);
 
-  console.log(address, formattedEthBalance);
-
   return (
     <Window
       id="swap"
