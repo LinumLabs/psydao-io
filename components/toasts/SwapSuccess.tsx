@@ -1,6 +1,12 @@
 import { CloseIcon, InfoIcon, WarningIcon } from "@chakra-ui/icons";
 import { Button, Flex, Text } from "@chakra-ui/react";
-import { Id, toast, ToastOptions, TypeOptions } from "react-toastify";
+import {
+  Id,
+  toast,
+  ToastContentProps,
+  ToastOptions,
+  TypeOptions,
+} from "react-toastify";
 import CheckIcon from "public/icons/check.svg";
 
 interface BodyProps {
@@ -8,9 +14,18 @@ interface BodyProps {
   type?: TypeOptions | null | undefined;
 }
 
-const CustomCloseButton = ({ closeToast }) => {
+const CustomCloseButton = (props: {
+  closeToast: (e: React.MouseEvent<HTMLElement>) => void;
+}) => {
   return (
-    <Button onClick={closeToast} variant={"unstyled"} color={"#F2BEBE"}>
+    <Button
+      variant={"unstyled"}
+      color={"#F2BEBE"}
+      onClick={props.closeToast}
+      display={"grid"}
+      placeItems={"center"}
+      h={"auto"}
+    >
       <CloseIcon w={"10px"} h={"10px"} />
     </Button>
   );
@@ -65,6 +80,7 @@ export function customToast(content: BodyProps, options?: ToastOptions): Id {
     },
     closeButton: CustomCloseButton,
     position: "top-center",
+    autoClose: false,
     ...options,
   });
 }

@@ -8,7 +8,6 @@ export const displaySwapSuccess = (isSuccessful: boolean) => {
       },
       {
         type: "success",
-        autoClose: 3000,
       }
     );
   } else {
@@ -18,7 +17,6 @@ export const displaySwapSuccess = (isSuccessful: boolean) => {
       },
       {
         type: "error",
-        autoClose: 3000,
       }
     );
   }
