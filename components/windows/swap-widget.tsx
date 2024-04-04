@@ -176,7 +176,7 @@ export const SwapWidget = () => {
                     maxBalance={formattedEthBalance}
                     isSwapped={isSwapped}
                   />
-                  <ConnectWalletButton />
+                  <ConnectWalletButton tokenAmount={tokenAmount} />
                 </Flex>
               </Flex>
             </Flex>

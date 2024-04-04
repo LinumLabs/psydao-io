@@ -7,7 +7,13 @@ import { useEffect } from "react";
 import { customToast } from "./toasts/SwapSuccess";
 import { displaySwapSuccess } from "./toasts/displaySwapSuccess";
 
-export const ConnectWalletButton = () => {
+interface ConnectWalletButtonProps {
+  tokenAmount: string;
+}
+
+export const ConnectWalletButton = ({
+  tokenAmount,
+}: ConnectWalletButtonProps) => {
   const { buyToken, isBlackListWallet } = useBuyToken();
   const signIn = useSignInWallet();
 
@@ -25,7 +31,7 @@ export const ConnectWalletButton = () => {
 
         const sendTransactionHandler = async () => {
           displaySwapSuccess(true);
-          await buyToken();
+          await buyToken(Number(tokenAmount));
         };
 
         return (
