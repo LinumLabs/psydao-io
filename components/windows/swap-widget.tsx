@@ -53,6 +53,8 @@ export const SwapWidget = () => {
             (amountOfEthBigInt * ethPriceBigInt) / tokenPriceInDollarBigInt
           ) / 1e10;
 
+        console.log("tokenAmount", tokenAmount);
+
         return Math.floor(tokenAmount);
       }
 
@@ -71,11 +73,13 @@ export const SwapWidget = () => {
       const amountValue = amount.length ? Number(amount) : 0;
       const value = fromEth
         ? calculateTokenAmount(amountValue)
-        : (Number(tokenPriceInDollar) / ethPrice) * 1e10 * amountValue;
+        : Math.floor(Number(tokenPriceInDollar) / ethPrice) *
+          1e10 *
+          amountValue;
 
       if (!isNaN(value)) {
         const formattedEther = formatEther(BigInt(value));
-        setValue(fromEth ? value.toString() : (+formattedEther).toFixed(6));
+        setValue(fromEth ? value.toString() : formattedEther);
       } else {
         setValue("");
       }
