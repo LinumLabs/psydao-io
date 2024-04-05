@@ -31,7 +31,7 @@ export const ConnectWalletButton = ({
 
         const sendTransactionHandler = async () => {
           displaySwapSuccess(true);
-          await buyToken(Number(tokenAmount));
+          await buyToken(tokenAmount);
         };
 
         return (

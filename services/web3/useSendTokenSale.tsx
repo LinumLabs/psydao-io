@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { tokenSaleContract } from "constants/tokenSaleContract";
 import tokenSaleAbi from "../../abis/tokenSaleAbi.json";
-import BigNumber from "bignumber.js";
+import { parseUnits } from 'viem';
 
 export const useSendTokenSale = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
@@ -13,17 +13,16 @@ export const useSendTokenSale = () => {
     });
 
   const sendTokenSale = useCallback(
-    async (amountOfPsyTokens: number) => {
+    async (amountOfPsyTokens: string) => {
       return writeContract({
         address: tokenSaleContract,
         functionName: "buyTokens",
         abi: tokenSaleAbi,
-        args: [amountOfPsyTokens],
+        args: [parseUnits(amountOfPsyTokens, 18)]
       });
     },
     [writeContract]
   );
-
   return {
     data,
     sendTokenSale,

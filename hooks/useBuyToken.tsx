@@ -15,7 +15,7 @@ export const useBuyToken = () => {
     null
   );
 
-  const buyToken = async (amountOfPsyTokens: number) => {
+  const buyToken = async (amountOfPsyTokens: string) => {
     if (!address) {
       toast({
         title: "Please connect your wallet first",
