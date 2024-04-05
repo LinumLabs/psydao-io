@@ -9,10 +9,12 @@ import { displaySwapSuccess } from "./toasts/displaySwapSuccess";
 
 interface ConnectWalletButtonProps {
   tokenAmount: string;
+  ethAmount: string;
 }
 
 export const ConnectWalletButton = ({
   tokenAmount,
+  ethAmount,
 }: ConnectWalletButtonProps) => {
   const { buyToken, isBlackListWallet } = useBuyToken();
   const signIn = useSignInWallet();
@@ -31,7 +33,7 @@ export const ConnectWalletButton = ({
 
         const sendTransactionHandler = async () => {
           displaySwapSuccess(true);
-          await buyToken(tokenAmount);
+          await buyToken(Number(tokenAmount), ethAmount);
         };
 
         return (

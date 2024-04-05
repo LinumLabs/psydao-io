@@ -15,7 +15,7 @@ export const useBuyToken = () => {
     null
   );
 
-  const buyToken = async (amountOfPsyTokens: string) => {
+  const buyToken = async (amountOfPsyTokens: number, ethToSpent: string) => {
     if (!address) {
       toast({
         title: "Please connect your wallet first",
@@ -28,7 +28,6 @@ export const useBuyToken = () => {
 
     try {
       if (data) {
-        console.log("data", data);
         if (data.identifications?.length > 0) {
           toast({
             title: "Address wallet is on blacklist",
@@ -42,7 +41,7 @@ export const useBuyToken = () => {
 
         if (data.identifications?.length === 0) {
           setIsBlackListWallet(false);
-          sendTokenSale(amountOfPsyTokens);
+          sendTokenSale(amountOfPsyTokens, ethToSpent);
           return;
         }
       }

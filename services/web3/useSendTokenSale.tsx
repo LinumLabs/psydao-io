@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { tokenSaleContract } from "constants/tokenSaleContract";
+import { parseEther } from "viem";
 import tokenSaleAbi from "../../abis/tokenSaleAbi.json";
-import { parseUnits } from 'viem';
 
 export const useSendTokenSale = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
@@ -13,16 +13,18 @@ export const useSendTokenSale = () => {
     });
 
   const sendTokenSale = useCallback(
-    async (amountOfPsyTokens: string) => {
+    async (amountOfPsyTokens: number, ethToSpent: string) => {
       return writeContract({
         address: tokenSaleContract,
         functionName: "buyTokens",
         abi: tokenSaleAbi,
-        args: [parseUnits(amountOfPsyTokens, 18)]
+        args: [amountOfPsyTokens],
+        value: parseEther(ethToSpent),
       });
     },
     [writeContract]
   );
+
   return {
     data,
     sendTokenSale,

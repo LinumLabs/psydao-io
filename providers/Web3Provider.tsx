@@ -11,7 +11,7 @@ import {
   ledgerWallet,
   trustWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import { WagmiProvider } from "wagmi";
+import { WagmiProvider, http } from "wagmi";
 import {
   arbitrum,
   goerli,
@@ -36,6 +36,10 @@ const wagmiConfig = getDefaultConfig({
     },
   ],
   chains: [mainnet, sepolia],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
   ssr: true,
 });
 
