@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { tokenSaleContract } from "constants/tokenSaleContract";
+import { tokenSaleContract } from "constants/contracts";
 import { parseEther } from "viem";
 import tokenSaleAbi from "../../abis/tokenSaleAbi.json";
 
@@ -14,8 +14,6 @@ export const useSendTokenSale = () => {
 
   const sendTokenSale = useCallback(
     async (amountOfPsyTokens: number, ethToSpent: string) => {
-      console.log("amountOfPsyTokens", amountOfPsyTokens);
-      console.log("ethToSpent", ethToSpent);
       return writeContract({
         address: tokenSaleContract,
         functionName: "buyTokens",
@@ -26,8 +24,6 @@ export const useSendTokenSale = () => {
     },
     [writeContract]
   );
-
-  console.log("error", error);
 
   return {
     data,

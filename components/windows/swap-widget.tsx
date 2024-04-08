@@ -53,9 +53,7 @@ export const SwapWidget = () => {
             (amountOfEthBigInt * ethPriceBigInt) / tokenPriceInDollarBigInt
           ) / 1e10;
 
-        console.log("tokenAmount", tokenAmount);
-
-        return Math.floor(tokenAmount);
+        return Math.round(tokenAmount);
       }
 
       return 0;
@@ -222,6 +220,11 @@ export const SwapWidget = () => {
                   <ConnectWalletButton
                     tokenAmount={tokenAmount}
                     ethAmount={ethAmount}
+                    ethToSend={
+                      Math.floor(Number(tokenPriceInDollar) / ethPrice) *
+                      1e10 *
+                      Number(tokenAmount)
+                    }
                   />
                 </Flex>
               </Flex>

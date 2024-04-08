@@ -6,15 +6,18 @@ import { useSignInWallet } from "hooks/useSignInWallet";
 import { useEffect } from "react";
 import { customToast } from "./toasts/SwapSuccess";
 import { displaySwapSuccess } from "./toasts/displaySwapSuccess";
+import { formatEther } from "viem";
 
 interface ConnectWalletButtonProps {
   tokenAmount: string;
   ethAmount: string;
+  ethToSend: any;
 }
 
 export const ConnectWalletButton = ({
   tokenAmount,
   ethAmount,
+  ethToSend,
 }: ConnectWalletButtonProps) => {
   const { buyToken, isBlackListWallet } = useBuyToken();
   const signIn = useSignInWallet();
@@ -33,7 +36,7 @@ export const ConnectWalletButton = ({
 
         const sendTransactionHandler = async () => {
           displaySwapSuccess(true);
-          await buyToken(Number(tokenAmount), ethAmount);
+          await buyToken(Number(tokenAmount), formatEther(ethToSend));
         };
 
         return (

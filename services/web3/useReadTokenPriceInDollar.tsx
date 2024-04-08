@@ -1,6 +1,6 @@
 import { useReadContract } from "wagmi";
 import tokenSaleAbi from "../../abis/tokenSaleAbi.json";
-import { tokenSaleContract } from "constants/tokenSaleContract";
+import { tokenSaleContract } from "constants/contracts";
 
 export const useReadTokenPriceInDollar = () => {
   const { data, isPending, error } = useReadContract({
