@@ -93,7 +93,7 @@ export const ConnectWalletButton = ({
       customToast(
         {
           mainText:
-            "Your transaction is successful. You will receive your PsyDao token once the sale is closed"
+            "Your transaction is successful. You will receive your PsyDao token once the sale is closed."
         },
         {
           type: "success",
