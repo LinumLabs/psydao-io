@@ -12,7 +12,7 @@ interface ConnectWalletButtonProps {
   tokenAmount: string;
   ethToSend: number;
   walletBalance: string;
-  clearAmounts: () => void;
+  clearAmounts?: () => void;
   totalTokensForSaleValue?: string;
   isWrongNetwork?: boolean;
 }
@@ -102,7 +102,9 @@ export const ConnectWalletButton = ({
         },
         width <= 768
       );
-      clearAmounts();
+      if (clearAmounts) {
+        clearAmounts();
+      }
     }
   }, [error, isConfirmed]);
 
