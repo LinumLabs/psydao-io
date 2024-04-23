@@ -176,7 +176,7 @@ export const ConnectWalletButton = ({
                           }
                     }
                   >
-                    Wrong network
+                    Change network
                   </LinearButton>
                 );
               }

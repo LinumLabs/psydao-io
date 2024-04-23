@@ -157,7 +157,7 @@ export const SwapWidget = () => {
           <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
         ) : (
           <>
-            {isWrongNetwork ? (
+            {address && isWrongNetwork ? (
               <>
                 <Flex p={3} pb={5} direction={"column"} gap={5}>
                   <Text
