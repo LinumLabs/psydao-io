@@ -3,6 +3,8 @@ import { useToast } from "@chakra-ui/react";
 import { useBlackListWallets } from "./useBlackListWallets";
 import { useState } from "react";
 import { useSendTokenSale } from "services/web3/useSendTokenSale";
+import { customToast } from "@/components/toasts/SwapSuccess";
+import { Zoom } from "react-toastify";
 
 export const useBuyToken = () => {
   const { address } = useAccount();
@@ -47,12 +49,28 @@ export const useBuyToken = () => {
         }
       }
     } catch (error) {
-      toast({
-        title: "Something went wrong!",
-        position: "top-right",
-        status: "error",
-        isClosable: true
-      });
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        error.toString().includes("Cannot convert")
+      ) {
+        customToast(
+          {
+            mainText: "You are below the minimum buy amount."
+          },
+          {
+            type: "error",
+            transition: Zoom
+          }
+        );
+      } else {
+        toast({
+          title: "Something went wrong!",
+          position: "top-right",
+          status: "error",
+          isClosable: true
+        });
+      }
     }
   };
 
