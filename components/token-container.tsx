@@ -21,8 +21,6 @@ type TokenContainerProps = FlexProps & {
 };
 
 export const TokenContainer = (props: TokenContainerProps) => {
-  const ethCard = props.symbol === "ETH";
-
   return (
     <Flex
       bgColor={"#fbf6f8"}
@@ -113,17 +111,12 @@ export const TokenContainer = (props: TokenContainerProps) => {
             type="number"
             fontWeight={600}
             color={"#97929e"}
-            // value={Number(props.amount).toFixed(6)}
             value={props.amount}
-            // value={ethCard ? props.amount : parseInt(props.amount)}
             onWheel={(e) => (e.target as HTMLElement).blur()}
             fontSize={{ base: "12px", sm: "16px" }}
             fontFamily="'Public Sans'"
             onFocus={() => props.setFocused(props.symbol)}
             onChange={(e) => {
-              // const value = ethCard
-              //   ? e.target.value
-              //   : e.target.value.replace(/[^\d]/, "");
               props.setAmount(e.target.value);
             }}
             step={1}

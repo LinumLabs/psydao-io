@@ -5,7 +5,6 @@ import { useBuyToken } from "hooks/useBuyToken";
 import { useSignInWallet } from "hooks/useSignInWallet";
 import { useEffect, useState } from "react";
 
-import { formatEther } from "viem";
 import { customToast } from "./toasts/SwapSuccess";
 import { Zoom } from "react-toastify";
 

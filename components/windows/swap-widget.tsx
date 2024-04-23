@@ -33,7 +33,7 @@ export const SwapWidget = () => {
     localStorage.getItem("acceptedTermsAndConditions") === "true"
   );
 
-  const { address, chainId, chain } = useAccount();
+  const { address, chainId } = useAccount();
   const ethBalance = useBalance({
     address: address
   });
