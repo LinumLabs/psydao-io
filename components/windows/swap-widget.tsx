@@ -54,11 +54,11 @@ export const SwapWidget = () => {
   const calculateTokenAmount = useCallback(
     (amountOfEth: string) => {
       if (ethPrice?.data && tokenPriceInDollar) {
-        const ethPriceBigInt = BigInt(ethPrice?.data);
-        const tokenPriceInDollarBigInt = BigInt(tokenPriceInDollar.toString());
+        const ethPriceBigInt = BigInt(Number(ethPrice?.data));
+        const tokenPriceInDollarBigInt = BigInt(Number(tokenPriceInDollar));
         const amountOfEthBigInt = parseEther(amountOfEth);
 
-        let tokenAmount =
+        const tokenAmount =
           amountOfEthBigInt /
           (tokenPriceInDollarBigInt / ethPriceBigInt + BigInt(1));
 
@@ -87,13 +87,14 @@ export const SwapWidget = () => {
           : amount.split(",")[1]?.length;
 
         const amountValue = amount.length ? BigInt(amountFormatted) : BigInt(0);
-        const tokenPriceInDollarBigInt = BigInt(tokenPriceInDollar.toString());
+        const tokenPriceInDollarBigInt = BigInt(Number(tokenPriceInDollar));
 
         const value = fromEth
           ? calculateTokenAmount(amount)
           : formatUnits(
               amountValue *
-                (tokenPriceInDollarBigInt / BigInt(ethPrice) + BigInt(1)),
+                (tokenPriceInDollarBigInt / BigInt(Number(ethPrice)) +
+                  BigInt(1)),
               8 + (decimalPlaces ?? 0)
             );
         if (value) {
