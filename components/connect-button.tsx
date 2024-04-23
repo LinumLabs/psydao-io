@@ -133,7 +133,7 @@ export const ConnectWalletButton = ({
           ) {
             customToast(
               {
-                mainText: "Amount requested exclude token sale value"
+                mainText: "Amount requested exceeds token sale value"
               },
               {
                 type: "error",
