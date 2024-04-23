@@ -10,7 +10,7 @@ import { Zoom } from "react-toastify";
 
 interface ConnectWalletButtonProps {
   tokenAmount: string;
-  ethToSend: number;
+  ethToSend: string;
   walletBalance: string;
   clearAmounts?: () => void;
   totalTokensForSaleValue?: string;

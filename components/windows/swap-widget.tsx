@@ -79,25 +79,9 @@ export const SwapWidget = () => {
       fromEth?: boolean
     ) => {
       if (tokenPriceInDollar) {
-        const amountFormatted = amount.includes(",")
-          ? amount.replace(",", "")
-          : amount.replace(".", "");
-
-        const decimalPlaces = amount.includes(".")
-          ? amount.split(".")[1]?.length
-          : amount.split(",")[1]?.length;
-
-        const amountValue = amount.length ? BigInt(amountFormatted) : BigInt(0);
-        const tokenPriceInDollarBigInt = BigInt(Number(tokenPriceInDollar));
-
         const value = fromEth
           ? calculateTokenAmount(amount)
-          : formatUnits(
-              amountValue *
-                (tokenPriceInDollarBigInt / BigInt(Number(ethPrice)) +
-                  BigInt(1)),
-              8 + (decimalPlaces ?? 0)
-            );
+          : calculateEthAmount(amount);
         if (value) {
           setValue(Number(value).toFixed(8));
         } else {
@@ -107,6 +91,25 @@ export const SwapWidget = () => {
     },
     [calculateTokenAmount, tokenPriceInDollar]
   );
+
+  const calculateEthAmount = (amount: string): string => {
+    if (ethPrice?.data && tokenPriceInDollar && Number(amount) > 0) {
+      const amountFormatted = amount.includes(",")
+        ? amount.replace(",", "")
+        : amount.replace(".", "");
+
+      const decimalPlaces = amount.includes(".")
+        ? amount.split(".")[1]?.length
+        : amount.split(",")[1]?.length;
+      const amountValue = amount.length ? BigInt(amountFormatted) : BigInt(0);
+      const tokenPriceInDollarBigInt = BigInt(Number(tokenPriceInDollar));
+      const formula =
+        tokenPriceInDollarBigInt / BigInt(Number(ethPrice?.data)) + BigInt(1);
+
+      return formatUnits(formula * amountValue, 8 + (decimalPlaces ?? 0));
+    }
+    return "0";
+  };
 
   useEffect(() => {
     if (ethPrice?.data && tokenPriceInDollar && focused === "PSY") {
@@ -190,14 +193,7 @@ export const SwapWidget = () => {
                     tokenAmount={tokenAmount}
                     walletBalance={formattedEthBalance}
                     totalTokensForSaleValue={totalTokensForSaleValue}
-                    ethToSend={
-                      (Math.floor(
-                        Number(tokenPriceInDollar) / ethPrice?.data + 1
-                      ) *
-                        1e10 *
-                        Number(tokenAmount)) /
-                      1e18
-                    }
+                    ethToSend={calculateEthAmount(tokenAmount)}
                     isWrongNetwork={isWrongNetwork}
                   />
                 </Flex>
@@ -307,14 +303,7 @@ export const SwapWidget = () => {
                         tokenAmount={tokenAmount}
                         walletBalance={formattedEthBalance}
                         totalTokensForSaleValue={totalTokensForSaleValue}
-                        ethToSend={
-                          (Math.floor(
-                            Number(tokenPriceInDollar) / ethPrice?.data + 1
-                          ) *
-                            1e10 *
-                            Number(tokenAmount)) /
-                          1e18
-                        }
+                        ethToSend={calculateEthAmount(tokenAmount)}
                         isWrongNetwork={isWrongNetwork}
                         clearAmounts={clearAmounts}
                       />
