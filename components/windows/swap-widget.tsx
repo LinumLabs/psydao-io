@@ -37,9 +37,10 @@ export const SwapWidget = () => {
   const ethBalance = useBalance({
     address: address
   });
-  const formattedEthBalance = parseFloat(
-    formatUnits(ethBalance.data ? ethBalance.data.value : BigInt(0), 18)
-  ).toPrecision(4);
+  const formattedEthBalance = formatUnits(
+    ethBalance.data ? ethBalance.data.value : BigInt(0),
+    18
+  );
 
   const ethPrice = useReadEthPrice();
   const { data: tokenPriceInDollar } = useReadTokenPriceInDollar();
@@ -98,7 +99,7 @@ export const SwapWidget = () => {
               8 + (decimalPlaces ?? 0)
             );
         if (value) {
-          setValue(Number(value).toFixed(6));
+          setValue(Number(value).toFixed(8));
         } else {
           setValue("0,00");
         }
@@ -118,6 +119,11 @@ export const SwapWidget = () => {
       calculatePriceAndToken(ethAmount, setTokenAmount, ethPrice?.data, true);
     }
   }, [calculatePriceAndToken, ethAmount, ethPrice?.data, tokenPriceInDollar]);
+
+  const clearAmounts = () => {
+    setTokenAmount("");
+    setEthAmount("");
+  };
 
   const [currentDomain, setCurrentDomain] = useState("");
   const handleGetDomain = () => {
@@ -278,6 +284,14 @@ export const SwapWidget = () => {
                         image="/windows/swap/ETH.svg"
                         maxBalance={formattedEthBalance}
                         setFocused={setFocused}
+                        calculatePriceAndToken={() =>
+                          calculatePriceAndToken(
+                            ethAmount,
+                            setTokenAmount,
+                            ethPrice?.data,
+                            true
+                          )
+                        }
                       />
                       <ArrowDownIcon />
                       <TokenContainer
@@ -303,6 +317,7 @@ export const SwapWidget = () => {
                           1e18
                         }
                         isWrongNetwork={isWrongNetwork}
+                        clearAmounts={clearAmounts}
                       />
                     </Flex>
                   </Flex>

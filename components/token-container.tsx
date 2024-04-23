@@ -18,6 +18,7 @@ type TokenContainerProps = FlexProps & {
   setAmount: Dispatch<SetStateAction<string>>;
   setFocused: Dispatch<SetStateAction<string>>;
   maxBalance?: string;
+  calculatePriceAndToken?: () => void;
 };
 
 export const TokenContainer = (props: TokenContainerProps) => {
@@ -49,7 +50,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
               color={"#656075"}
               fontFamily="'Public Sans'"
             >
-              {`Balance: ${props.maxBalance} ETH`}{" "}
+              {`Balance: ${Number(props.maxBalance).toFixed(4)} ETH`}{" "}
             </Text>
             <Button
               variant={"unstyled"}
@@ -60,7 +61,12 @@ export const TokenContainer = (props: TokenContainerProps) => {
               p={"2px 6px"}
               onClick={() => {
                 if (props.maxBalance) {
-                  props.setAmount(props.maxBalance);
+                  props.setAmount(
+                    (Number(props.maxBalance) - 0.001).toFixed(6)
+                  );
+                  props.setFocused(props.symbol);
+                  props.calculatePriceAndToken &&
+                    props.calculatePriceAndToken();
                 }
               }}
             >
