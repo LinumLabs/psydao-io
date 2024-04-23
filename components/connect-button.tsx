@@ -161,14 +161,20 @@ export const ConnectWalletButton = ({
                   </LinearButton>
                 );
               }
-              if (isWrongNetwork || chain.unsupported) {
+              if (isWrongNetwork ?? chain.unsupported) {
                 return (
                   <LinearButton
                     customStyle={{
                       width: "100%",
                       mb: 9
                     }}
-                    onClick={openChainModal ? openChainModal : () => {}}
+                    onClick={
+                      openChainModal
+                        ? openChainModal
+                        : () => {
+                            console.error("Cannot open chain modal");
+                          }
+                    }
                   >
                     Wrong network
                   </LinearButton>

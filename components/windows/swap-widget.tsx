@@ -168,7 +168,7 @@ export const SwapWidget = () => {
                     fontSize={{ base: "20px", sm: "36px" }}
                     fontFamily={"Amiri"}
                   >
-                    Oops, wrong network!
+                    Wrong network!
                   </Text>
                   <Text
                     textColor="#269200"
