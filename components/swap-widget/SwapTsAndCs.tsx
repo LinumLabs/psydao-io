@@ -19,7 +19,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
     <Flex
       direction={"column"}
       h={"full"}
-      gap={8}
+      gap={{ base: 4, sm: 6 }}
       alignItems={"center"}
       justifyContent={"center"}
       px={{ base: 2, sm: 4 }}
