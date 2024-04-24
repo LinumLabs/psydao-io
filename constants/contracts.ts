@@ -1,4 +1,4 @@
-export const tokenSaleContract = "0x8F70d678c370B9B7b5b2BbD8399426b458002A9F"; // MAINNET
+export const tokenSaleContract = "0x8F70d678c370B9B7b5b2BbD8399426b458002A9F"; // ETH MAINNET
 export const tokenSaleContractSepolia =
   "0x6c6Ab7b3215374dE4A65De63eAC9BC7A0c7f402d"; // SEPOLIA TESTNET
 
