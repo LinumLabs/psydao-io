@@ -137,7 +137,7 @@ export const SwapWidget = () => {
     handleGetDomain();
   }, [currentDomain]);
 
-  const isWrongNetwork = chainId !== 1;
+  const isWrongNetwork = chainId !== 11155111; //sepolia
 
   return (
     <Window
