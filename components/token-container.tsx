@@ -1,3 +1,4 @@
+import { mainnetClient } from "@/constants/publicClient";
 import {
   Box,
   Button,
@@ -8,6 +9,8 @@ import {
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { type Dispatch, type SetStateAction } from "react";
+import { formatEther, parseEther } from "viem";
+import { estimateFeesPerGas } from "viem/actions";
 
 type TokenContainerProps = FlexProps & {
   image: string;
@@ -23,6 +26,37 @@ type TokenContainerProps = FlexProps & {
 
 export const TokenContainer = (props: TokenContainerProps) => {
   const ethCard = props.symbol === "ETH";
+
+  const estimateGas = async () => {
+    if (!props.maxBalance || parseFloat(props.maxBalance) === 0) return "0";
+
+    const defaultGasEstimate = parseEther("0.045");
+    const valueAsBigNumber = parseEther(props.maxBalance);
+    const maxGasUsage = 100000; // Max gas usage seen on Etherscan was ~85k
+
+    try {
+      const feeData = await estimateFeesPerGas(mainnetClient);
+
+      if (feeData) {
+        if (feeData.maxFeePerGas) {
+          const maxFee = formatEther(feeData.maxFeePerGas);
+          const gasPriceEther = parseFloat(maxFee);
+          if (!isNaN(gasPriceEther)) {
+            const gasCost = parseEther(
+              (gasPriceEther * maxGasUsage).toString()
+            );
+            if (valueAsBigNumber - gasCost <= 0n) return 0.0045;
+            return Number(formatEther(valueAsBigNumber - gasCost)).toFixed(8);
+          }
+        }
+      } else return 0.0045;
+    } catch (error) {}
+
+    const valMinusGas = valueAsBigNumber - defaultGasEstimate;
+    if (valMinusGas <= 0n) return 0.0045;
+
+    return Number(formatEther(valMinusGas)).toFixed(8);
+  };
 
   return (
     <Flex
@@ -57,10 +91,11 @@ export const TokenContainer = (props: TokenContainerProps) => {
               display={"flex"}
               h={"fit-content"}
               p={"2px 6px"}
-              onClick={() => {
-                if (Number(props.maxBalance) > 0.0045) {
+              onClick={async () => {
+                const gas = await estimateGas();
+                if (gas && Number(props.maxBalance) > Number(gas)) {
                   props.setAmount(
-                    (Number(props.maxBalance) - 0.0045).toFixed(8)
+                    (Number(props.maxBalance) - Number(gas)).toFixed(8)
                   );
                   props.setFocused(props.symbol);
                   props.calculatePriceAndToken &&
