@@ -60,10 +60,15 @@ export const TokenContainer = (props: TokenContainerProps) => {
               h={"fit-content"}
               p={"2px 6px"}
               onClick={() => {
-                if (props.maxBalance) {
+                if (Number(props.maxBalance) > 0.0045) {
                   props.setAmount(
-                    (Number(props.maxBalance) - 0.001).toFixed(6)
+                    (Number(props.maxBalance) - 0.0045).toFixed(6)
                   );
+                  props.setFocused(props.symbol);
+                  props.calculatePriceAndToken &&
+                    props.calculatePriceAndToken();
+                } else {
+                  props.setAmount("0.00");
                   props.setFocused(props.symbol);
                   props.calculatePriceAndToken &&
                     props.calculatePriceAndToken();
