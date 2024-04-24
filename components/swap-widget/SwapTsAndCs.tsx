@@ -23,7 +23,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
       alignItems={"center"}
       justifyContent={"center"}
       pt={6}
-      px={4}
+      px={{ base: 2, sm: 4 }}
     >
       <Flex
         flexWrap={"wrap"}
