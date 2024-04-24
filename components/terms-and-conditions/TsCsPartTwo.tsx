@@ -13,7 +13,7 @@ const TsCsPartTwo = () => {
         textTransform={"uppercase"}
         justifySelf={"center"}
         textAlign={"center"}
-        fontSize={"20px"}
+        fontSize={"18px"}
         fontWeight={600}
       >
         Schedule 2
@@ -22,7 +22,7 @@ const TsCsPartTwo = () => {
         textTransform={"uppercase"}
         justifySelf={"center"}
         textAlign={"center"}
-        fontSize={"20px"}
+        fontSize={"18px"}
         fontWeight={600}
       >
         CONTRIBUTOR’S REPRESENTATIONS AND WARRANTIES

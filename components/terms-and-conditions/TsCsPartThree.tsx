@@ -13,7 +13,7 @@ const TsCsPartThree = () => {
         textTransform={"uppercase"}
         justifySelf={"center"}
         textAlign={"center"}
-        fontSize={"20px"}
+        fontSize={"18px"}
         fontWeight={600}
       >
         Schedule 3
@@ -22,12 +22,12 @@ const TsCsPartThree = () => {
         textTransform={"uppercase"}
         justifySelf={"center"}
         textAlign={"center"}
-        fontSize={"20px"}
+        fontSize={"18px"}
         fontWeight={600}
       >
         RISK FACTORS
       </Text>
-      <Text textTransform={"uppercase"} fontSize={"20px"} fontWeight={600}>
+      <Text textTransform={"uppercase"} fontSize={"18px"} fontWeight={600}>
         THE FOLLOWING IS NOT NOR IS IT INTENDED TO BE A COMPREHENSIVE OR
         EXHAUSTIVE LIST OF RISK FACTORS
       </Text>

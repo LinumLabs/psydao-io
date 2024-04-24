@@ -6,12 +6,12 @@ const TsCsPartOne = () => {
         textTransform={"uppercase"}
         justifySelf={"center"}
         textAlign={"center"}
-        fontSize={{ base: "16px", md: "20px" }}
+        fontSize={{ base: "16px", md: "18px" }}
         fontWeight={600}
       >
         TERMS AND CONDITIONS RELATING TO THE PSY TOKEN SALE
       </Text>
-      <Text fontSize={{ base: "16px", md: "18px" }} fontStyle={"italic"}>
+      <Text fontSize={16} fontStyle={"italic"}>
         April 2024
       </Text>
       <Text>
@@ -1052,7 +1052,7 @@ const TsCsPartOne = () => {
         textTransform={"uppercase"}
         justifySelf={"center"}
         textAlign={"center"}
-        fontSize={{ base: "16px", md: "20px" }}
+        fontSize={{ base: "16px", md: "18px" }}
         fontWeight={600}
       >
         schedule 1
@@ -1061,7 +1061,7 @@ const TsCsPartOne = () => {
         textTransform={"uppercase"}
         justifySelf={"center"}
         textAlign={"center"}
-        fontSize={{ base: "16px", md: "20px" }}
+        fontSize={{ base: "16px", md: "18px" }}
         fontWeight={600}
       >
         psy creation and intended distribution
