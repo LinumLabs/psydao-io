@@ -389,9 +389,9 @@ const TsCsPartOne = () => {
           Company reasonably believes to be unlawful for any reason.
         </Text>
         <Text>
-          9.9 Notwithstanding any other provision in this clause 9, the Company
-          reserves the right to treat as void any transfer of a PSY which the
-          Company reasonably believes to be unlawful for any reason.
+          9.10 Notwithstanding any of the above, there is no guarantee or
+          assurance of the availability of any market for transfer of PSY or any
+          such market’s liquidity.
         </Text>
       </Flex>
       <Flex
@@ -962,17 +962,18 @@ const TsCsPartOne = () => {
         textAlign={"start"}
       >
         <Text fontWeight={600}>26. Governing law and dispute resolution</Text>
+        <Text fontWeight={600}>26.1 Governing law:</Text>
         <Text>
-          26.1 Governing law. These T&Cs, including non-contractual claims
-          arising out of or related to these T&Cs, and any business relationship
-          hereunder shall be governed by and construed in accordance with the
-          laws of Switzerland, excluding the conflict of law rules.
+          These T&Cs, including non-contractual claims arising out of or related
+          to these T&Cs, and any business relationship hereunder shall be
+          governed by and construed in accordance with the laws of Switzerland,
+          excluding the conflict of law rules.
         </Text>
+        <Text fontWeight={600}>26.2 Jurisdiction (if you are a Consumer):</Text>
         <Text>
-          26.2 Jurisdiction (if you are a Consumer). If you are a Consumer, you
-          and the Company each irrevocably submit with respect to any Dispute
-          arising out of or related to these T&Cs to the exclusive jurisdiction
-          of the Swiss courts.
+          If you are a Consumer, you and the Company each irrevocably submit
+          with respect to any Dispute arising out of or related to these T&Cs to
+          the exclusive jurisdiction of the Swiss courts.
         </Text>
       </Flex>
       <Flex
