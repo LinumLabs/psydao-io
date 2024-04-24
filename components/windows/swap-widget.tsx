@@ -151,7 +151,9 @@ export const SwapWidget = () => {
         {isRescricted ? (
           <RestrictedCountries />
         ) : !termsAndConditions ? (
-          <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
+          <Box pt={8}>
+            <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
+          </Box>
         ) : (
           <>
             {address && isWrongNetwork ? (

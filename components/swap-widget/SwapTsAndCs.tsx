@@ -22,7 +22,6 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
       gap={8}
       alignItems={"center"}
       justifyContent={"center"}
-      pt={6}
       px={{ base: 2, sm: 4 }}
     >
       <Flex
