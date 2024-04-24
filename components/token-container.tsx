@@ -60,7 +60,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
               onClick={() => {
                 if (Number(props.maxBalance) > 0.0045) {
                   props.setAmount(
-                    (Number(props.maxBalance) - 0.0045).toFixed(6)
+                    (Number(props.maxBalance) - 0.0045).toFixed(8)
                   );
                   props.setFocused(props.symbol);
                   props.calculatePriceAndToken &&
