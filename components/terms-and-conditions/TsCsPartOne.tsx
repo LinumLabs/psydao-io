@@ -4,8 +4,8 @@ const TsCsPartOne = () => {
     <>
       <Text
         textTransform={"uppercase"}
-        justifySelf={"center"}
-        textAlign={"center"}
+        justifySelf={{ base: "center", md: "start" }}
+        textAlign={{ base: "center", md: "start" }}
         fontSize={{ base: "16px", md: "18px" }}
         fontWeight={600}
       >

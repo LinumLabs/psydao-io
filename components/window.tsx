@@ -73,6 +73,21 @@ const Content = (props: BoxProps) => {
       sx={
         isPointerDragging ? { "&::-webkit-scrollbar": { display: "none" } } : {}
       }
+      css={{
+        "&::-webkit-scrollbar": {
+          width: "6px"
+        },
+        "&::-webkit-scrollbar-track": {
+          width: "8px",
+          background: "white",
+          border: "1px solid #F2BEBE",
+          borderRadius: "24px"
+        },
+        "&::-webkit-scrollbar-thumb": {
+          background: "#F2BEBE",
+          borderRadius: "24px"
+        }
+      }}
       {...props}
     />
   );
