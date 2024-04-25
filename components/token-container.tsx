@@ -30,7 +30,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
   const estimateGas = async () => {
     if (!props.maxBalance || parseFloat(props.maxBalance) === 0) return "0";
 
-    const defaultGasEstimate = parseEther("0.045");
+    const defaultGasEstimate = parseEther("0.0045");
     const valueAsBigNumber = parseEther(props.maxBalance);
     const maxGasUsage = 100000; // Max gas usage seen on Etherscan was ~85k
 
@@ -45,15 +45,15 @@ export const TokenContainer = (props: TokenContainerProps) => {
             const gasCost = parseEther(
               (gasPriceEther * maxGasUsage).toString()
             );
-            if (valueAsBigNumber - gasCost <= 0n) return 0.0045;
+            if (valueAsBigNumber - gasCost <= 0n) return "0.0045";
             return Number(formatEther(valueAsBigNumber - gasCost)).toFixed(8);
           }
         }
-      } else return 0.0045;
+      } else return "0.0045";
     } catch (error) {}
 
     const valMinusGas = valueAsBigNumber - defaultGasEstimate;
-    if (valMinusGas <= 0n) return 0.0045;
+    if (valMinusGas <= 0n) return "0.0045";
 
     return Number(formatEther(valMinusGas)).toFixed(8);
   };
