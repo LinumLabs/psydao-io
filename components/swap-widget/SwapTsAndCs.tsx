@@ -41,7 +41,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
         >
           <Text
             fontSize={{ base: "18px", sm: "30px", lg: "48px" }}
-            lineHeight={{ base: "22px", sm: "34px", lg: "52px" }}
+            lineHeight={{ base: "22px", sm: "34px", lg: "48px" }}
             fontFamily={"Amiri"}
             fontStyle={"italic"}
           >
@@ -49,7 +49,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
           </Text>
           <Flex
             fontSize={{ base: "14px", sm: "18px", md: "20px", lg: "24px" }}
-            lineHeight={{ base: "14px", sm: "22px", md: "24px", lg: "28px" }}
+            lineHeight={{ base: "14px", sm: "22px", md: "24px", lg: "24px" }}
             fontFamily={"Amiri"}
             fontStyle={"italic"}
             textAlign={"center"}
