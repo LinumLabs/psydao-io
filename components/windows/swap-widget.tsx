@@ -145,8 +145,8 @@ export const SwapWidget = () => {
   return (
     <Window
       id="swap"
-      height="80%"
-      maxHeight="640px"
+      height="100%"
+      maxHeight={termsAndConditions ? "640px" : "700px"}
       minHeight={isLargerThanMd ? "552px" : "350px"}
       width="95%"
       maxWidth="655px"
@@ -160,7 +160,7 @@ export const SwapWidget = () => {
       <Window.Content p={2}>
         {isRescricted ? (
           <RestrictedCountries />
-        ) : !termsAndConditions ? (
+        ) : termsAndConditions ? (
           <Box pt={{ base: 2, lg: 5 }}>
             <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
           </Box>
@@ -206,13 +206,14 @@ export const SwapWidget = () => {
             ) : (
               <>
                 {" "}
-                <Box p={6} pb={8}>
+                <Box p={4} pb={6}>
                   <Text
                     textColor="#269200"
                     fontWeight="500"
                     fontStyle="italic"
                     mt="1"
                     fontSize={{ base: "20px", sm: "36px" }}
+                    lineHeight={{ base: "20px", sm: "36px" }}
                     fontFamily={"Amiri"}
                   >
                     PSY token sale now open
@@ -222,6 +223,7 @@ export const SwapWidget = () => {
                     textColor="#269200"
                     fontWeight="400"
                     fontSize={{ base: "18px", md: "24px" }}
+                    lineHeight={{ base: "18px", md: "24px" }}
                     textUnderlineOffset={"12px"}
                     fontFamily={"Amiri"}
                     href="/documents/psydao-whitepaper.pdf"
@@ -247,7 +249,7 @@ export const SwapWidget = () => {
                     />
                     <Text
                       fontFamily={"Amiri"}
-                      fontSize={{ base: "10px", sm: "16px" }}
+                      fontSize={{ base: "10px", sm: "12px" }}
                       color={"#C3767F"}
                       fontStyle={"italic"}
                     >
@@ -255,7 +257,7 @@ export const SwapWidget = () => {
                     </Text>
                     <Text
                       fontFamily={"Amiri"}
-                      fontSize={{ base: "10px", sm: "16px" }}
+                      fontSize={{ base: "10px", sm: "12px" }}
                       color={"#C3767F"}
                       fontStyle={"italic"}
                     >
