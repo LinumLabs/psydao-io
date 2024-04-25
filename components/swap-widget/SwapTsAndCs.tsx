@@ -94,12 +94,14 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
             colorScheme="purple"
             onChange={() => setUserHasAccepted((prev) => !prev)}
             isChecked={userHasAccepted}
+            id="accept-terms-checkbox"
           />
           <label htmlFor="accept-terms-checkbox">
             <Text
               color={"#374151"}
               fontFamily={"Poppins"}
               fontSize={{ base: "10px", sm: "14px" }}
+              cursor={"pointer"}
             >
               I have read the T&Cs
             </Text>
