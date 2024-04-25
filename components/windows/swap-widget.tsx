@@ -145,7 +145,7 @@ export const SwapWidget = () => {
   return (
     <Window
       id="swap"
-      height="100%"
+      height="80%"
       maxHeight={termsAndConditions ? "640px" : "700px"}
       minHeight={isLargerThanMd ? "552px" : "350px"}
       width="95%"
@@ -160,8 +160,8 @@ export const SwapWidget = () => {
       <Window.Content p={2}>
         {isRescricted ? (
           <RestrictedCountries />
-        ) : termsAndConditions ? (
-          <Box pt={{ base: 2, lg: 5 }}>
+        ) : !termsAndConditions ? (
+          <Box pt={{ base: 2, lg: 4 }}>
             <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
           </Box>
         ) : (
