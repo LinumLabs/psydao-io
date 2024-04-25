@@ -19,7 +19,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
     <Flex
       direction={"column"}
       h={"full"}
-      gap={{ base: 4, sm: 6 }}
+      gap={4}
       alignItems={"center"}
       justifyContent={"center"}
       px={{ base: 2, sm: 4 }}
@@ -40,14 +40,14 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
           flexWrap={"nowrap"}
         >
           <Text
-            fontSize={{ base: "18px", sm: "30px", md: "48px" }}
+            fontSize={{ base: "18px", sm: "30px", lg: "48px" }}
             fontFamily={"Amiri"}
             fontStyle={"italic"}
           >
             To Participate in our Token Sale,
           </Text>
           <Flex
-            fontSize={{ base: "14px", sm: "18px", md: "24px" }}
+            fontSize={{ base: "14px", sm: "18px", md: "20px", lg: "24px" }}
             fontFamily={"Amiri"}
             fontStyle={"italic"}
             textAlign={"center"}

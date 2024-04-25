@@ -31,7 +31,7 @@ const LinearButton: React.FC<LinearButtonProps> = ({
       display={"flex"}
       isDisabled={isConfirming ?? isDisabled}
       _hover={{
-        opacity: "0.8"
+        opacity: isDisabled ? "" : "0.8"
       }}
       fontFamily={"Poppins Semibold"}
       fontSize={16}
