@@ -26,8 +26,8 @@ export const TokenContainer = (props: TokenContainerProps) => {
   return (
     <Flex
       bgColor={"#fbf6f8"}
-      px={4}
-      py={6}
+      px={3}
+      py={4}
       w={"full"}
       borderRadius={"3xl"}
       direction={"column"}
