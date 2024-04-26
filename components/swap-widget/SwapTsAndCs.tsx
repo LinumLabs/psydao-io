@@ -1,4 +1,13 @@
-import { Box, Checkbox, Flex, Image, Show, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Checkbox,
+  Flex,
+  Grid,
+  GridItem,
+  Image,
+  Show,
+  Text
+} from "@chakra-ui/react";
 import LinearButton from "components/linear-button";
 import React, { type Dispatch, type SetStateAction, useState } from "react";
 import TermsAndConditionsContent from "../terms-and-conditions/TermsAndConditionsContent";
@@ -16,114 +25,127 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
   };
 
   return (
-    <Flex
-      direction={"column"}
-      h={"full"}
+    <Grid
+      gridTemplateRows={{ md: "0.4fr 0.6fr 0.1fr" }}
       gap={4}
       alignItems={"center"}
-      justifyContent={"center"}
       px={{ base: 2, sm: 4 }}
+      css={{
+        "@media (max-width: 375px)": {
+          gridTemplateRows: "1fr 1fr 0.5fr"
+        },
+        "@media (max-width: 480px)": {
+          gridTemplateRows: "0.4fr 1fr 0.3fr"
+        }
+      }}
     >
-      <Flex
-        flexWrap={"wrap"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        direction={"column"}
-        gap={4}
-      >
+      <GridItem>
         <Flex
-          direction={"column"}
+          flexWrap={"wrap"}
           alignItems={"center"}
-          textAlign={"center"}
-          color={"#269200"}
-          whiteSpace={"nowrap"}
-          flexWrap={"nowrap"}
+          direction={"column"}
+          gap={4}
+          flex={1}
         >
-          <Text
-            fontSize={{ base: "18px", sm: "30px", lg: "48px" }}
-            lineHeight={{ base: "22px", sm: "34px", lg: "48px" }}
-            fontFamily={"Amiri"}
-            fontStyle={"italic"}
-          >
-            To Participate in our Token Sale,
-          </Text>
           <Flex
-            fontSize={{ base: "14px", sm: "18px", md: "20px", lg: "22px" }}
-            lineHeight={{ base: "14px", sm: "18px", md: "20px", lg: "22px" }}
-            fontFamily={"Amiri"}
-            fontStyle={"italic"}
-            textAlign={"center"}
+            direction={"column"}
             alignItems={"center"}
-            justifyContent={"center"}
-            flexWrap={{ base: "wrap", sm: "nowrap" }}
-            gap={1}
+            textAlign={"center"}
+            color={"#269200"}
+            whiteSpace={"nowrap"}
+            flexWrap={"nowrap"}
           >
-            Please Read and Accept our{" "}
-            <Show breakpoint="(max-width: 380px)">
-              <br />
-            </Show>
             <Text
-              cursor={"pointer"}
-              whiteSpace={"nowrap"}
-              textDecoration={"underline"}
-              textUnderlineOffset={"8px"}
-              onClick={() => setShowTerms(true)}
-              color={showTerms ? "#269200" : "#9835BA"}
+              fontSize={{ base: "18px", sm: "30px", lg: "48px" }}
+              lineHeight={{ base: "22px", sm: "34px", lg: "48px" }}
+              fontFamily={"Amiri"}
+              fontStyle={"italic"}
             >
-              Terms and Conditions
+              To Participate in our Token Sale,
             </Text>
-            .
+            <Flex
+              fontSize={{ base: "14px", sm: "18px", md: "20px", lg: "22px" }}
+              lineHeight={{ base: "14px", sm: "18px", md: "20px", lg: "22px" }}
+              fontFamily={"Amiri"}
+              fontStyle={"italic"}
+              textAlign={"center"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              flexWrap={{ base: "wrap", sm: "nowrap" }}
+              gap={1}
+            >
+              Please Read and Accept our{" "}
+              <Show breakpoint="(max-width: 380px)">
+                <br />
+              </Show>
+              <Text
+                cursor={"pointer"}
+                whiteSpace={"nowrap"}
+                textDecoration={"underline"}
+                textUnderlineOffset={"8px"}
+                onClick={() => setShowTerms(true)}
+                color={showTerms ? "#269200" : "#9835BA"}
+              >
+                Terms and Conditions
+              </Text>
+              .
+            </Flex>
           </Flex>
         </Flex>
-      </Flex>
-      {showTerms ? (
-        <Box height={"30%"}>
-          <TermsAndConditionsContent />
-        </Box>
-      ) : (
-        <Image
-          src="/windows/swap/terms-conditions.png"
-          alt="Terms and conditions background"
-          objectFit={"fill"}
-        />
-      )}
-      <Flex
-        w={"full"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        gap={2}
-      >
-        <Flex gap={3}>
-          <Checkbox
-            colorScheme="purple"
-            onChange={() => setUserHasAccepted((prev) => !prev)}
-            isChecked={userHasAccepted}
-            id="accept-terms-checkbox"
+      </GridItem>
+      <GridItem>
+        {showTerms ? (
+          <Box height={"30%"}>
+            <TermsAndConditionsContent />
+          </Box>
+        ) : (
+          <Image
+            src="/windows/swap/terms-conditions.png"
+            alt="Terms and conditions background"
+            objectFit={"fill"}
           />
-          <label htmlFor="accept-terms-checkbox">
-            <Text
-              color={"#374151"}
-              fontFamily={"Poppins"}
-              fontSize={{ base: "10px", sm: "14px" }}
-              cursor={"pointer"}
-            >
-              I have read the T&Cs
-            </Text>
-          </label>
-        </Flex>
-        <LinearButton
-          customStyle={{ width: "fit-content" }}
-          onClick={handleAccept}
-          isDisabled={!userHasAccepted}
+        )}
+      </GridItem>
+      <GridItem>
+        <Flex
+          w={"full"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          gap={2}
         >
-          <Text
-            fontSize={{ base: "10px", sm: "18px" }}
-            padding={{ base: "8px 16px", sm: "18px" }}
+          <Flex gap={3}>
+            <Checkbox
+              colorScheme="purple"
+              onChange={() => setUserHasAccepted((prev) => !prev)}
+              isChecked={userHasAccepted}
+              id="accept-terms-checkbox"
+            />
+            <label htmlFor="accept-terms-checkbox">
+              <Text
+                color={"#374151"}
+                fontFamily={"Poppins"}
+                fontSize={{ base: "10px", sm: "14px" }}
+                cursor={"pointer"}
+              >
+                I have read the T&Cs
+              </Text>
+            </label>
+          </Flex>
+          <LinearButton
+            customStyle={{ width: "100%" }}
+            onClick={handleAccept}
+            isDisabled={!userHasAccepted}
+            isAccept={true}
           >
-            I Accept
-          </Text>
-        </LinearButton>
-      </Flex>
-    </Flex>
+            <Text
+              fontSize={{ base: "10px", sm: "18px" }}
+              padding={{ base: "8px 16px", sm: "18px" }}
+            >
+              I Accept
+            </Text>
+          </LinearButton>
+        </Flex>
+      </GridItem>
+    </Grid>
   );
 };
