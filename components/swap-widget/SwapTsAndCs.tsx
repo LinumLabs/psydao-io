@@ -48,8 +48,8 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
             To Participate in our Token Sale,
           </Text>
           <Flex
-            fontSize={{ base: "14px", sm: "18px", md: "20px", lg: "24px" }}
-            lineHeight={{ base: "14px", sm: "22px", md: "24px", lg: "24px" }}
+            fontSize={{ base: "14px", sm: "18px", md: "20px", lg: "22px" }}
+            lineHeight={{ base: "14px", sm: "18px", md: "20px", lg: "22px" }}
             fontFamily={"Amiri"}
             fontStyle={"italic"}
             textAlign={"center"}
@@ -116,7 +116,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
         >
           <Text
             fontSize={{ base: "10px", sm: "18px" }}
-            padding={{ base: "8px 16px", sm: "20px" }}
+            padding={{ base: "8px 16px", sm: "18px" }}
           >
             I Accept
           </Text>

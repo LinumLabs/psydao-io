@@ -151,14 +151,14 @@ export const SwapWidget = () => {
         {isRescricted ? (
           <RestrictedCountries />
         ) : !termsAndConditions ? (
-          <Box pt={{ base: 2, lg: 4 }}>
+          <Box pt={2}>
             <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
           </Box>
         ) : (
           <>
             {address && isWrongNetwork ? (
               <>
-                <Flex p={3} pb={5} direction={"column"} gap={5}>
+                <Flex p={2} pb={5} direction={"column"} gap={4}>
                   <Text
                     textColor="#269200"
                     fontWeight="500"
