@@ -1,4 +1,4 @@
-import { Checkbox, Flex, Image, Show, Text } from "@chakra-ui/react";
+import { Box, Checkbox, Flex, Image, Show, Text } from "@chakra-ui/react";
 import LinearButton from "components/linear-button";
 import React, { type Dispatch, type SetStateAction, useState } from "react";
 import TermsAndConditionsContent from "../terms-and-conditions/TermsAndConditionsContent";
@@ -77,7 +77,9 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
         </Flex>
       </Flex>
       {showTerms ? (
-        <TermsAndConditionsContent />
+        <Box height={"30%"}>
+          <TermsAndConditionsContent />
+        </Box>
       ) : (
         <Image
           src="/windows/swap/terms-conditions.png"
