@@ -26,7 +26,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
 
   return (
     <Box
-      display={{ base: "grid", sm: "flex" }}
+      display={{ base: "grid", md: "flex" }}
       // bg={"red"}
       flexDirection={"column"}
       gap={4}
@@ -34,8 +34,14 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
       px={{ base: 2, sm: 4 }}
       h={"100%"}
       css={{
-        "@media (max-width: 500px)": {
+        "@media (max-height: 779px)": {
           gridTemplateRows: "0.5fr 1fr 0.5fr"
+        },
+        "@media (min-height: 780px)": {
+          gridTemplateRows: "0.7fr 1fr 0.7fr"
+        },
+        "@media (min-height: 850px)": {
+          gridTemplateRows: "0.7fr 1fr 1fr"
         }
       }}
     >
