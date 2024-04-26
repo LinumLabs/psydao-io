@@ -25,17 +25,17 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
   };
 
   return (
-    <Grid
-      gridTemplateRows={{ md: "0.4fr 0.6fr 0.1fr" }}
+    <Box
+      display={{ base: "grid", sm: "flex" }}
+      // bg={"red"}
+      flexDirection={"column"}
       gap={4}
       alignItems={"center"}
       px={{ base: 2, sm: 4 }}
+      h={"100%"}
       css={{
-        "@media (max-width: 375px)": {
-          gridTemplateRows: "1fr 1fr 0.5fr"
-        },
-        "@media (max-width: 480px)": {
-          gridTemplateRows: "0.4fr 1fr 0.3fr"
+        "@media (max-width: 500px)": {
+          gridTemplateRows: "0.5fr 1fr 0.5fr"
         }
       }}
     >
@@ -106,7 +106,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
           />
         )}
       </GridItem>
-      <GridItem>
+      <GridItem w={"full"}>
         <Flex
           w={"full"}
           alignItems={"center"}
@@ -146,6 +146,6 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
           </LinearButton>
         </Flex>
       </GridItem>
-    </Grid>
+    </Box>
   );
 };
