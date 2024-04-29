@@ -74,10 +74,9 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
                 <br />
               </Show>
               <Text
-                cursor={"pointer"}
                 whiteSpace={"nowrap"}
-                textDecoration={"underline"}
-                textUnderlineOffset={"8px"}
+                // textDecoration={"underline"}
+                // textUnderlineOffset={"8px"}
                 color={"#269200"}
               >
                 Terms and Conditions
