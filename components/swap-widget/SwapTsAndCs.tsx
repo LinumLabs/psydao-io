@@ -73,12 +73,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
               <Show breakpoint="(max-width: 380px)">
                 <br />
               </Show>
-              <Text
-                whiteSpace={"nowrap"}
-                // textDecoration={"underline"}
-                // textUnderlineOffset={"8px"}
-                color={"#269200"}
-              >
+              <Text whiteSpace={"nowrap"} color={"#269200"}>
                 Terms and Conditions
               </Text>
               .
@@ -120,7 +115,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
             customStyle={{ width: "100%" }}
             onClick={handleAccept}
             isDisabled={!userHasAccepted}
-            isAccept={true}
+            isAccept
           >
             <Text
               fontSize={{ base: "10px", sm: "18px" }}
