@@ -9,11 +9,12 @@ const TermsAndConditionsContent = () => {
       p={{ base: "8px", md: "16px" }}
       background={"#FBE7E8"}
       borderRadius={"16px"}
+      maxH={"50%"}
     >
       <Flex
         h={"100%"}
         direction={"column"}
-        maxH={{ base: "230px", md: "260px", lg: "280px" }}
+        maxH={{ base: "200px", sm: "230px", md: "260px", lg: "280px" }}
         color={"#591D6D"}
         overflowY={"scroll"}
         justifyContent={"flex-start"}
@@ -36,7 +37,12 @@ const TermsAndConditionsContent = () => {
             backgroundClip: "padding-box",
             borderRadius: "24px",
             width: "6px"
-          }
+          },
+
+          "@media (min-width: 360px) (min-height: 600px) (max-height: 1000px)":
+            {
+              maxHeight: "320px"
+            }
         }}
       >
         <TsCsPartOne />

@@ -160,8 +160,8 @@ export const SwapWidget = () => {
       <Window.Content p={2}>
         {isRescricted ? (
           <RestrictedCountries />
-        ) : !termsAndConditions ? (
-          <Box pt={2} h={"100%"}>
+        ) : termsAndConditions ? (
+          <Box pt={{ base: 0, sm: 2 }} h={"100%"}>
             <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
           </Box>
         ) : (

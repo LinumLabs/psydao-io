@@ -1,4 +1,4 @@
-import { Box, Checkbox, Flex, GridItem, Show, Text } from "@chakra-ui/react";
+import { Box, Checkbox, Flex, Show, Text } from "@chakra-ui/react";
 import LinearButton from "components/linear-button";
 import React, { type Dispatch, type SetStateAction, useState } from "react";
 import TermsAndConditionsContent from "../terms-and-conditions/TermsAndConditionsContent";
@@ -24,7 +24,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
       p={{ base: 2, sm: 4 }}
       h={"100%"}
     >
-      <GridItem>
+      <Box>
         <Flex
           flexWrap={"wrap"}
           alignItems={"center"}
@@ -70,13 +70,13 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
             </Flex>
           </Flex>
         </Flex>
-      </GridItem>
-      <GridItem>
+      </Box>
+      <Box>
         <Box>
           <TermsAndConditionsContent />
         </Box>
-      </GridItem>
-      <GridItem w={"full"}>
+      </Box>
+      <Box w={"full"}>
         <Flex
           w={"full"}
           alignItems={"center"}
@@ -115,7 +115,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
             </Text>
           </LinearButton>
         </Flex>
-      </GridItem>
+      </Box>
     </Box>
   );
 };
