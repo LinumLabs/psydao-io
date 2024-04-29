@@ -1,13 +1,4 @@
-import {
-  Box,
-  Checkbox,
-  Flex,
-  Grid,
-  GridItem,
-  Image,
-  Show,
-  Text
-} from "@chakra-ui/react";
+import { Box, Checkbox, Flex, GridItem, Show, Text } from "@chakra-ui/react";
 import LinearButton from "components/linear-button";
 import React, { type Dispatch, type SetStateAction, useState } from "react";
 import TermsAndConditionsContent from "../terms-and-conditions/TermsAndConditionsContent";
@@ -17,7 +8,6 @@ interface SwapTsAndCsType {
 }
 
 export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
-  const [showTerms, setShowTerms] = useState(false);
   const [userHasAccepted, setUserHasAccepted] = useState(false);
   const handleAccept = () => {
     setTermsAndConditions(true);
@@ -27,7 +17,6 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
   return (
     <Box
       display={{ base: "grid", md: "flex" }}
-      // bg={"red"}
       flexDirection={"column"}
       gap={4}
       alignItems={"center"}
@@ -35,13 +24,13 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
       h={"100%"}
       css={{
         "@media (max-height: 779px)": {
-          gridTemplateRows: "0.5fr 1fr 0.5fr"
+          gridTemplateRows: "0.4fr 1fr 0.5fr"
         },
         "@media (min-height: 780px)": {
-          gridTemplateRows: "0.7fr 1fr 0.7fr"
+          gridTemplateRows: "0.5fr 1fr 0.6fr"
         },
         "@media (min-height: 850px)": {
-          gridTemplateRows: "0.7fr 1fr 1fr"
+          gridTemplateRows: "0.6fr 1fr 0.5fr"
         }
       }}
     >
@@ -89,8 +78,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
                 whiteSpace={"nowrap"}
                 textDecoration={"underline"}
                 textUnderlineOffset={"8px"}
-                onClick={() => setShowTerms(true)}
-                color={showTerms ? "#269200" : "#9835BA"}
+                color={"#269200"}
               >
                 Terms and Conditions
               </Text>
@@ -100,17 +88,9 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
         </Flex>
       </GridItem>
       <GridItem>
-        {showTerms ? (
-          <Box height={"30%"}>
-            <TermsAndConditionsContent />
-          </Box>
-        ) : (
-          <Image
-            src="/windows/swap/terms-conditions.png"
-            alt="Terms and conditions background"
-            objectFit={"fill"}
-          />
-        )}
+        <Box>
+          <TermsAndConditionsContent />
+        </Box>
       </GridItem>
       <GridItem w={"full"}>
         <Flex
