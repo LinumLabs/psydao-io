@@ -105,7 +105,7 @@ export const TokenContainer = ({
         </Text>
         {header === "Send" && (
           <Flex alignItems={"center"} gap={1}>
-            <Text fontSize={"10px"} color={"#656075"} fontFamily="Poppins">
+            <Text fontSize={"12px"} color={"#656075"} fontFamily="Poppins">
               {`Balance: ${Number(maxBalance).toFixed(4)} ETH`}{" "}
             </Text>
             <Button
@@ -120,7 +120,7 @@ export const TokenContainer = ({
               <Text
                 textAlign={"center"}
                 fontWeight="600"
-                fontSize={"10px"}
+                fontSize={"12px"}
                 bgGradient={"linear(to-r, #B14CE7, #E09CA4)"}
                 bgClip="text"
                 fontFamily="Poppins Semibold"
