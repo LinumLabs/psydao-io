@@ -16,23 +16,13 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
 
   return (
     <Box
-      display={{ base: "grid", md: "flex" }}
+      display={"flex"}
       flexDirection={"column"}
       gap={4}
       alignItems={"center"}
-      px={{ base: 2, sm: 4 }}
+      justifyContent={"space-between"}
+      p={{ base: 2, sm: 4 }}
       h={"100%"}
-      css={{
-        "@media (max-height: 779px)": {
-          gridTemplateRows: "0.4fr 1fr 0.5fr"
-        },
-        "@media (min-height: 780px)": {
-          gridTemplateRows: "0.5fr 1fr 0.6fr"
-        },
-        "@media (min-height: 850px)": {
-          gridTemplateRows: "0.6fr 1fr 0.5fr"
-        }
-      }}
     >
       <GridItem>
         <Flex
