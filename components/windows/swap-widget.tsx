@@ -160,7 +160,7 @@ export const SwapWidget = () => {
       <Window.Content p={2}>
         {isRescricted ? (
           <RestrictedCountries />
-        ) : termsAndConditions ? (
+        ) : !termsAndConditions ? (
           <Box pt={{ base: 0, sm: 2 }} h={"100%"}>
             <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
           </Box>
@@ -249,7 +249,7 @@ export const SwapWidget = () => {
                     />
                     <Text
                       fontFamily={"Amiri"}
-                      fontSize={{ base: "10px", sm: "12px" }}
+                      fontSize={{ base: "10px", sm: "16px" }}
                       color={"#C3767F"}
                       fontStyle={"italic"}
                     >
@@ -257,7 +257,7 @@ export const SwapWidget = () => {
                     </Text>
                     <Text
                       fontFamily={"Amiri"}
-                      fontSize={{ base: "10px", sm: "12px" }}
+                      fontSize={{ base: "10px", sm: "16px" }}
                       color={"#C3767F"}
                       fontStyle={"italic"}
                     >

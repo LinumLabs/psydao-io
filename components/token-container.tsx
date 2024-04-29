@@ -96,7 +96,7 @@ export const TokenContainer = ({
       <Flex w={"full"} justifyContent={"space-between"}>
         <Text
           color={"#686478"}
-          fontSize={"16px"}
+          fontSize={"14px"}
           fontWeight={700}
           textAlign={"start"}
           fontFamily="Poppins Semibold"
