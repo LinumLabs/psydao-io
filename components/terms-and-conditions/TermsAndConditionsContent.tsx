@@ -14,7 +14,7 @@ const TermsAndConditionsContent = () => {
       <Flex
         h={"100%"}
         direction={"column"}
-        maxH={{ base: "200px", sm: "230px", md: "260px", lg: "280px" }}
+        maxH={{ base: "300px", md: "260px", lg: "280px" }}
         color={"#591D6D"}
         overflowY={"scroll"}
         justifyContent={"flex-start"}
