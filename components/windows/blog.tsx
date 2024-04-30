@@ -9,14 +9,14 @@ export const Blog = () => {
   return (
     <Window
       id={id}
-      height="85%"
-      maxHeight="700px"
+      height="100%"
+      maxHeight="640px"
       minHeight="350px"
       width="95%"
-      maxWidth="600px"
+      maxWidth="655px"
       minWidth="240px"
-      top={{ base: "45%", md: "42%" }}
-      left={{ base: "50%", md: "40%" }}
+      top="40%"
+      left={{ base: "50%", lg: "40%" }}
       transform="translate(-50%, -50%)"
       defaultIsOpen
     >
