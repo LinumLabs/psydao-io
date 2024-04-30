@@ -9,14 +9,13 @@ const TermsAndConditionsContent = () => {
       p={{ base: "8px", md: "16px" }}
       background={"#FBE7E8"}
       borderRadius={"16px"}
-      maxH={"50%"}
+      overflowY={"auto"}
     >
       <Flex
         h={"100%"}
         direction={"column"}
-        maxH={{ base: "300px", md: "260px", lg: "280px" }}
+        // maxH={{ base: "300px", md: "260px", lg: "280px" }}
         color={"#591D6D"}
-        overflowY={"scroll"}
         justifyContent={"flex-start"}
         textAlign={"start"}
         paddingRight={{ base: "8px", md: "16px" }}
