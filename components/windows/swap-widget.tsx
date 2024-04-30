@@ -151,7 +151,7 @@ export const SwapWidget = () => {
       width="95%"
       maxWidth="655px"
       minWidth="240px"
-      top={{ base: "60%", md: "55%" }}
+      top={{ base: "60%", sm: "58%", md: "56%" }}
       left="50%"
       transform="translate(-50%, -50%)"
       defaultIsOpen={true}
