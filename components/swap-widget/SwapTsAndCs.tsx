@@ -31,6 +31,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
         color={"#269200"}
         whiteSpace={"nowrap"}
         flexWrap={"nowrap"}
+        pt={{ base: 0, sm: 4 }}
       >
         <Text
           fontSize={{ base: "18px", sm: "30px", lg: "48px" }}
@@ -70,6 +71,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
         grow={0}
         shrink={0}
         basis={"auto"}
+        pt={{ base: 2, sm: 4 }}
       >
         <Flex gap={3}>
           <Checkbox
