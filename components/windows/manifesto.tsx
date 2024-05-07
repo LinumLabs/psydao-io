@@ -1,20 +1,34 @@
-import { Box, Image, Link, Text } from "@chakra-ui/react";
+import { Box, Image, Link, Text, useMediaQuery } from "@chakra-ui/react";
 
 import { Window } from "components/window";
+import { useWindowManager } from "../window-manager";
+import { useMemo } from "react";
 
 export const Manifesto = () => {
+  const { state } = useWindowManager();
+  const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
+
+  const fullScreenWindow = useMemo(() => {
+    const window = state.windows.find((item) => item.id === "manifesto");
+    if (window?.isFullScreen) {
+      return true;
+    }
+
+    return false;
+  }, [state]);
+
   return (
     <Window
       id="manifesto"
-      height={{ base: "80%", md: "70%" }}
-      maxHeight="1000px"
-      minHeight="350px"
-      width="95%"
-      maxWidth="650px"
-      minWidth="240px"
-      top="50%"
-      left="50%"
-      transform="translate(-50%, -50%)"
+      height={{
+        base: fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%",
+        md: fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "70%"
+      }}
+      width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
+      top={fullScreenWindow ? "0" : "50%"}
+      left={fullScreenWindow ? "0" : "50%"}
+      transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
+      fullScreenWindow={fullScreenWindow}
     >
       <Window.TitleBar />
       <Window.Content layerStyle="window" position="relative" zIndex="0" p={0}>

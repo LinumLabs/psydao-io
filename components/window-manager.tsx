@@ -6,6 +6,7 @@ import { createCtx } from "lib/context";
 export interface Window {
   id: string;
   isOpen: boolean;
+  isFullScreen: boolean;
 }
 
 export interface State {
@@ -16,6 +17,11 @@ export interface State {
 interface ForegroundAction {
   type: "foreground";
   id: string;
+}
+interface FullScreenAction {
+  type: "fullScreen";
+  id: string;
+  fullScreen: boolean;
 }
 
 interface CloseAction {
@@ -33,6 +39,7 @@ interface StopDragAction {
 
 export type Action =
   | ForegroundAction
+  | FullScreenAction
   | CloseAction
   | StartDragAction
   | StopDragAction;
@@ -50,8 +57,21 @@ const reducer = (state: State, action: Action): State => {
         windows: [
           ...state.windows.filter(({ id }) => id !== action.id),
           {
+            ...state.windows.find(({ id }) => id === action.id)!,
             id: action.id,
             isOpen: true
+          }
+        ]
+      };
+    case "fullScreen":
+      return {
+        ...state,
+        windows: [
+          ...state.windows.filter(({ id }) => id !== action.id),
+          {
+            id: action.id,
+            isOpen: true,
+            isFullScreen: action.fullScreen
           }
         ]
       };
@@ -60,7 +80,8 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         windows: state.windows.map(({ id, isOpen }) => ({
           id,
-          isOpen: id === action.id ? false : isOpen
+          isOpen: id === action.id ? false : isOpen,
+          isFullScreen: false
         }))
       };
     case "startDrag":

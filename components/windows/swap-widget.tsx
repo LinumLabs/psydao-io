@@ -21,10 +21,13 @@ import { useReadTokenPriceInDollar } from "services/web3/useReadTokenPriceInDoll
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
 import ImageNext from "next/image";
+import { useWindowManager } from "../window-manager";
 
 export const SwapWidget = () => {
   const isRescricted = useRescrictedCountries();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
+
+  const { state } = useWindowManager();
 
   const [focused, setFocused] = useState<string>("");
 
@@ -143,19 +146,31 @@ export const SwapWidget = () => {
 
   const isWrongNetwork = chainId !== 1;
 
+  const fullScreenWindow = useMemo(() => {
+    const window = state.windows.find((item) => item.id === "swap");
+    if (window?.isFullScreen) {
+      return true;
+    }
+
+    return false;
+  }, [state]);
+
+  console.log("state.windows", state.windows);
+
   return (
     <Window
       id="swap"
-      height="80%"
-      maxHeight="640px"
-      minHeight={isLargerThanMd ? "500px" : "350px"}
-      width="95%"
-      maxWidth="655px"
-      minWidth="240px"
-      top={{ base: "60%", sm: "58%", md: "56%" }}
-      left="50%"
-      transform="translate(-50%, -50%)"
-      defaultIsOpen={true}
+      height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%"}
+      width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
+      top={{
+        base: fullScreenWindow ? "0" : "60%",
+        sm: fullScreenWindow ? "0" : "58%",
+        md: fullScreenWindow ? "0" : "56%"
+      }}
+      left={fullScreenWindow ? "0" : "50%"}
+      transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
+      fullScreenWindow={fullScreenWindow}
+      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content p={2}>
