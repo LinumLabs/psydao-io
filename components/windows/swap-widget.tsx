@@ -147,15 +147,12 @@ export const SwapWidget = () => {
   const isWrongNetwork = chainId !== 1;
 
   const fullScreenWindow = useMemo(() => {
-    const window = state.windows.find((item) => item.id === "swap");
-    if (window?.isFullScreen) {
+    if (state.fullScreen === "swap") {
       return true;
     }
 
     return false;
   }, [state]);
-
-  console.log("state.windows", state.windows);
 
   return (
     <Window

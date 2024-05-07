@@ -37,10 +37,10 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
       onDoubleClick={() => {
         const window = state.windows.find((item) => item.id === id);
         if (window) {
-          if (window.isFullScreen) {
-            dispatch({ type: "fullScreen", id, fullScreen: false });
+          if (state.fullScreen !== id) {
+            dispatch({ type: "fullScreen", id });
           } else {
-            dispatch({ type: "fullScreen", id, fullScreen: true });
+            dispatch({ type: "fullScreen", id: "" });
           }
         }
       }}
@@ -157,7 +157,7 @@ export const Window = ({
   };
 
   const handleEnd = () => {
-    dispatch({ type: "fullScreen", id, fullScreen: false });
+    dispatch({ type: "fullScreen", id: "" });
     dispatch({ type: "stopDrag" });
   };
 

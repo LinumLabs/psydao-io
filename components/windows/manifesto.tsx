@@ -9,8 +9,7 @@ export const Manifesto = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const fullScreenWindow = useMemo(() => {
-    const window = state.windows.find((item) => item.id === "manifesto");
-    if (window?.isFullScreen) {
+    if (state.fullScreen === "manifesto") {
       return true;
     }
 

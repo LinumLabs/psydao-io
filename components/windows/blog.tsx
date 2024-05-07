@@ -11,8 +11,7 @@ export const Blog = () => {
   const id = "blog";
 
   const fullScreenWindow = useMemo(() => {
-    const window = state.windows.find((item) => item.id === id);
-    if (window?.isFullScreen) {
+    if (state.fullScreen === id) {
       return true;
     }
 

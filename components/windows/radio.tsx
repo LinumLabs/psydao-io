@@ -191,8 +191,7 @@ export const Radio = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const fullScreenWindow = useMemo(() => {
-    const window = state.windows.find((item) => item.id === "radio");
-    if (window?.isFullScreen) {
+    if (state.fullScreen === "radio") {
       return true;
     }
 
