@@ -10,6 +10,7 @@ export interface Window {
 
 export interface State {
   isPointerDragging: boolean;
+  isFullscreen: boolean;
   windows: Window[];
 }
 
@@ -31,14 +32,21 @@ interface StopDragAction {
   type: "stopDrag";
 }
 
+interface FullScreenAction {
+  type: "fullScreen";
+  id: string;
+}
+
 export type Action =
   | ForegroundAction
   | CloseAction
   | StartDragAction
-  | StopDragAction;
+  | StopDragAction
+  | FullScreenAction;
 
 const initialState: State = {
   isPointerDragging: false,
+  isFullscreen: false,
   windows: []
 };
 
@@ -72,6 +80,11 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         isPointerDragging: false
+      };
+    case "fullScreen":
+      return {
+        ...state,
+        isFullscreen: !state.isFullscreen
       };
   }
 };

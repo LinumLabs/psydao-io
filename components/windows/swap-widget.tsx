@@ -21,6 +21,7 @@ import { useReadTokenPriceInDollar } from "services/web3/useReadTokenPriceInDoll
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
 import ImageNext from "next/image";
+import { useWindowManager } from "../window-manager";
 
 export const SwapWidget = () => {
   const isRescricted = useRescrictedCountries();
@@ -143,16 +144,26 @@ export const SwapWidget = () => {
 
   const isWrongNetwork = chainId !== 1;
 
+  const { state } = useWindowManager();
+
   return (
     <Window
       id="swap"
-      height="80%"
-      maxHeight="640px"
+      height={{
+        base: state.isFullscreen ? "100%" : "80%",
+        md: state.isFullscreen ? "100%" : "640px"
+      }}
       minHeight={isLargerThanMd ? "500px" : "350px"}
-      width="95%"
-      maxWidth="655px"
+      width={{
+        base: state.isFullscreen ? "100%" : "95%",
+        md: state.isFullscreen ? "100%" : "665px"
+      }}
       minWidth="240px"
-      top={{ base: "60%", sm: "58%", md: "56%" }}
+      top={{
+        base: state.isFullscreen ? "50%" : "60%",
+        sm: state.isFullscreen ? "50%" : "58%",
+        md: state.isFullscreen ? "50%" : "56%"
+      }}
       left="50%"
       transform="translate(-50%, -50%)"
       defaultIsOpen={true}

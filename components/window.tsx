@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import type { BoxProps } from "@chakra-ui/react";
-import { Box, chakra } from "@chakra-ui/react";
+import { Box, Button, chakra, useMediaQuery } from "@chakra-ui/react";
 import { useLayoutEffect } from "react";
 import { Rnd } from "react-rnd";
 
@@ -25,6 +26,7 @@ interface TitleBarProps extends BoxProps {
 const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
   const { border, id, padding } = useWindowContext();
   const { dispatch } = useWindowManager();
+  const [isDesktop] = useMediaQuery("(min-width: 1024px)");
 
   return (
     <Box
@@ -36,11 +38,18 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
       {...rest}
     >
       <Box
+        as="button"
         className="drag-handle"
         p={padding}
         flex="1 0"
         cursor="grab"
         _active={{ cursor: "grabbing" }}
+        onDoubleClick={
+          isDesktop ? () => dispatch({ type: "fullScreen", id }) : () => {}
+        }
+        onClick={
+          isDesktop ? () => {} : () => dispatch({ type: "fullScreen", id })
+        }
       >
         <Drag display="block" />
       </Box>
@@ -60,7 +69,7 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
 const Content = (props: BoxProps) => {
   const { padding } = useWindowContext();
   const {
-    state: { isPointerDragging }
+    state: { isPointerDragging, isFullscreen }
   } = useWindowManager();
 
   return (
@@ -73,6 +82,8 @@ const Content = (props: BoxProps) => {
       sx={
         isPointerDragging ? { "&::-webkit-scrollbar": { display: "none" } } : {}
       }
+      height={isFullscreen ? "100%" : "auto"}
+      width={isFullscreen ? "100%" : "auto"}
       {...props}
     />
   );
@@ -162,6 +173,8 @@ export const Window = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              height={state.isFullscreen ? "100%" : "auto"}
+              width={state.isFullscreen ? "100%" : "auto"}
               {...rest}
             >
               <Resizable

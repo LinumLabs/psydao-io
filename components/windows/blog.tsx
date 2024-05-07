@@ -6,20 +6,28 @@ import { useMediaQuery } from "@chakra-ui/react";
 export const Blog = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
-  const { dispatch } = useWindowManager();
+  const { dispatch, state } = useWindowManager();
   const id = "blog";
 
   return (
     <Window
       id={id}
-      height="80%"
-      maxHeight="640px"
+      height={{
+        base: state.isFullscreen ? "100%" : "80%",
+        md: state.isFullscreen ? "100%" : "640px"
+      }}
       minHeight={isLargerThanMd ? "500px" : "350px"}
-      width="95%"
-      maxWidth="655px"
+      width={{
+        base: state.isFullscreen ? "100%" : "95%",
+        md: state.isFullscreen ? "100%" : "665px"
+      }}
       minWidth="240px"
-      top={{ base: "46%", md: "42%" }}
-      left={{ base: "50%", lg: "40%" }}
+      top={{
+        base: state.isFullscreen ? "50%" : "46%",
+        sm: state.isFullscreen ? "50%" : "46%",
+        md: state.isFullscreen ? "50%" : "42%"
+      }}
+      left={{ base: "50%", lg: state.isFullscreen ? "50%" : "40%" }}
       transform="translate(-50%, -50%)"
       defaultIsOpen
     >
