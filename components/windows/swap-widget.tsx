@@ -157,15 +157,31 @@ export const SwapWidget = () => {
   return (
     <Window
       id="swap"
-      height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%"}
-      width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
+      height={
+        fullScreenWindow && termsAndConditions
+          ? "100%"
+          : isLargerThanMd
+            ? "500px"
+            : "80%"
+      }
+      width={
+        fullScreenWindow && termsAndConditions
+          ? "100%"
+          : isLargerThanMd
+            ? "655px"
+            : "95%"
+      }
       top={{
-        base: fullScreenWindow ? "0" : "60%",
-        sm: fullScreenWindow ? "0" : "58%",
-        md: fullScreenWindow ? "0" : "56%"
+        base: fullScreenWindow && termsAndConditions ? "0" : "60%",
+        sm: fullScreenWindow && termsAndConditions ? "0" : "58%",
+        md: fullScreenWindow && termsAndConditions ? "0" : "56%"
       }}
-      left={fullScreenWindow ? "0" : "50%"}
-      transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
+      left={fullScreenWindow && termsAndConditions ? "0" : "50%"}
+      transform={
+        fullScreenWindow && termsAndConditions
+          ? "translate(0, 0)"
+          : "translate(-50%, -50%)"
+      }
       fullScreenWindow={fullScreenWindow}
       defaultIsOpen
     >
@@ -219,34 +235,65 @@ export const SwapWidget = () => {
             ) : (
               <>
                 {" "}
-                <Box p={4} pb={6}>
-                  <Text
-                    textColor="#269200"
-                    fontWeight="500"
-                    fontStyle="italic"
-                    mt="1"
-                    fontSize={{ base: "20px", sm: "36px" }}
-                    lineHeight={{ base: "20px", sm: "36px" }}
-                    fontFamily={"Amiri"}
-                  >
-                    PSY token sale now open
-                  </Text>
-                  <Link
-                    textDecoration={"underline"}
-                    textColor="#269200"
-                    fontWeight="400"
-                    fontSize={{ base: "18px", md: "24px" }}
-                    lineHeight={{ base: "18px", md: "24px" }}
-                    textUnderlineOffset={"12px"}
-                    fontFamily={"Amiri"}
-                    href="/documents/psydao-whitepaper.pdf"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Whitepaper
-                  </Link>
-                </Box>
+                {!fullScreenWindow && (
+                  <Box p={4} pb={6}>
+                    <Text
+                      textColor="#269200"
+                      fontWeight="500"
+                      fontStyle="italic"
+                      mt="1"
+                      fontSize={{ base: "20px", sm: "36px" }}
+                      lineHeight={{ base: "20px", sm: "36px" }}
+                      fontFamily={"Amiri"}
+                    >
+                      PSY token sale now open
+                    </Text>
+                    <Link
+                      textDecoration={"underline"}
+                      textColor="#269200"
+                      fontWeight="400"
+                      fontSize={{ base: "18px", md: "24px" }}
+                      lineHeight={{ base: "18px", md: "24px" }}
+                      textUnderlineOffset={"12px"}
+                      fontFamily={"Amiri"}
+                      href="/documents/psydao-whitepaper.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      Whitepaper
+                    </Link>
+                  </Box>
+                )}
                 <Flex w={"full"} alignItems={"center"} direction={"column"}>
+                  {fullScreenWindow && (
+                    <Box p={4} pb={8}>
+                      <Text
+                        textColor="#269200"
+                        fontWeight="500"
+                        fontStyle="italic"
+                        mt="1"
+                        fontSize={{ base: "20px", sm: "36px" }}
+                        lineHeight={{ base: "20px", sm: "36px" }}
+                        fontFamily={"Amiri"}
+                      >
+                        PSY token sale now open
+                      </Text>
+                      <Link
+                        textDecoration={"underline"}
+                        textColor="#269200"
+                        fontWeight="400"
+                        fontSize={{ base: "18px", md: "24px" }}
+                        lineHeight={{ base: "18px", md: "24px" }}
+                        textUnderlineOffset={"12px"}
+                        fontFamily={"Amiri"}
+                        href="/documents/psydao-whitepaper.pdf"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        Whitepaper
+                      </Link>
+                    </Box>
+                  )}
                   <Flex
                     direction={"column"}
                     alignItems={"start"}

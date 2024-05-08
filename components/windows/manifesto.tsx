@@ -23,10 +23,12 @@ export const Manifesto = () => {
         base: fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%",
         md: fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "70%"
       }}
-      width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
+      width={isLargerThanMd ? "655px" : "95%"}
       top={fullScreenWindow ? "0" : "50%"}
-      left={fullScreenWindow ? "0" : "50%"}
-      transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
+      left={"50%"}
+      transform={
+        fullScreenWindow ? "translate(-50%, 0)" : "translate(-50%, -50%)"
+      }
       fullScreenWindow={fullScreenWindow}
     >
       <Window.TitleBar />
@@ -36,7 +38,7 @@ export const Manifesto = () => {
           pb="32"
           background="no-repeat bottom -100px left 0px / 100% 369px linear-gradient(to top, #f2bebe 100px, transparent)"
         >
-          <Text color="#269200" fontSize="24px" mt="20">
+          <Text color="#269200" fontSize="24px" mt="7">
             The PsyDAO Manifesto
           </Text>
           <Text as="h1" mb="6">
