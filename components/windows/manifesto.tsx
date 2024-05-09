@@ -1,12 +1,24 @@
-import { Box, Image, Link, Text, useMediaQuery } from "@chakra-ui/react";
-
+import {
+  Box,
+  Flex,
+  Icon,
+  Image,
+  Link,
+  type ResponsiveValue,
+  Text,
+  useMediaQuery
+} from "@chakra-ui/react";
+import { IoIosPlay, IoIosPause } from "react-icons/io";
 import { Window } from "components/window";
 import { useWindowManager } from "../window-manager";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { MotionBox } from "../motion-box";
 
 export const Manifesto = () => {
   const { state } = useWindowManager();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
+
+  const [playVoice, setPlayVoice] = useState(false);
 
   const fullScreenWindow = useMemo(() => {
     if (state.fullScreen === "manifesto") {
@@ -38,12 +50,89 @@ export const Manifesto = () => {
           pb="32"
           background="no-repeat bottom -100px left 0px / 100% 369px linear-gradient(to top, #f2bebe 100px, transparent)"
         >
-          <Text color="#269200" fontSize="24px" mt="7">
-            The PsyDAO Manifesto
-          </Text>
-          <Text as="h1" mb="6">
-            An Industrial Ego Death
-          </Text>
+          <Flex alignItems={"center"} justifyContent={"space-between"}>
+            <Box>
+              <Text color="#269200" fontSize="24px" mt="7">
+                The PsyDAO Manifesto
+              </Text>
+              <Text as="h1" mb="6">
+                An Industrial Ego Death
+              </Text>
+            </Box>
+            <Box position={"relative"}>
+              <Box position={"fixed"} right={"35px"} top={"55px"} zIndex={1}>
+                <Image src="/terence_mckenn.svg" />
+                {playVoice && (
+                  <Box
+                    w={"64px"}
+                    h={"64px"}
+                    position={"absolute"}
+                    top={0}
+                    borderRadius={"100%"}
+                    opacity={0.7}
+                    background={"#9835BA"}
+                  >
+                    <Flex
+                      justifyContent="center"
+                      h={"100%"}
+                      alignItems="center"
+                    >
+                      <Flex height="15px" width="40px" gap={"4px"}>
+                        {[1, 2, 3, 4, 5].map((num, index) => (
+                          <MotionBox
+                            style={{
+                              transform: "scaleY(.4)",
+                              height: "100%",
+                              width: "8px",
+                              background: "#FFF",
+                              borderRadius: "8px"
+                            }}
+                            animate={{
+                              scaleY: [
+                                1, 0.6, 0.4, 0.8, 0.4, 0.6, 0.4, 0.6, 0.4, 1.2,
+                                1
+                              ]
+                            }}
+                            transition={
+                              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                              {
+                                duration: 1.2,
+                                ease: "easeInOut",
+                                loop: Infinity,
+                                delay: index * 0.1
+                              } as unknown as ResponsiveValue<any>
+                            }
+                          />
+                        ))}
+                      </Flex>
+                    </Flex>
+                  </Box>
+                )}
+              </Box>
+              <Box
+                position={"fixed"}
+                p={1}
+                background={"#FFF"}
+                zIndex={2}
+                right={"30px"}
+                top={"58px"}
+                border={"1px solid #9835BA"}
+                borderRadius={"100%"}
+                cursor={"pointer"}
+                onClick={() => setPlayVoice(!playVoice)}
+              >
+                <Icon
+                  position={"relative"}
+                  left={playVoice ? 0 : "1px"}
+                  as={playVoice ? IoIosPause : IoIosPlay}
+                  display="block"
+                  w={"12px"}
+                  h={"12px"}
+                  color="gray.700"
+                />
+              </Box>
+            </Box>
+          </Flex>
           <Box position="relative" width="100%" paddingBottom="56.25%">
             <Box
               as="iframe"
