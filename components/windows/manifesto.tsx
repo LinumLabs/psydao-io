@@ -11,14 +11,18 @@ import {
 import { IoIosPlay, IoIosPause } from "react-icons/io";
 import { Window } from "components/window";
 import { useWindowManager } from "../window-manager";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { MotionBox } from "../motion-box";
+import { useAudio } from "@/hooks/useAudio";
 
 export const Manifesto = () => {
   const { state } = useWindowManager();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
-  const [playVoice, setPlayVoice] = useState(false);
+  const { playing, toggle } = useAudio(
+    // Replace with correct mp3
+    "https://peregrine-results.s3.amazonaws.com/pigeon/2B2MyyJyjs9pFJYtuA_0.mp3"
+  );
 
   const fullScreenWindow = useMemo(() => {
     if (state.fullScreen === "manifesto") {
@@ -62,7 +66,7 @@ export const Manifesto = () => {
             <Box position={"relative"}>
               <Box position={"fixed"} right={"35px"} top={"55px"} zIndex={1}>
                 <Image src="/terence_mckenn.svg" />
-                {playVoice && (
+                {playing && (
                   <Box
                     w={"64px"}
                     h={"64px"}
@@ -114,20 +118,20 @@ export const Manifesto = () => {
                 p={1}
                 background={"#FFF"}
                 zIndex={2}
-                right={"30px"}
+                right={"26px"}
                 top={"58px"}
                 border={"1px solid #9835BA"}
                 borderRadius={"100%"}
                 cursor={"pointer"}
-                onClick={() => setPlayVoice(!playVoice)}
+                onClick={toggle}
               >
                 <Icon
                   position={"relative"}
-                  left={playVoice ? 0 : "1px"}
-                  as={playVoice ? IoIosPause : IoIosPlay}
+                  left={playing ? 0 : "1px"}
+                  as={playing ? IoIosPause : IoIosPlay}
                   display="block"
-                  w={"12px"}
-                  h={"12px"}
+                  w={4}
+                  h={4}
                   color="gray.700"
                 />
               </Box>
