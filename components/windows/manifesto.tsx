@@ -9,10 +9,10 @@ import {
   useMediaQuery
 } from "@chakra-ui/react";
 import { IoIosPlay, IoIosPause } from "react-icons/io";
-import { Window } from "components/window";
-import { useWindowManager } from "../window-manager";
+import { Window } from "@/components/window";
+import { useWindowManager } from "@/components/window-manager";
 import { useMemo } from "react";
-import { MotionBox } from "../motion-box";
+import { MotionBox } from "@/components/motion-box";
 import { useAudio } from "@/hooks/useAudio";
 
 const ManifestoSectionTitle = ({
