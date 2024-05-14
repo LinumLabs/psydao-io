@@ -291,8 +291,9 @@ export const Manifesto = () => {
               Las Vegas with a head full of mescaline and a lawyer, but the wave
               rolled back when <ManifestoBoldText text="The Man" /> crept in, as{" "}
               <ManifestoBoldText text="The Man" /> always tends to do in our
-              temporary autonomous zones [4], pausing psychedelic research for
-              decades. For decades, the state has controlled our access.
+              temporary <ManifestoLinkText text="autonomous zones [4]," />{" "}
+              pausing psychedelic research for decades. For decades, the state
+              has controlled our access.
             </Text>
             <Text>
               For apes and scientists, Greeks and Romans, Egyptians and Mayans,
