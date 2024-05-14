@@ -81,7 +81,13 @@ export const Manifesto = () => {
       fullScreenWindow={fullScreenWindow}
     >
       <Window.TitleBar />
-      <Window.Content layerStyle="window" position="relative" zIndex="0" p={0}>
+      <Window.Content
+        layerStyle="window"
+        position="relative"
+        zIndex="0"
+        p={0}
+        overflowX={"hidden"}
+      >
         <Box>
           <Flex
             px={{ base: "4", md: "8" }}
@@ -107,7 +113,8 @@ export const Manifesto = () => {
                 An Industrial Ego Death
               </Text>
             </Flex>
-            <Box position={"relative"}>
+            {/* TODO: Enable commented section when AI voice is set */}
+            {/* <Box position={"relative"}>
               <Box position={"fixed"} right={"50px"} top={"55px"} zIndex={1}>
                 <Image src="/terence_mckenn.svg" />
                 {playing && (
@@ -179,7 +186,7 @@ export const Manifesto = () => {
                   color="gray.700"
                 />
               </Box>
-            </Box>
+            </Box> */}
           </Flex>
           <Box position="relative" width="100%" paddingBottom="56.25%" mb={8}>
             <Box
