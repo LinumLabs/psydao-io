@@ -37,17 +37,6 @@ const ManifestoBoldText = ({ text }: { text: string }) => (
   </Text>
 );
 
-const ManifestoLinkText = ({ text }: { text: string }) => (
-  <Link
-    href="https://openai.com/dall-e-2"
-    target="_blank"
-    color={"#269200"}
-    cursor={"pointer"}
-  >
-    {text}
-  </Link>
-);
-
 export const Manifesto = () => {
   const { state } = useWindowManager();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
@@ -224,10 +213,8 @@ export const Manifesto = () => {
             <Text mb={6}>
               For millennia, psychedelics have provided the human race with
               exactly that. Plants like Amanita muscaria, Banisteriopsis caapi,
-              and Cannabis sativa and preparations with psychedelic effects like{" "}
-              <ManifestoLinkText text="ayahuasca [1]," />{" "}
-              <ManifestoLinkText text="ergotized beer [2]," /> and{" "}
-              <ManifestoLinkText text="soma [3]" /> have extensive spiritual,
+              and Cannabis sativa and preparations with psychedelic effects like
+              ayahuasca, ergotized beer, and soma have extensive spiritual,
               medicinal, and recreational value to the human race, with the
               lines between those domains often blurred.
             </Text>
@@ -298,9 +285,8 @@ export const Manifesto = () => {
               Las Vegas with a head full of mescaline and a lawyer, but the wave
               rolled back when <ManifestoBoldText text="The Man" /> crept in, as{" "}
               <ManifestoBoldText text="The Man" /> always tends to do in our
-              temporary <ManifestoLinkText text="autonomous zones [4]," />{" "}
-              pausing psychedelic research for decades. For decades, the state
-              has controlled our access.
+              temporary autonomous zones, pausing psychedelic research for
+              decades. For decades, the state has controlled our access.
             </Text>
             <Text>
               For apes and scientists, Greeks and Romans, Egyptians and Mayans,
@@ -446,7 +432,7 @@ export const Manifesto = () => {
               partners and contributors.
             </Text>
             <ManifestoSectionTitle title="Summary" width="218px" />
-            <Text mb={10}>
+            <Text mb={14}>
               We are on the precipice of either ruin and revolution. Our species
               needs a radical shift in consciousness to preserve its light for
               the future. Since that first ape ate a psychedelic mushroom many
@@ -456,33 +442,6 @@ export const Manifesto = () => {
               level of human experience that should be available to everyone who
               wants it. We must ensure that this world is available to anyone.
             </Text>
-            <Box
-              as="ul"
-              fontStyle="italic"
-              listStyleType="none"
-              textDecoration="underline"
-              color={"#269200"}
-              mb={16}
-            >
-              <Text as="li" mb={3}>
-                <ManifestoLinkText
-                  text="[1] Jeremy Narby, The Cosmic Serpent: DNA and the Origins of
-              Knowledge, 2006"
-                />
-              </Text>
-              <Text as="li" mb={3}>
-                <ManifestoLinkText
-                  text="[2] Brian Muraresku, The Immortality Key: The Secret History of
-                the Religion With No Name, 2020"
-                />
-              </Text>
-              <Text as="li" mb={3}>
-                <ManifestoLinkText text="[3] Id." />
-              </Text>
-              <Text as="li">
-                <ManifestoLinkText text="[4] Hakim Bey." />
-              </Text>
-            </Box>
             <Link
               border="1px solid #9835BA"
               borderRadius="full"
