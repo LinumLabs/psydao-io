@@ -22,6 +22,8 @@ import { useReadEthPrice } from "@/services/web3/useReadEthPrice";
 import { useReadTokenPriceInDollar } from "@/services/web3/useReadTokenPriceInDollar";
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
 import { useWindowManager } from "@/components/window-manager";
+import { useQuery } from "@apollo/client";
+import getNFTs from "@/services/graph";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>
@@ -183,6 +185,11 @@ export const SwapWidget = () => {
 
     return false;
   }, [state]);
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { data, loading, error } = useQuery(getNFTs);
+
+  console.log(data, loading, error);
 
   return (
     <Window
