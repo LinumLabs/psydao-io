@@ -1,9 +1,8 @@
-import { tokenSaleContractSepolia } from "@/constants/contracts";
 import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import tokenSaleAbiSepolia from "@/abis/tokenSaleAbiSepolia.json";
+import { psycSaleSepolia } from "@/constants/contracts";
 import { parseUnits } from "viem";
-
+import psycSaleAbiSepolia from "@/abis/psycSaleAbiSepolia.json";
 export const useBuyRandomPsycPrivate = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
 
@@ -16,9 +15,9 @@ export const useBuyRandomPsycPrivate = () => {
     async (buyRandomFromBatch: string, batchId: number, proof: string) => {
       const randomNftAmount = parseUnits(buyRandomFromBatch, 18);
       return writeContract({
-        address: tokenSaleContractSepolia,
+        address: psycSaleSepolia,
         functionName: "buyRandomFromBatch",
-        abi: tokenSaleAbiSepolia,
+        abi: psycSaleAbiSepolia,
         args: [batchId, proof],
         value: randomNftAmount
       });
