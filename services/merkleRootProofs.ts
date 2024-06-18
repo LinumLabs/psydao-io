@@ -1,5 +1,6 @@
 import { keccak256 } from "viem";
 import { MerkleTree } from "merkletreejs";
+import { useUpdateMerkleRoot } from "./web3/useUpdateMerkleRoot";
 
 const addresses: `0x${string}`[] = [
   "0x8754a4c886f8Cb77a1d2F38470c653DDb4727f21"
@@ -24,6 +25,14 @@ export const getMerkleProof = (
 
   return proof;
 };
-const merkleRoot = getMerkleRoot(addresses);
-// contract call:
-// await setMerkleRoot(merkleRoot);
+
+export const updateMerkleTree = async (batchId: number, ipfsHash: string) => {
+  const merkleRoot = getMerkleRoot(addresses);
+  const { updateMerkleRoot, error: merkleError } = useUpdateMerkleRoot();
+  // contract call:
+  try {
+    await updateMerkleRoot(batchId, merkleRoot.toString(), ipfsHash);
+  } catch (error) {
+    console.error(merkleError);
+  }
+};
