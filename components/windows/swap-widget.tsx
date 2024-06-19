@@ -22,6 +22,8 @@ import { useReadEthPrice } from "@/services/web3/useReadEthPrice";
 import { useReadTokenPriceInDollar } from "@/services/web3/useReadTokenPriceInDollar";
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
 import { useWindowManager } from "@/components/window-manager";
+import e from "cors";
+import { checkIfFibonacci } from "@/services/fibonacciSequenceChecks";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>
@@ -183,45 +185,6 @@ export const SwapWidget = () => {
 
     return false;
   }, [state]);
-
-  const isPerfectSquare = (num: number) => {
-    const fibPlus = Math.pow(num, 2) * 5 + 4;
-    const fibMinus = Math.pow(num, 2) * 5 - 4;
-
-    if (
-      Number.isInteger(Math.sqrt(fibPlus)) ||
-      Number.isInteger(Math.sqrt(fibMinus))
-    ) {
-      return true;
-    } else return false;
-  };
-
-  const checkIfFibonacci = (ids: number[]) => {
-    const isFibonacci: boolean[] = [];
-
-    ids.forEach((id) => {
-      if (id === 0 || id === 1 || isPerfectSquare(id)) {
-        isFibonacci.push(true);
-      } else isFibonacci.push(false);
-    });
-
-    if (isFibonacci.includes(false)) {
-      return [];
-    } else return ids;
-  };
-
-  const eep = checkIfFibonacci([0, 1, 2, 3, 5, 8, 13, 21, 34]);
-
-  const checkIfSequential = (ids: number[]) => {
-    if (ids.length >= 3) {
-      for (let i = 0; i < ids.length; i++) {
-        if (ids.length < i + 2 || ids[i] !== ids[i + 1] + ids[i + 2]) {
-          return false;
-        }
-      }
-    }
-    return false; // Add this line to handle the case when ids.length < 3
-  };
 
   return (
     <Window
