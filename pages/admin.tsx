@@ -1,0 +1,217 @@
+import { useEffect } from "react";
+import {
+  Box,
+  Center,
+  Icon,
+  Image,
+  Link,
+  Text,
+  keyframes
+} from "@chakra-ui/react";
+import type { NextPage } from "next";
+import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
+import { ToastContainer } from "react-toastify";
+
+import { BackgroundGrid } from "@/components/background-grid";
+import { Blobs } from "@/components/blobs";
+import { Csr } from "@/components/csr";
+import { Grid } from "@/components/grid";
+import { GridProvider } from "@/components/grid-context";
+import { Head } from "@/components/head";
+import { Marquee } from "@/components/marquee";
+import { Menu } from "@/components/menu";
+import { Open, WindowManager } from "@/components/window-manager";
+import { Manifesto } from "@/components/windows/manifesto";
+import { Radio } from "@/components/windows/radio";
+import { MixpanelTracking } from "@/services/mixpanel";
+import { SwapWidget } from "@/components/windows/swap-widget";
+import { useRescrictedCountries } from "@/hooks/restrictedCountries";
+import { Blog } from "@/components/windows/blog";
+import "react-toastify/dist/ReactToastify.css";
+
+const AdminPage: NextPage = () => {
+  useRescrictedCountries();
+
+  useEffect(() => {
+    const updateHeight = () => {
+      document.documentElement.style.setProperty(
+        "--app-height",
+        window.innerHeight + "px"
+      );
+      MixpanelTracking.getInstance().pageView();
+    };
+
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
+  }, []);
+
+  const fadeIn = keyframes`
+   0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+  `;
+
+  const fadeinAnimate = `${fadeIn} infinite 6s`;
+
+  const SALE_ACTIVE = true;
+
+  return (
+    <>
+      <Head />
+      <Csr
+        fallback={
+          <noscript>
+            <Box fontSize="2xl" p="6">
+              <Text>This page requires JavaScript.</Text>
+              <Text>
+                Check out our{" "}
+                <Link href="/links" textDecor="underline">
+                  links
+                </Link>{" "}
+                page, which doesn&apos;t.
+              </Text>
+            </Box>
+          </noscript>
+        }
+      >
+        <ToastContainer />
+        <GridProvider>
+          <Center
+            h="var(--app-height)"
+            w="100vw"
+            overflow="hidden"
+            background="no-repeat top right url(/clouds.png), linear-gradient(60deg, #fffafa, #fff9ef)"
+          >
+            <Blobs />
+            <BackgroundGrid />
+            <Box id="window-bounds">
+              <Grid
+                position="relative"
+                zIndex="0"
+                getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 11}
+              >
+                <WindowManager>
+                  <Box gridArea="1 / 1 / 3 / 3">
+                    {/* TODO: temporary until I can find a better way to do this */}
+                    <Open h="100%" w="100%" id="swap">
+                      <Box
+                        cursor="pointer"
+                        h="100%"
+                        w="100%"
+                        position={"relative"}
+                      >
+                        <Image
+                          h={"100%"}
+                          w={"100%"}
+                          alt="logo"
+                          src="/psydao-deep-logo.svg"
+                        />
+                      </Box>
+                    </Open>
+                  </Box>
+                  <Box gridArea="-2 / 1 / -1 / -1">
+                    <Marquee
+                      text={[
+                        "WELCOME TO PSYDAO",
+                        "FUNDING RESEARCH AT THE INTERSECTION OF PSYCHEDELICS AND MENTAL HEALTH",
+                        "NOW ACCEPTING APPLICATIONS FOR RESEARCH PROJECT FUNDING AND ALCHEMIST GRANTS"
+                      ]}
+                    />
+                  </Box>
+
+                  <Menu />
+                  <Open id="radio" gridArea="-4 / 1 / span 2 / span 2" p="3">
+                    <Image
+                      src="/radio.svg"
+                      alt=""
+                      height="100%"
+                      width="100%"
+                      cursor="pointer"
+                      opacity="0.5"
+                      _hover={{
+                        opacity: 1
+                      }}
+                    />
+                  </Open>
+                  <Box
+                    position="absolute"
+                    top="0"
+                    right="0"
+                    bottom="0"
+                    left="0"
+                    pointerEvents="none"
+                    overflow="hidden"
+                  >
+                    {/* <SwapWidget /> insert admin dashboard here OwO*/}
+
+                    <Manifesto />
+                  </Box>
+                </WindowManager>
+                <Link
+                  href="https://discord.gg/FJHQtBZYdp"
+                  target="_blank"
+                  gridArea="-3 / -4 / span 1 / span 1"
+                  p="30%"
+                  color="#f2bebe"
+                  _hover={{
+                    color: "#E69CFF",
+                    backgroundImage:
+                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)"
+                  }}
+                  transition="all 200ms ease"
+                >
+                  <Icon as={FaDiscord} boxSize="full" />
+                </Link>
+                <Link
+                  href="https://twitter.com/psy_dao"
+                  target="_blank"
+                  gridArea="-3 / -3 / span 1 / span 1"
+                  p="30%"
+                  color="#f2bebe"
+                  _hover={{
+                    color: "#a4ffff",
+                    backgroundImage:
+                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)"
+                  }}
+                  transition="all 200ms ease"
+                >
+                  <Icon as={FaTwitter} boxSize="full" />
+                </Link>
+                <Link
+                  href="https://www.youtube.com/channel/UC8bjrtWOPuHdvMfZ3ScAI-Q"
+                  target="_blank"
+                  gridArea="-3 / -2 / span 1 / span 1"
+                  p="30%"
+                  color="#f2bebe"
+                  _hover={{
+                    color: "#dc4e4e",
+                    backgroundImage:
+                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)"
+                  }}
+                  transition="all 200ms ease"
+                >
+                  <Icon as={FaYoutube} boxSize="full" />
+                </Link>
+              </Grid>
+            </Box>
+          </Center>
+        </GridProvider>
+      </Csr>
+    </>
+  );
+};
+
+export default AdminPage;
