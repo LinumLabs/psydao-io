@@ -11,7 +11,7 @@ export const useUpdateMerkleRoot = () => {
     });
 
   const updateMerkleRoot = useCallback(
-    async (batchId: number, newMerkle: string, ipfsHash: string) => {
+    async (batchId: number, newMerkle: Buffer, ipfsHash: string) => {
       return writeContract({
         address: psycSaleSepolia,
         functionName: "updateMerkleRoot",

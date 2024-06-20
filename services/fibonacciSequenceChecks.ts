@@ -1,38 +1,35 @@
-const isPerfectSquare = (num: number) => {
-  const fibPlus = Math.pow(num, 2) * 5 + 4;
-  const fibMinus = Math.pow(num, 2) * 5 - 4;
+function fibonacci(batchId: number): number {
+  if (batchId <= 0) return 0;
+  if (batchId === 1) return 3;
+  if (batchId === 2) return 2;
 
-  if (
-    Number.isInteger(Math.sqrt(fibPlus)) ||
-    Number.isInteger(Math.sqrt(fibMinus))
-  ) {
-    return true;
-  } else return false;
-};
+  let a = 1; // F(1)
+  let b = 1; // F(2)
+  let fib = 1; // To store F(batchId)
 
-export const checkIfFibonacci = (ids: number[]) => {
-  ids.sort((a, b) => a - b);
-  const isFibonacci: boolean[] = [];
-
-  if (ids.length === 0) {
-    throw new Error("No ids were provided");
-  } else if (ids.length === 1 || ids.length === 2) {
-    console.log("eee");
-    ids.forEach((id) => {
-      if (id === 0 || id === 1 || isPerfectSquare(id)) {
-        isFibonacci.push(true);
-      } else isFibonacci.push(false);
-      console.log(isFibonacci);
-    });
-  } else if (ids.length > 2) {
-    for (let i = 2; i < ids.length; i++) {
-      if (isPerfectSquare(ids[i]) && ids[i] === ids[i - 1] + ids[i - 2]) {
-        isFibonacci.push(true);
-      } else isFibonacci.push(false);
-    }
-    // if isFibonacci is false, return empty array - otherwise - return ids and send them through
+  for (let i = 2; i <= batchId; i++) {
+    fib = a + b;
+    a = b;
+    b = fib;
   }
-  if (isFibonacci.includes(false)) {
-    return [];
-  } else return ids;
-};
+
+  return fib;
+}
+
+// we will get last token Id from a call to the SG or contract
+export function generateNftIds(batchId: number, lastTokenId: number) {
+  // Get the Fibonacci number for the given batchId
+  if (batchId < 1) {
+    throw new Error("Invalid batch Id");
+  }
+  const fibNumber = fibonacci(batchId);
+  const nftIds: number[] = [];
+  // Generate consecutive NFT IDs based on the last token Id of the previous batch
+  // This will be the value sent to the useCreateSale hook
+  for (let i = 0; i < fibNumber; i++) {
+    if (batchId === 1) {
+      nftIds.push(lastTokenId + i);
+    } else nftIds.push(lastTokenId + i + 1);
+  }
+  return nftIds;
+}

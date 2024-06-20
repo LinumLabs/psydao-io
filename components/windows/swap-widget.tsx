@@ -22,8 +22,6 @@ import { useReadEthPrice } from "@/services/web3/useReadEthPrice";
 import { useReadTokenPriceInDollar } from "@/services/web3/useReadTokenPriceInDollar";
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
 import { useWindowManager } from "@/components/window-manager";
-import e from "cors";
-import { checkIfFibonacci } from "@/services/fibonacciSequenceChecks";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>

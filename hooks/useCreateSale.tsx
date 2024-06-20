@@ -1,3 +1,4 @@
+import { generateNftIds } from "@/services/fibonacciSequenceChecks";
 import { useCreatePsycSale } from "@/services/web3/useCreatePsycSale";
 import { useToast } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
@@ -19,7 +20,7 @@ export const useCreateSale = () => {
   }
 
   const createSaleBatch = async (
-    tokenIds: number[],
+    batchNumber: number,
     saleStartTime: number,
     floorPrice: number,
     ceilingPrice: number,
@@ -27,14 +28,24 @@ export const useCreateSale = () => {
     ipfsHash: string
   ) => {
     try {
+      const lastTokenId = 0; // TODO: get last token id from subgraph
+      const nftIds = generateNftIds(batchNumber, lastTokenId);
       await createSale(
-        tokenIds,
+        nftIds,
         saleStartTime,
         floorPrice,
         ceilingPrice,
         merkleRoot,
         ipfsHash
       );
+      if (isConfirmed) {
+        toast({
+          title: "Sale created!",
+          position: "top-right",
+          status: "success",
+          isClosable: true
+        });
+      }
     } catch (error) {
       toast({
         title: "Something went wrong!",
