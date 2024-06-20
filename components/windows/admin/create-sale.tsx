@@ -1,26 +1,11 @@
-import {
-  type Dispatch,
-  type SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-  useMemo
-} from "react";
-import { useAccount, useBalance } from "wagmi";
-import { formatUnits, parseEther } from "viem";
-import ImageNext from "next/image";
-import { ArrowDownIcon } from "@chakra-ui/icons";
+import { useState, useMemo } from "react";
+
 import { Box, Flex, Image, Link, Text, useMediaQuery } from "@chakra-ui/react";
 import { Window } from "@/components/window";
-import { TokenContainer } from "@/components/token-container";
-import { ConnectWalletButton } from "@/components/connect-button";
+
 import { useRescrictedCountries } from "hooks/restrictedCountries";
 import { RestrictedCountries } from "@/components/swap-widget/RestrictedCountries";
-import { SwapTsAndCs } from "@/components/swap-widget/SwapTsAndCs";
-import { psyDAOTokenPrice } from "@/constants/psyTokenPrice";
-import { useReadEthPrice } from "@/services/web3/useReadEthPrice";
-import { useReadTokenPriceInDollar } from "@/services/web3/useReadTokenPriceInDollar";
-import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
+
 import { useWindowManager } from "@/components/window-manager";
 
 const SwapWidgetTitle = () => (
@@ -34,32 +19,16 @@ const SwapWidgetTitle = () => (
       lineHeight={{ base: "20px", sm: "36px" }}
       fontFamily={"Amiri"}
     >
-      PSY token sale now open
+      Create Sale
     </Text>
-    <Link
-      textDecoration={"underline"}
-      textColor="#269200"
-      fontWeight="400"
-      fontSize={{ base: "18px", md: "24px" }}
-      lineHeight={{ base: "18px", md: "24px" }}
-      textUnderlineOffset={"12px"}
-      fontFamily={"Amiri"}
-      href="/documents/psydao-whitepaper.pdf"
-      target="_blank"
-      rel="noreferrer noopener"
-    >
-      Whitepaper
-    </Link>
   </Box>
 );
 
-export const SwapWidget = () => {
+export const CreateSaleWindow = () => {
   const isRescricted = useRescrictedCountries();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const { state } = useWindowManager();
-
-  const [focused, setFocused] = useState<string>("");
 
   const fullScreenWindow = useMemo(() => {
     if (state.fullScreen === "swap") {
