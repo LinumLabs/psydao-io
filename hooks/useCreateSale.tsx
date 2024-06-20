@@ -1,4 +1,4 @@
-import { generateNftIds } from "@/services/fibonacciSequenceChecks";
+import { generateNftIds } from "@/services/generateNftIds";
 import { useCreatePsycSale } from "@/services/web3/useCreatePsycSale";
 import { useToast } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
