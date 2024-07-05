@@ -1,16 +1,23 @@
 import { useMemo } from "react";
 
-import { Image, useMediaQuery } from "@chakra-ui/react";
+import {
+  Image,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useMediaQuery
+} from "@chakra-ui/react";
 import { Window } from "@/components/window";
 
 import { useWindowManager } from "@/components/window-manager";
 import MintPsycHeader from "./layout/mint-psyc-header";
-import MintRandomPsycHeader from "./layout/mint-random-psyc-header";
-import MintSpecificPsycHeader from "./layout/mint-specific-psyc-header";
 
-import MintSection from "./layout/mint-section";
+import PsycSaleContent from "./layout/psyc-sale-content";
+import OwnedNftsContent from "./layout/owned-nfts-content";
+import { useAccount } from "wagmi";
 
 export const NftSaleWidget = () => {
+  const { address } = useAccount();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const { state } = useWindowManager();
@@ -38,12 +45,21 @@ export const NftSaleWidget = () => {
       fullScreenWindow={fullScreenWindow}
     >
       <Window.TitleBar />
-      <Window.Content py={2}>
-        <MintPsycHeader />
-        <MintRandomPsycHeader />
-        <MintSection isRandom />
-        <MintSpecificPsycHeader />
-        <MintSection isRandom={false} />
+      <Window.Content py={2} height={"100%"} width={"100%"}>
+        <Tabs variant={"unstyled"}>
+          <MintPsycHeader />
+          <TabPanels>
+            <TabPanel>
+              <PsycSaleContent />
+            </TabPanel>
+            <TabPanel h="100%" w="100%">
+              <OwnedNftsContent
+                isFullScreen={fullScreenWindow}
+                address={address}
+              />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
         <Image
           src="/windows/alchemist/clouds.png"
           alt=""

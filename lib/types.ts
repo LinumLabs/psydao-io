@@ -1,6 +1,7 @@
 interface TokenOnSale {
   id: string;
   tokenID: string;
+  owner: string;
 }
 
 interface Sale {
@@ -14,6 +15,10 @@ interface Sale {
 
 export interface GetAllSalesWithTokensData {
   sales: Sale[];
+}
+
+export interface GetTokensByOwnerData {
+  tokens: TokenOnSale[];
 }
 
 export interface TokenItem {
