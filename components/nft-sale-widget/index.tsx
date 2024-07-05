@@ -10,14 +10,18 @@ import {
 import { Window } from "@/components/window";
 
 import { useWindowManager } from "@/components/window-manager";
-import MintPsycHeader from "./layout/mint-psyc-header";
+import MintPsycHeader from "./layout/nft-sale/mint-psyc-header";
 
-import PsycSaleContent from "./layout/psyc-sale-content";
-import OwnedNftsContent from "./layout/owned-nfts-content";
+import PsycSaleContent from "./layout/nft-sale/psyc-sale-content";
+import OwnedNftsContent from "./layout/owned-nfts/owned-nfts-content";
 import { useAccount } from "wagmi";
+import { useQuery } from "@apollo/client";
+import { type GetAllTokensOnSaleData } from "@/lib/types";
+import { getTokensOnSale } from "@/services/graph";
 
 export const NftSaleWidget = () => {
   const { address } = useAccount();
+  const { data } = useQuery<GetAllTokensOnSaleData>(getTokensOnSale);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const { state } = useWindowManager();
@@ -29,6 +33,8 @@ export const NftSaleWidget = () => {
 
     return false;
   }, [state]);
+
+  const tokensOnSale = data?.tokenOnSales?.length ?? 0;
 
   return (
     <Window
@@ -47,7 +53,7 @@ export const NftSaleWidget = () => {
       <Window.TitleBar />
       <Window.Content py={2} height={"100%"} width={"100%"}>
         <Tabs variant={"unstyled"}>
-          <MintPsycHeader />
+          <MintPsycHeader numberOfOwnedNfts={tokensOnSale} />
           <TabPanels>
             <TabPanel>
               <PsycSaleContent />
@@ -56,6 +62,7 @@ export const NftSaleWidget = () => {
               <OwnedNftsContent
                 isFullScreen={fullScreenWindow}
                 address={address}
+                nftData={data}
               />
             </TabPanel>
           </TabPanels>

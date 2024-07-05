@@ -1,9 +1,13 @@
 import { Box, Flex, TabIndicator, Text } from "@chakra-ui/react";
-import { WhitepaperLink } from "../commons/whitepaper-link";
-import { PrivateSaleSwitch } from "../commons/privatesale-switch";
-import NftSaleTabs from "./nft-sale-tabs";
+import { WhitepaperLink } from "../../commons/whitepaper-link";
+import { PrivateSaleSwitch } from "../../commons/privatesale-switch";
+import NftSaleTabs from "../nft-sale-tabs";
 
-const MintPsycHeader = () => {
+type MintPsycHeaderProps = {
+  numberOfOwnedNfts: number;
+};
+
+const MintPsycHeader = (props: MintPsycHeaderProps) => {
   // TODO: Hide toggle if user is not whitelisted
   const IS_WHITELISTED = true;
 
@@ -16,7 +20,7 @@ const MintPsycHeader = () => {
           gap={2}
           flexWrap={"wrap"}
         >
-          <NftSaleTabs />
+          <NftSaleTabs numberOfOwnedNfts={props.numberOfOwnedNfts} />
           <WhitepaperLink />
         </Flex>
         {IS_WHITELISTED && <PrivateSaleSwitch />}

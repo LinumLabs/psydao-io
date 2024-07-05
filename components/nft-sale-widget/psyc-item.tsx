@@ -12,6 +12,7 @@ interface PsycItemProps {
   isRandom: boolean;
   isPrivateSale: boolean;
   tokenIdsForActivation: number[];
+  isOwned?: boolean;
 }
 
 const PsycItem = ({
@@ -19,7 +20,8 @@ const PsycItem = ({
   index,
   isRandom,
   isPrivateSale,
-  tokenIdsForActivation
+  tokenIdsForActivation,
+  isOwned
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting, isConfirmed } = useBuyNft(
     isPrivateSale,
@@ -64,45 +66,51 @@ const PsycItem = ({
           bg={"#00000066"}
           display={item.isSold ? "block" : "none"}
         />
-        <NFTPrice price={item.price} />
+        {!isOwned && <NFTPrice price={item.price} />}
       </Box>
-      <Tooltip
-        isDisabled={!!address}
-        label="To mint PSYC NFTs, you need to connect your wallet first."
-        placement="top"
-        bg={"white"}
-        py={4}
-        px={6}
-        color={"#1A202C"}
-        fontSize={18}
-        maxW={"300px"}
-        whiteSpace={"normal"}
-        borderRadius={"16px"}
-        border={"2px solid #F2BEBE73"}
-      >
-        <Box mt={2}>
-          <MintButton
-            customStyle={{ width: "100%" }}
-            onClick={handleMint}
-            isDisabled={
-              !address || item.isSold || isPending || isConfirming || isMinting
-            }
-          >
-            {isConfirmed ? (
-              <Text color="black">Minted</Text>
-            ) : isMinting ? (
-              <>
-                <Spinner size="sm" mr={2} />
-                Minting
-              </>
-            ) : item.isSold ? (
-              <Text color="black">Sold</Text>
-            ) : (
-              "Mint"
-            )}
-          </MintButton>
-        </Box>
-      </Tooltip>
+      {!isOwned && (
+        <Tooltip
+          isDisabled={!!address}
+          label="To mint PSYC NFTs, you need to connect your wallet first."
+          placement="top"
+          bg={"white"}
+          py={4}
+          px={6}
+          color={"#1A202C"}
+          fontSize={18}
+          maxW={"300px"}
+          whiteSpace={"normal"}
+          borderRadius={"16px"}
+          border={"2px solid #F2BEBE73"}
+        >
+          <Box mt={2}>
+            <MintButton
+              customStyle={{ width: "100%" }}
+              onClick={handleMint}
+              isDisabled={
+                !address ||
+                item.isSold ||
+                isPending ||
+                isConfirming ||
+                isMinting
+              }
+            >
+              {isConfirmed ? (
+                <Text color="black">Minted</Text>
+              ) : isMinting ? (
+                <>
+                  <Spinner size="sm" mr={2} />
+                  Minting
+                </>
+              ) : item.isSold ? (
+                <Text color="black">Sold</Text>
+              ) : (
+                "Mint"
+              )}
+            </MintButton>
+          </Box>
+        </Tooltip>
+      )}
     </Box>
   );
 };

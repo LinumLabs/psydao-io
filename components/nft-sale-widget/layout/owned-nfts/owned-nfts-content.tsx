@@ -1,12 +1,18 @@
 import { Grid } from "@chakra-ui/react";
 import OwnedNftsEmptyState from "./owned-nfts-empty-state";
+
+import {
+  type GetTokensByOwnerData,
+  type GetAllTokensOnSaleData
+} from "@/lib/types";
+import OwnedNfts from "./owned-nfts";
 import { useQuery } from "@apollo/client";
 import { getTokensByOwner } from "@/services/graph";
-import { type GetTokensByOwnerData } from "@/lib/types";
 
 type OwnedNftsContentProps = {
   isFullScreen: boolean;
   address: `0x${string}` | undefined;
+  nftData: GetAllTokensOnSaleData | undefined;
 };
 
 const OwnedNftsContent = (props: OwnedNftsContentProps) => {
@@ -21,8 +27,8 @@ const OwnedNftsContent = (props: OwnedNftsContentProps) => {
 
   return (
     <>
-      {!loading && ownedNfts && ownedNfts.tokens.length > 0 ? (
-        <></>
+      {!loading && ownedNfts ? (
+        <OwnedNfts nftData={props.nftData} />
       ) : (
         <Grid
           minH={"100%"}
