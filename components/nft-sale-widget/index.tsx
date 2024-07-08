@@ -21,12 +21,11 @@ import { getTokensByOwner } from "@/services/graph";
 
 export const NftSaleWidget = () => {
   const { address } = useAccount();
-  //! TESTING PURPOSES ONLY: REPLACE WITH ADDRESS FROM USEACCOUNT <-- NB!!
   const { data, loading, error } = useQuery<GetTokensByOwnerData>(
     getTokensByOwner,
     {
       variables: {
-        owner: "0x113b885021b8f7fdab682cd7a1e9ca8321cd2a9a"
+        owner: address
       }
     }
   );
@@ -42,7 +41,7 @@ export const NftSaleWidget = () => {
     return false;
   }, [state]);
 
-  const tokensOnSale = data?.tokens.length ?? 0;
+  const tokensOwned = data?.tokens.length ?? 0;
 
   return (
     <Window
@@ -61,7 +60,7 @@ export const NftSaleWidget = () => {
       <Window.TitleBar />
       <Window.Content py={2} height={"100%"} width={"100%"}>
         <Tabs variant={"unstyled"}>
-          <MintPsycHeader numberOfOwnedNfts={tokensOnSale} />
+          <MintPsycHeader numberOfOwnedNfts={tokensOwned} />
           <TabPanels>
             <TabPanel>
               <PsycSaleContent />
