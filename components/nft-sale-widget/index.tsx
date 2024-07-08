@@ -16,12 +16,20 @@ import PsycSaleContent from "./layout/nft-sale/psyc-sale-content";
 import OwnedNftsContent from "./layout/owned-nfts/owned-nfts-content";
 import { useAccount } from "wagmi";
 import { useQuery } from "@apollo/client";
-import { type GetAllTokensOnSaleData } from "@/lib/types";
-import { getTokensOnSale } from "@/services/graph";
+import { type GetTokensByOwnerData } from "@/lib/types";
+import { getTokensByOwner } from "@/services/graph";
 
 export const NftSaleWidget = () => {
   const { address } = useAccount();
-  const { data } = useQuery<GetAllTokensOnSaleData>(getTokensOnSale);
+  //! TESTING PURPOSES ONLY: REPLACE WITH ADDRESS FROM USEACCOUNT <-- NB!!
+  const { data, loading, error } = useQuery<GetTokensByOwnerData>(
+    getTokensByOwner,
+    {
+      variables: {
+        owner: "0x113b885021b8f7fdab682cd7a1e9ca8321cd2a9a"
+      }
+    }
+  );
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const { state } = useWindowManager();
@@ -34,7 +42,7 @@ export const NftSaleWidget = () => {
     return false;
   }, [state]);
 
-  const tokensOnSale = data?.tokenOnSales?.length ?? 0;
+  const tokensOnSale = data?.tokens.length ?? 0;
 
   return (
     <Window
@@ -63,6 +71,8 @@ export const NftSaleWidget = () => {
                 isFullScreen={fullScreenWindow}
                 address={address}
                 nftData={data}
+                loading={loading}
+                error={error}
               />
             </TabPanel>
           </TabPanels>

@@ -1,33 +1,22 @@
 import { Grid } from "@chakra-ui/react";
 import OwnedNftsEmptyState from "./owned-nfts-empty-state";
 
-import {
-  type GetTokensByOwnerData,
-  type GetAllTokensOnSaleData
-} from "@/lib/types";
+import { type GetTokensByOwnerData } from "@/lib/types";
 import OwnedNfts from "./owned-nfts";
-import { useQuery } from "@apollo/client";
-import { getTokensByOwner } from "@/services/graph";
+import { type ApolloError } from "@apollo/client";
 
 type OwnedNftsContentProps = {
   isFullScreen: boolean;
   address: `0x${string}` | undefined;
-  nftData: GetAllTokensOnSaleData | undefined;
+  nftData: GetTokensByOwnerData | undefined;
+  loading: boolean;
+  error: ApolloError | undefined;
 };
 
 const OwnedNftsContent = (props: OwnedNftsContentProps) => {
-  const { data: ownedNfts, loading } = useQuery<GetTokensByOwnerData>(
-    getTokensByOwner,
-    {
-      variables: {
-        owner: props.address ?? ""
-      }
-    }
-  );
-
   return (
     <>
-      {!loading && ownedNfts ? (
+      {!props.loading && !props.error && props.nftData ? (
         <OwnedNfts nftData={props.nftData} />
       ) : (
         <Grid

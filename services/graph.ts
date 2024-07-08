@@ -68,11 +68,11 @@ export const getTokenById = gql`
 
 export const getTokensByOwner = gql`
   query GetTokensByOwner($owner: String!) {
-    tokens(owner: $owner) {
-      id
-      tokenID
+    tokens(where: { owner: $owner }) {
       owner
-      price
+      tokenId
+      tokenAddress
+      uri
     }
   }
 `;

@@ -33,3 +33,9 @@ export interface TokenItem {
   batchId: string;
   tokenId: string;
 }
+
+export interface OwnedTokenItem {
+  owner: string;
+  tokenId: string;
+  src: string;
+}

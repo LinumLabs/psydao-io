@@ -1,4 +1,4 @@
-import { Box, Flex, TabIndicator, Text } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { WhitepaperLink } from "../../commons/whitepaper-link";
 import { PrivateSaleSwitch } from "../../commons/privatesale-switch";
 import NftSaleTabs from "../nft-sale-tabs";

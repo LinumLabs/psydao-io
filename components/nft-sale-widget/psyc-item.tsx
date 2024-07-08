@@ -1,10 +1,10 @@
 import React from "react";
-import { Box, Image, Text, Spinner, Tooltip } from "@chakra-ui/react";
+import { Box, Image, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
 import { useAccount } from "wagmi";
-import { type TokenItem } from "@/lib/types";
+import { type OwnedTokenItem, type TokenItem } from "@/lib/types";
 
 interface PsycItemProps {
   item: TokenItem;
@@ -14,6 +14,67 @@ interface PsycItemProps {
   tokenIdsForActivation: number[];
   isOwned?: boolean;
 }
+
+type PsycItemBaseProps = {
+  item: OwnedTokenItem;
+  index: number;
+  isPrivateSale: boolean;
+  isOwned: boolean;
+  copiesOwned: number;
+  src: string;
+};
+
+export const PsycItemBase = (props: PsycItemBaseProps) => {
+  return (
+    <Box
+      w="100%"
+      h={"208px"}
+      borderRadius={"20px"}
+      overflow="hidden"
+      position="relative"
+      border="1px solid #e2e2e2"
+      boxShadow="md"
+    >
+      <Image
+        src={props.item.src}
+        alt={`PSYC ${props.index + 1}`}
+        w="100%"
+        h="100%"
+        objectFit="cover"
+      />
+      {props.isOwned && !props.isPrivateSale && (
+        <Flex
+          position={"absolute"}
+          top={3}
+          left={3}
+          bg={"#FFFFFFE5"}
+          borderRadius={"14px"}
+          padding={"6px 6px 6px 8px"}
+          alignItems={"center"}
+          gap={1}
+        >
+          <Text color={"black"} fontSize={"12px"} fontWeight={700}>
+            You Minted
+          </Text>
+          <Flex
+            borderRadius={"9999px"}
+            border={"1px solid #F2BEBE73"}
+            fontSize={12}
+            padding={"2px 8px"}
+            color={"black"}
+            textDecoration={"none"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            height={"30px"}
+            width={"30px"}
+          >
+            {props.copiesOwned}
+          </Flex>
+        </Flex>
+      )}
+    </Box>
+  );
+};
 
 const PsycItem = ({
   item,
