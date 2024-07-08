@@ -29,7 +29,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
           price: `${formatUnits(BigInt(sale.floorPrice), 18)} ETH`,
           isSold: false,
           batchId: sale.batchID,
-          tokenId: token.tokenID
+          tokenId: token.tokenId
         }))
       ) ?? []
     );
@@ -79,7 +79,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
         >
           {data?.sales.map((sale, saleIndex) => {
             const tokenIdsForActivation = sale.tokensOnSale.map((token) =>
-              parseInt(token.tokenID)
+              parseInt(token.tokenId)
             );
             return sale.tokensOnSale.map((token) => (
               <PsycItem
@@ -90,7 +90,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
                   price: `${formatUnits(BigInt(sale.ceilingPrice), 18)} ETH`,
                   isSold: false,
                   batchId: sale.batchID,
-                  tokenId: token.tokenID
+                  tokenId: token.tokenId
                 }}
                 index={parseInt(token.id, 10)}
                 isRandom={false}
