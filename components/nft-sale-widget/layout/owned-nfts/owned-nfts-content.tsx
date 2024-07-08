@@ -14,9 +14,10 @@ type OwnedNftsContentProps = {
 };
 
 const OwnedNftsContent = (props: OwnedNftsContentProps) => {
+  const numberOfTokens = props.nftData?.tokens.length ?? 0;
   return (
     <>
-      {!props.loading && !props.error && props.nftData ? (
+      {!props.loading && !props.error && numberOfTokens > 0 ? (
         <OwnedNfts nftData={props.nftData} />
       ) : (
         <Grid
