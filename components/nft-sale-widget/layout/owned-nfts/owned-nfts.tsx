@@ -3,6 +3,7 @@ import { PsycItemBase } from "../../psyc-item";
 import { type GetTokensByOwnerData } from "@/lib/types";
 
 import { useAccount } from "wagmi";
+import { countNumberOfCopies } from "@/utils/countNumberOfCopies";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
@@ -11,6 +12,8 @@ type OwnedNftsProps = {
 const OwnedNfts = (props: OwnedNftsProps) => {
   const images = ["/psyc1.png", "/psyc2.png", "/psyc3.png", "/psyc4.png"];
   const { address } = useAccount();
+
+  const counts = countNumberOfCopies(props.nftData ?? { tokens: [] });
 
   // TODO: Add check to see if sale is private and re-add price and mint button if public
   return (
@@ -28,10 +31,9 @@ const OwnedNfts = (props: OwnedNftsProps) => {
             item={{
               src: images[index % images.length] ?? "",
               owner: token.owner,
-              tokenId: token.tokenID
+              tokenId: token.tokenId
             }}
-            // TODO: Add util to get number of copies
-            copiesOwned={5}
+            copiesOwned={counts[token.tokenId] ?? 0}
             src={images[index % images.length] ?? ""}
             index={index}
             // TODO: Add public and private sale checks

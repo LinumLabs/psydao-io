@@ -65,8 +65,8 @@ export const PsycItemBase = (props: PsycItemBaseProps) => {
             textDecoration={"none"}
             justifyContent={"center"}
             alignItems={"center"}
-            height={"30px"}
-            width={"30px"}
+            height={"25px"}
+            width={"25px"}
           >
             {props.copiesOwned}
           </Flex>

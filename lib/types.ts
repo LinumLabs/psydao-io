@@ -1,6 +1,6 @@
 interface TokenOnSale {
   id: string;
-  tokenID: string;
+  tokenId: string;
   owner: string;
   price: string;
 }

@@ -25,7 +25,7 @@ export const NftSaleWidget = () => {
     getTokensByOwner,
     {
       variables: {
-        owner: address
+        owner: "0x113b885021b8f7fdab682cd7a1e9ca8321cd2a9a"
       }
     }
   );
