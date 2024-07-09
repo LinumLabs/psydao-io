@@ -138,18 +138,16 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
           args = [batchId, erc721TokenId];
         }
 
-        // const priceInWei = calculateEthAmount(price);
-        // console.log(priceInWei, "priceInWei");
+        const priceInWei = calculateEthAmount(price);
 
-        // const parsedAmount = parseUnits(priceInWei, 18);
-        // console.log({ parsedAmount });
+        const parsedAmount = parseUnits(priceInWei, 18);
         console.log(price, "price");
         writeContract({
           address: psycSaleSepolia,
           abi: psycSaleAbiSepolia,
           functionName: functionName,
           args: args,
-          value: parseUnits("0.0001", 18)
+          value: parsedAmount
         });
       } catch (error) {
         const message =
