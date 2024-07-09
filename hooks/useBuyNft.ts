@@ -112,9 +112,14 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
         return;
       }
 
-      if (!isSalesActive && !activationInProgress) {
-        console.log(tokenIdsForActivation, "tokenIdsForActivation");
-        await handleActivateSale(tokenIdsForActivation);
+      if (!isSalesActive) {
+        try {
+          await handleActivateSale(tokenIdsForActivation);
+          await new Promise((resolve) => setTimeout(resolve, 5000));
+        } catch (error) {
+          console.error("Failed to activate sales:", error);
+          return;
+        }
       }
 
       console.log({
@@ -131,7 +136,6 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
         setIsMinting(true);
         let functionName = "";
         let args: ArgsType = [batchId, erc721TokenId];
-        console.log(proof, "proof");
         if (isPrivateSale && isRandom) {
           functionName = "buyRandomFromBatch";
           args = [batchId, proof];
@@ -149,7 +153,8 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
         const priceInWei = calculateEthAmount(price);
 
         const parsedAmount = parseUnits(priceInWei, 18);
-        console.log(price, "price");
+        console.log(parsedAmount, "price");
+
         writeContract({
           address: psycSaleSepolia,
           abi: psycSaleAbiSepolia,
