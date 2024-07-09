@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Image, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
 import { useAccount } from "wagmi";
 import { type OwnedTokenItem, type TokenItem } from "@/lib/types";
+import { getMerkleProof } from "@/services/merkleRootProofs";
 
 interface PsycItemProps {
   item: TokenItem;
@@ -14,6 +15,12 @@ interface PsycItemProps {
   tokenIdsForActivation: number[];
   isOwned?: boolean;
 }
+
+const whitelist: `0x${string}`[] = [
+  "0x7c6d212E46E38F7c1A9C12D1664Ce90B202715A4",
+  "0x03961e7f170eb959fDA928c7c9Ce8A5973ee52B6",
+  "0x57b69EE64F985ea2f62BDdf8bD6233262b543410"
+];
 
 type PsycItemBaseProps = {
   item: OwnedTokenItem;
@@ -88,15 +95,23 @@ const PsycItem = ({
     isPrivateSale,
     isRandom
   );
-
   const { address } = useAccount();
+  const [proof, setProof] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (isPrivateSale && address) {
+      const proof = getMerkleProof(address, whitelist);
+      setProof(proof);
+    }
+  }, [address, isPrivateSale]);
 
   const handleMint = async () => {
     await buyNft(
       parseInt(item.batchId),
       parseInt(item.tokenId),
       tokenIdsForActivation,
-      item.price
+      item.price,
+      proof
     );
   };
 

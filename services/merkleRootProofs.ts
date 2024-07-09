@@ -19,13 +19,28 @@ export const getMerkleProof = (
   address: `0x${string}` | null | undefined,
   whitelist?: `0x${string}`[]
 ) => {
-  if (!whitelist || !address) return [];
+  try {
+    if (!whitelist || whitelist.length === 0) {
+      throw new Error("Whitelist is not provided or is empty.");
+    }
+    if (!address) {
+      throw new Error("Address is not provided or invalid.");
+    }
 
-  const leaves = whitelist.map((item) => keccak256(item));
-  const merkleTree = new MerkleTree(leaves, keccak256, { sortPairs: true });
-  const proof = merkleTree.getHexProof(keccak256(address));
+    const leaves = whitelist.map((item) => keccak256(item));
+    const merkleTree = new MerkleTree(leaves, keccak256, { sortPairs: true });
+    const proof = merkleTree.getHexProof(keccak256(address));
 
-  return proof;
+    if (proof.length === 0) {
+      throw new Error("Address is not part of the whitelist.");
+    }
+
+    return proof;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error generating Merkle proof:", message);
+    return [];
+  }
 };
 
 export const updateMerkleTree = async (batchId: number, ipfsHash: string) => {

@@ -19,7 +19,7 @@ export const getTokensOnSale = gql`
 
 export const getAllSalesWithTokens = gql`
   query GetAllSalesWithTokens {
-    sales {
+    sales(where: { id: 1 }) {
       batchID
       blockNumber
       ceilingPrice
@@ -29,6 +29,7 @@ export const getAllSalesWithTokens = gql`
       tokensOnSale {
         id
         tokenID
+        buyer
       }
     }
   }

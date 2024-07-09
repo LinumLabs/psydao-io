@@ -10,6 +10,7 @@ import { psycSaleSepolia } from "../constants/contracts";
 import { customToast } from "@/components/toasts/SwapSuccess";
 import { useToast } from "@chakra-ui/react";
 import { Zoom } from "react-toastify";
+import { parseUnits } from "viem";
 
 type ArgsType =
   | [number, string[]]
@@ -97,6 +98,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       }
 
       if (!isSalesActive && !activationInProgress) {
+        console.log(tokenIdsForActivation, "tokenIdsForActivation");
         await handleActivateSale(tokenIdsForActivation);
       }
 
@@ -106,7 +108,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
         setIsMinting(true);
         let functionName = "";
         let args: ArgsType = [batchId, erc721TokenId];
-
+        console.log(proof, "proof");
         if (isPrivateSale && isRandom) {
           functionName = "buyRandomFromBatch";
           args = [batchId, proof];
@@ -121,16 +123,25 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
           args = [batchId, erc721TokenId];
         }
 
+        const priceValue = price?.split(" ")[0] ?? "0";
+        console.log(priceValue, "priceValue");
+
+        const priceInWei = parseUnits(priceValue, 18);
+        console.log(priceInWei, "priceInWei");
+
         writeContract({
           address: psycSaleSepolia,
           abi: psycSaleAbiSepolia,
           functionName: functionName,
           args: args
+          // value: priceInWei
         });
-      } catch (error: unknown) {
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
         customToast(
           {
-            mainText: "An error occurred. Please try again later."
+            mainText: ` ${message}`
           },
           {
             type: "error",
@@ -170,15 +181,17 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       setIsMinting(false);
       setIsModalOpen(false);
     } else if (error && !error.message.includes("User rejected")) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      console.log(message);
       customToast(
         {
-          mainText: "An error occurred. Please try again later."
+          mainText: message
         },
         {
           type: "error",
           transition: Zoom
         },
-        width <= 768
+        width <= 1024
       );
       setIsMinting(false);
       setIsModalOpen(false);
