@@ -117,6 +117,14 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
         await handleActivateSale(tokenIdsForActivation);
       }
 
+      console.log({
+        batchId,
+        erc721TokenId,
+        tokenIdsForActivation,
+        price,
+        proof
+      });
+
       if (isRandom && !isSalesActive) return;
 
       try {

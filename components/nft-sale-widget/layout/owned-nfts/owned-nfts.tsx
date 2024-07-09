@@ -31,9 +31,9 @@ const OwnedNfts = (props: OwnedNftsProps) => {
             item={{
               src: images[index % images.length] ?? "",
               owner: token.owner,
-              tokenId: token.tokenId
+              tokenId: token.tokenID
             }}
-            copiesOwned={numberOfCopies[token.tokenId] ?? 0}
+            copiesOwned={numberOfCopies[token.tokenID] ?? 0}
             src={images[index % images.length] ?? ""}
             index={index}
             // TODO: Add public and private sale checks
