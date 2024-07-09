@@ -10,7 +10,7 @@ import { psycSaleSepolia } from "../constants/contracts";
 import { customToast } from "@/components/toasts/SwapSuccess";
 import { useToast } from "@chakra-ui/react";
 import { Zoom } from "react-toastify";
-import { parseUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 
 type ArgsType =
   | [number, string[]]
@@ -74,6 +74,21 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
     },
     [writeContract, toast]
   );
+  const calculateEthAmount = (amount: string): string => {
+    if (Number(amount) > 0) {
+      const amountFormatted = amount.includes(",")
+        ? amount.replace(",", "")
+        : amount.replace(".", "");
+
+      const decimalPlaces = amount.includes(".")
+        ? amount.split(".")[1]?.length
+        : amount.split(",")[1]?.length;
+      const amountValue = amount.length ? BigInt(amountFormatted) : BigInt(0);
+
+      return formatUnits(amountValue, 8 + (decimalPlaces ?? 0));
+    }
+    return "0";
+  };
 
   const buyNft = useCallback(
     async (
@@ -123,18 +138,18 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
           args = [batchId, erc721TokenId];
         }
 
-        const priceValue = price?.split(" ")[0] ?? "0";
-        console.log(priceValue, "priceValue");
+        // const priceInWei = calculateEthAmount(price);
+        // console.log(priceInWei, "priceInWei");
 
-        const priceInWei = parseUnits(priceValue, 18);
-        console.log(priceInWei, "priceInWei");
-
+        // const parsedAmount = parseUnits(priceInWei, 18);
+        // console.log({ parsedAmount });
+        console.log(price, "price");
         writeContract({
           address: psycSaleSepolia,
           abi: psycSaleAbiSepolia,
           functionName: functionName,
-          args: args
-          // value: priceInWei
+          args: args,
+          value: parseUnits("0.0001", 18)
         });
       } catch (error) {
         const message =
