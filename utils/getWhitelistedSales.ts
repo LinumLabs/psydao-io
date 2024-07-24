@@ -34,6 +34,8 @@ export const useGetWhitelistedSales = (sales: Sale[] | undefined) => {
           (sale): sale is NonNullable<typeof sale> => sale !== null
         )
       );
+
+      console.log(whitelistedSales, "whitelistedSales");
       return whitelistedSales;
     }
     return whitelistedSales;

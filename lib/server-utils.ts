@@ -58,10 +58,12 @@ export const getAddresses = async (
   try {
     if (ipfsHash && ipfsHash.length > 0 && isValidIpfsHash(ipfsHash)) {
       const res = await fetch(`https://gateway.pinata.cloud/ipfs/${ipfsHash}`);
+
       if (!res.ok) {
         throw new Error(`Failed to fetch addresses: ${res.statusText}`);
       }
       const json: IpfsHashResponse = (await res.json()) as IpfsHashResponse;
+      console.log(ipfsHash, "ipfsHash");
       if (json.addresses) {
         return json.addresses;
       } else {

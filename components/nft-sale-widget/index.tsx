@@ -46,7 +46,7 @@ export const NftSaleWidget = () => {
   useEffect(() => {
     const getWhitelistedSales = async () => {
       const sales = await handleGetWhitelistedSales();
-      console.log(sales);
+      console.log(sales, "whitelistedSales");
       if (sales) {
         setWhitelistedSales(sales);
       }
