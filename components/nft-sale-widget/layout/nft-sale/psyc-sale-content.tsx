@@ -6,14 +6,14 @@ import type { Sale } from "@/lib/types";
 
 type PsycSaleContentProps = {
   isFullScreen: boolean;
-  activeSale: Sale | undefined;
+  selectedSale: Sale | undefined;
 };
 
 const PsycSaleContent = (props: PsycSaleContentProps) => {
   return (
     <>
       <MintRandomPsycHeader isFullScreen={props.isFullScreen} />
-      <MintSection isRandom activeSale={props.activeSale} />
+      <MintSection isRandom selectedSale={props.selectedSale} />
       <Divider
         h={"1px"}
         border={"none"}
@@ -22,7 +22,7 @@ const PsycSaleContent = (props: PsycSaleContentProps) => {
         display={{ base: "none", sm: "block" }}
       />
       <MintSpecificPsycHeader isFullScreen={props.isFullScreen} />
-      <MintSection isRandom={false} activeSale={props.activeSale} />
+      <MintSection isRandom={false} selectedSale={props.selectedSale} />
     </>
   );
 };

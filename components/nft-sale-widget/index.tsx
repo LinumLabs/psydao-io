@@ -4,9 +4,7 @@ import {
   useMediaQuery,
   TabPanel,
   TabPanels,
-  Tabs,
-  Text,
-  Flex
+  Tabs
 } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
@@ -20,17 +18,17 @@ import { getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
 
 export const NftSaleWidget = () => {
-  const [activeSale, setActiveSale] = useState<Sale>();
+  const [selectedSale, setSelectedSale] = useState<Sale>();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
   const { data, loading, error } = useQuery<GetSaleByIdData>(getSaleById, {
-    variables: { id: activeSale ? activeSale.id : "1" }
+    variables: { id: selectedSale ? selectedSale.id : "1" }
   });
 
   useEffect(() => {
     if (data) {
-      setActiveSale(data.sale);
+      setSelectedSale(data.sale);
     }
-  }, [data, setActiveSale]);
+  }, [data, setSelectedSale]);
 
   const { state } = useWindowManager();
 
@@ -57,8 +55,8 @@ export const NftSaleWidget = () => {
         <TokenProvider>
           <Tabs variant={"unstyled"}>
             <MintPsycHeader
-              activeSale={activeSale}
-              setActiveSale={setActiveSale}
+              selectedSale={selectedSale}
+              setSelectedSale={setSelectedSale}
             />
             {loading ? (
               <InterimState type="loading" />
@@ -69,7 +67,7 @@ export const NftSaleWidget = () => {
                 <TabPanel px={0}>
                   <PsycSaleContent
                     isFullScreen={fullScreenWindow}
-                    activeSale={activeSale}
+                    selectedSale={selectedSale}
                   />
                 </TabPanel>
                 <TabPanel h="100%" w="100%">

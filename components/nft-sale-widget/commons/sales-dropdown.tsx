@@ -5,8 +5,8 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 
 type NftSalesDropdownProps = {
-  setActiveSale: (sale: Sale) => void;
-  activeSale: Sale | undefined;
+  setSelectedSale: (sale: Sale) => void;
+  selectedSale: Sale | undefined;
 };
 
 const NftSalesDropdown = (props: NftSalesDropdownProps) => {
@@ -32,8 +32,8 @@ const NftSalesDropdown = (props: NftSalesDropdownProps) => {
             borderRadius={"8px"}
             p={"8px 16px"}
           >
-            {props.activeSale
-              ? `Batch ${props.activeSale.batchID}`
+            {props.selectedSale
+              ? `Batch ${props.selectedSale.batchID}`
               : "Select Batch"}
           </MenuButton>
           <MenuList
@@ -46,7 +46,7 @@ const NftSalesDropdown = (props: NftSalesDropdownProps) => {
               return (
                 <MenuItem
                   key={sale.id}
-                  onClick={() => props.setActiveSale(sale)}
+                  onClick={() => props.setSelectedSale(sale)}
                 >
                   Batch {sale.batchID}
                 </MenuItem>

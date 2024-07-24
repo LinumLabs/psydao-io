@@ -11,8 +11,8 @@ import type { Sale } from "@/lib/types";
 import type { SetStateAction } from "react";
 
 const MintPsycHeader = (props: {
-  activeSale: Sale | undefined;
-  setActiveSale: React.Dispatch<SetStateAction<Sale | undefined>>;
+  selectedSale: Sale | undefined;
+  setSelectedSale: React.Dispatch<SetStateAction<Sale | undefined>>;
 }) => {
   // TODO: Hide toggle if user is not whitelisted
   const { tokenCount } = useTokenContext();
@@ -55,8 +55,8 @@ const MintPsycHeader = (props: {
           </Flex>
           <Flex gap={6}>
             <NftSalesDropdown
-              activeSale={props.activeSale}
-              setActiveSale={props.setActiveSale}
+              selectedSale={props.selectedSale}
+              setSelectedSale={props.setSelectedSale}
             />
             {isWhitelisted && <PrivateSaleSwitch />}
           </Flex>

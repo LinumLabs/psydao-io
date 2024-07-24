@@ -10,14 +10,17 @@ import { getAddresses } from "@/lib/server-utils";
 
 interface MintSectionProps {
   isRandom: boolean;
-  activeSale: Sale | undefined;
+  selectedSale: Sale | undefined;
 }
 
 interface WhitelistedTokenItem extends TokenItem {
   whitelist: string[];
 }
 
-const MintSection = ({ isRandom, activeSale }: MintSectionProps) => {
+const MintSection = ({
+  isRandom,
+  selectedSale: selectedSale
+}: MintSectionProps) => {
   const { loading, error, data } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
   );
@@ -27,11 +30,11 @@ const MintSection = ({ isRandom, activeSale }: MintSectionProps) => {
   }, [data]);
 
   const images = useMemo(() => {
-    if (!activeSale) return [];
-    return activeSale.tokensOnSale.map(
+    if (!selectedSale) return [];
+    return selectedSale.tokensOnSale.map(
       (_, index) => `/psyc${(index % 3) + 1}.webp`
     );
-  }, [activeSale]);
+  }, [selectedSale]);
 
   const currentImageIndex = useRandomImage(isRandom, images);
   const [randomToken, setRandomToken] = useState<WhitelistedTokenItem | null>(
@@ -40,13 +43,13 @@ const MintSection = ({ isRandom, activeSale }: MintSectionProps) => {
   const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
 
   useEffect(() => {
-    if (activeSale) {
+    if (selectedSale) {
       const fetchWhitelist = async () => {
         try {
-          const addresses = await getAddresses(activeSale.ipfsHash);
+          const addresses = await getAddresses(selectedSale.ipfsHash);
           setWhitelist((prev) => ({
             ...prev,
-            [activeSale.ipfsHash]: addresses
+            [selectedSale.ipfsHash]: addresses
           }));
         } catch (error) {
           console.error("Error fetching whitelist addresses:", error);
@@ -56,20 +59,20 @@ const MintSection = ({ isRandom, activeSale }: MintSectionProps) => {
         console.error("Error fetching whitelist:", error);
       });
     }
-  }, [activeSale]);
+  }, [selectedSale]);
 
   const activeTokens = useMemo(() => {
-    if (!activeSale) return [];
-    return activeSale.tokensOnSale.map((token, index) => ({
+    if (!selectedSale) return [];
+    return selectedSale.tokensOnSale.map((token, index) => ({
       src: images[index] ?? "",
-      price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
+      price: `${formatUnits(BigInt(selectedSale.floorPrice), 18)}`,
       isSold: false,
-      batchId: activeSale.batchID,
+      batchId: selectedSale.batchID,
       tokenId: token.tokenID,
-      ipfsHash: activeSale.ipfsHash,
-      whitelist: whitelist[activeSale.ipfsHash] ?? []
+      ipfsHash: selectedSale.ipfsHash,
+      whitelist: whitelist[selectedSale.ipfsHash] ?? []
     }));
-  }, [activeSale, images, whitelist]);
+  }, [selectedSale, images, whitelist]);
 
   useEffect(() => {
     if (isRandom && activeTokens.length > 0) {
@@ -102,18 +105,18 @@ const MintSection = ({ isRandom, activeSale }: MintSectionProps) => {
           }}
           gap={6}
         >
-          {activeSale?.tokensOnSale.map((token, index) => (
+          {selectedSale?.tokensOnSale.map((token, index) => (
             <PsycItem
               isPrivateSale={true}
               key={token.id}
               item={{
                 src: `/psyc${(index % 3) + 1}.webp`,
-                price: `${formatUnits(BigInt(activeSale.ceilingPrice), 18)}`,
+                price: `${formatUnits(BigInt(selectedSale.ceilingPrice), 18)}`,
                 isSold: false,
-                batchId: activeSale.batchID,
+                batchId: selectedSale.batchID,
                 tokenId: token.tokenID,
-                ipfsHash: activeSale.ipfsHash,
-                whitelist: whitelist[activeSale.ipfsHash] ?? []
+                ipfsHash: selectedSale.ipfsHash,
+                whitelist: whitelist[selectedSale.ipfsHash] ?? []
               }}
               index={parseInt(token.id, 10)}
               isRandom={isRandom}
