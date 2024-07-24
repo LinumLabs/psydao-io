@@ -54,6 +54,7 @@ export const uploadAddresses = async (addresses: string[]): Promise<string> => {
 export const getAddresses = async (
   ipfsHash: string
 ): Promise<string[] | []> => {
+  console.log("getAddresses running");
   try {
     if (ipfsHash && ipfsHash.length > 0 && isValidIpfsHash(ipfsHash)) {
       const res = await fetch(`https://gateway.pinata.cloud/ipfs/${ipfsHash}`);

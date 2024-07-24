@@ -12,23 +12,58 @@ import MintPsycHeader from "./layout/nft-sale/mint-psyc-header";
 import PsycSaleContent from "./layout/nft-sale/psyc-sale-content";
 import OwnedNftsContent from "./layout/owned-nfts/owned-nfts-section";
 import { TokenProvider } from "@/providers/TokenContext";
-import type { Sale, GetSaleByIdData } from "@/lib/types";
+import type {
+  Sale,
+  GetSaleByIdData,
+  GetAllSalesWithTokensData
+} from "@/lib/types";
 import { useQuery } from "@apollo/client";
-import { getSaleById } from "@/services/graph";
+import { getAllSalesWithTokens, getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
+import { useGetWhitelistedSales } from "@/utils/getWhitelistedSales";
 
 export const NftSaleWidget = () => {
   const [selectedSale, setSelectedSale] = useState<Sale>();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
-  const { data, loading, error } = useQuery<GetSaleByIdData>(getSaleById, {
+
+  const {
+    data: saleById,
+    loading: loadingSaleById,
+    error: errorSaleById
+  } = useQuery<GetSaleByIdData>(getSaleById, {
     variables: { id: selectedSale ? selectedSale.id : "1" }
   });
 
+  const { data: allSales, loading: loadingAllSales } =
+    useQuery<GetAllSalesWithTokensData>(getAllSalesWithTokens);
+
+  const [whitelistedSales, setWhitelistedSales] = useState<Sale[] | undefined>(
+    undefined
+  );
+
+  const { handleGetWhitelistedSales } = useGetWhitelistedSales(allSales?.sales);
+
   useEffect(() => {
-    if (data) {
-      setSelectedSale(data.sale);
+    const getWhitelistedSales = async () => {
+      const sales = await handleGetWhitelistedSales();
+      console.log(sales);
+      if (sales) {
+        setWhitelistedSales(sales);
+      }
+    };
+
+    console.log("executing");
+
+    getWhitelistedSales().catch((error) => {
+      console.error("Error getting whitelisted sales:", error);
+    });
+  }, [setWhitelistedSales]);
+
+  useEffect(() => {
+    if (saleById) {
+      setSelectedSale(saleById.sale);
     }
-  }, [data, setSelectedSale]);
+  }, [saleById, setSelectedSale]);
 
   const { state } = useWindowManager();
 
@@ -57,10 +92,11 @@ export const NftSaleWidget = () => {
             <MintPsycHeader
               selectedSale={selectedSale}
               setSelectedSale={setSelectedSale}
+              whitelistedSales={whitelistedSales}
             />
-            {loading ? (
+            {loadingSaleById ? (
               <InterimState type="loading" />
-            ) : error ? (
+            ) : errorSaleById ? (
               <InterimState type="error" />
             ) : (
               <TabPanels>
