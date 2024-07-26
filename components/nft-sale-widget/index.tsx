@@ -30,13 +30,16 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
     data: saleById,
     loading: loadingSaleById,
     error: errorSaleById,
-    refetch
+    refetch: refetchSaleById
   } = useQuery<GetSaleByIdData>(getSaleById, {
     variables: { id: selectedSale ? selectedSale.id : "1" }
   });
 
-  const { data: allSales, loading: loadingAllSales } =
-    useQuery<GetAllSalesWithTokensData>(getAllSalesWithTokens);
+  const {
+    data: allSales,
+    loading: loadingAllSales,
+    refetch: refetchAllSales
+  } = useQuery<GetAllSalesWithTokensData>(getAllSalesWithTokens);
 
   const [whitelistedSales, setWhitelistedSales] = useState<Sale[] | undefined>(
     undefined
@@ -68,11 +71,12 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
 
   useEffect(() => {
     const refetchData = async () => {
-      await refetch();
+      await refetchSaleById();
+      await refetchAllSales();
       console.log("Refetched data");
     };
     refetchData().catch(console.error);
-  }, [updateTrigger, refetch]);
+  }, [updateTrigger, refetchSaleById, refetchAllSales]);
 
   const { state } = useWindowManager();
 
