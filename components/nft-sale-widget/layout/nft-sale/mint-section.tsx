@@ -7,10 +7,13 @@ import { formatUnits } from "viem";
 import PsycItem from "../../psyc-item";
 import useRandomImage from "@/hooks/useRandomImage";
 import { getAddresses } from "@/lib/server-utils";
+import usePrivateSale from "@/hooks/usePrivateSale";
 
 interface MintSectionProps {
   isRandom: boolean;
   selectedSale: Sale | undefined;
+  isFullscreen?: boolean;
+  isOriginal: boolean;
 }
 
 interface WhitelistedTokenItem extends TokenItem {
@@ -19,7 +22,8 @@ interface WhitelistedTokenItem extends TokenItem {
 
 const MintSection = ({
   isRandom,
-  selectedSale: selectedSale
+  selectedSale,
+  isOriginal
 }: MintSectionProps) => {
   const { loading, error, data } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
@@ -41,6 +45,12 @@ const MintSection = ({
     null
   );
   const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
+
+  const { isLoading, isPrivateSale } = usePrivateSale();
+
+  useEffect(() => {
+    console.log(!isLoading && isPrivateSale, "isPrivateSale");
+  }, [isPrivateSale]);
 
   useEffect(() => {
     if (selectedSale) {
@@ -85,15 +95,18 @@ const MintSection = ({
   if (loading) return <Box textAlign="center">Loading...</Box>;
   if (error) return <Box textAlign="center">Error loading data</Box>;
 
+  const privateSale = !isLoading && isPrivateSale;
+
   return (
-    <Box textAlign="center" py={4} px={4}>
+    <Flex textAlign="center" py={4} px={4} justifyContent={"center"}>
       {isRandom && randomToken ? (
-        <Flex justifyContent="center">
+        <Flex justifyContent="center" w={"100%"}>
           <PsycItem
             item={randomToken}
             index={currentImageIndex}
             isRandom={true}
-            isPrivateSale={true}
+            isPrivateSale={privateSale}
+            isOriginal={isOriginal}
             loading={loading}
           />
         </Flex>
@@ -104,10 +117,11 @@ const MintSection = ({
             sm: "repeat(auto-fit, minmax(170px, 1fr))"
           }}
           gap={6}
+          justifyItems={"center"}
+          maxW={"100%"}
         >
           {selectedSale?.tokensOnSale.map((token, index) => (
             <PsycItem
-              isPrivateSale={true}
               key={token.id}
               item={{
                 src: `/psyc${(index % 3) + 1}.webp`,
@@ -120,12 +134,14 @@ const MintSection = ({
               }}
               index={parseInt(token.id, 10)}
               isRandom={isRandom}
+              isPrivateSale={privateSale}
+              isOriginal={isOriginal}
               loading={loading}
             />
           ))}
         </Grid>
       )}
-    </Box>
+    </Flex>
   );
 };
 

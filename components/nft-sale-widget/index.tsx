@@ -22,14 +22,15 @@ import { getAllSalesWithTokens, getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
 import { useGetWhitelistedSales } from "@/utils/getWhitelistedSales";
 
-export const NftSaleWidget = () => {
+export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const [selectedSale, setSelectedSale] = useState<Sale>();
+  const [isOriginal, setIsOriginal] = useState<boolean>(true);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
-
   const {
     data: saleById,
     loading: loadingSaleById,
-    error: errorSaleById
+    error: errorSaleById,
+    refetch
   } = useQuery<GetSaleByIdData>(getSaleById, {
     variables: { id: selectedSale ? selectedSale.id : "1" }
   });
@@ -63,7 +64,15 @@ export const NftSaleWidget = () => {
     if (saleById) {
       setSelectedSale(saleById.sale);
     }
-  }, [saleById, setSelectedSale]);
+  }, [saleById]);
+
+  useEffect(() => {
+    const refetchData = async () => {
+      await refetch();
+      console.log("Refetched data");
+    };
+    refetchData().catch(console.error);
+  }, [updateTrigger, refetch]);
 
   const { state } = useWindowManager();
 
@@ -91,7 +100,9 @@ export const NftSaleWidget = () => {
           <Tabs variant={"unstyled"}>
             <MintPsycHeader
               selectedSale={selectedSale}
-              setSelectedSale={setSelectedSale}
+              setselectedSale={setSelectedSale}
+              isOriginal={isOriginal}
+              setIsOriginal={setIsOriginal}
               whitelistedSales={whitelistedSales}
             />
             {loadingSaleById ? (
@@ -104,6 +115,7 @@ export const NftSaleWidget = () => {
                   <PsycSaleContent
                     isFullScreen={fullScreenWindow}
                     selectedSale={selectedSale}
+                    isOriginal={isOriginal}
                   />
                 </TabPanel>
                 <TabPanel h="100%" w="100%">

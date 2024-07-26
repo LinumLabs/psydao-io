@@ -7,13 +7,22 @@ import type { Sale } from "@/lib/types";
 type PsycSaleContentProps = {
   isFullScreen: boolean;
   selectedSale: Sale | undefined;
+  isOriginal: boolean;
 };
 
-const PsycSaleContent = (props: PsycSaleContentProps) => {
+const PsycSaleContent = ({
+  isFullScreen,
+  selectedSale,
+  isOriginal
+}: PsycSaleContentProps) => {
   return (
     <>
-      <MintRandomPsycHeader isFullScreen={props.isFullScreen} />
-      <MintSection isRandom selectedSale={props.selectedSale} />
+      <MintRandomPsycHeader isFullScreen={isFullScreen} />
+      <MintSection
+        isRandom={true}
+        selectedSale={selectedSale}
+        isOriginal={isOriginal}
+      />
       <Divider
         h={"1px"}
         border={"none"}
@@ -21,8 +30,12 @@ const PsycSaleContent = (props: PsycSaleContentProps) => {
         width={"100%"}
         display={{ base: "none", sm: "block" }}
       />
-      <MintSpecificPsycHeader isFullScreen={props.isFullScreen} />
-      <MintSection isRandom={false} selectedSale={props.selectedSale} />
+      <MintSpecificPsycHeader isFullScreen={isFullScreen} />
+      <MintSection
+        isRandom={false}
+        selectedSale={selectedSale}
+        isOriginal={isOriginal}
+      />
     </>
   );
 };

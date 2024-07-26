@@ -1,6 +1,6 @@
 import { Box, Divider, Flex, Text } from "@chakra-ui/react";
 import { WhitepaperLink } from "../../commons/whitepaper-link";
-import { PrivateSaleSwitch } from "../../commons/privatesale-switch";
+import { SaleTypeSwitch } from "../../commons/sale-type-switch";
 import NftSaleTabs from "../nft-sale-tabs";
 import { useTokenContext } from "@/providers/TokenContext";
 import { Open } from "@/components/ui/window-manager";
@@ -12,10 +12,11 @@ import type { SetStateAction } from "react";
 
 const MintPsycHeader = (props: {
   selectedSale: Sale | undefined;
-  setSelectedSale: React.Dispatch<SetStateAction<Sale | undefined>>;
+  setselectedSale: React.Dispatch<SetStateAction<Sale | undefined>>;
   whitelistedSales: Sale[] | undefined;
+  isOriginal: boolean;
+  setIsOriginal: React.Dispatch<SetStateAction<boolean>>;
 }) => {
-  // TODO: Hide toggle if user is not whitelisted
   const { tokenCount } = useTokenContext();
 
   const { address } = useAccount();
@@ -57,10 +58,13 @@ const MintPsycHeader = (props: {
           <Flex gap={6}>
             <NftSalesDropdown
               selectedSale={props.selectedSale}
-              setSelectedSale={props.setSelectedSale}
+              setSelectedSale={props.setselectedSale}
               whitelistedSales={props.whitelistedSales}
             />
-            {isWhitelisted && <PrivateSaleSwitch />}
+            <SaleTypeSwitch
+              isOriginal={props.isOriginal}
+              setIsOriginal={props.setIsOriginal}
+            />
           </Flex>
         </Flex>
       </Box>
