@@ -17,6 +17,8 @@ const usePausedSale = (saleId: string) => {
   const [saleBatches, setSaleBatches] = useState<SaleBatchesReturn | undefined>(
     undefined
   );
+  const [isPausedContractDataLoading, setIsPausedContractDataLoading] =
+    useState<boolean>(true);
 
   const { data, isError, isLoading } = useReadContract({
     ...psycSaleContractConfig,
@@ -24,22 +26,24 @@ const usePausedSale = (saleId: string) => {
     args: [saleId]
   });
   useEffect(() => {
-    if (data) {
+    if (data && !isLoading) {
       setSaleBatches(data as SaleBatchesReturn);
     }
 
-    if (saleBatches) {
+    if (saleBatches && !isLoading) {
       setIsPaused(saleBatches[6]);
+      setIsPausedContractDataLoading(false);
     }
-  }, [data, saleBatches]);
+  }, [data, saleBatches, isLoading]);
 
   useEffect(() => {
     if (isError) {
+      setIsPausedContractDataLoading(false);
       console.error("Error fetching sale status");
     }
   });
 
-  return { isPaused, isError, isLoading };
+  return { isPaused, isError, isPausedLoading: isPausedContractDataLoading };
 };
 
 export default usePausedSale;

@@ -52,7 +52,7 @@ const PsycItem = ({
     parseInt(item.tokenId)
   );
 
-  const { isPaused } = usePausedSale(item.batchId);
+  const { isPaused, isPausedLoading } = usePausedSale(item.batchId);
 
   const { refetch } = useTokenContext();
 
@@ -65,18 +65,17 @@ const PsycItem = ({
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
 
   const isWhitelisted = address ? item.whitelist.includes(address) : false;
-  const modalNeeded = !address || (!isWhitelisted && isOriginal);
+  const modalNeeded =
+    !isPaused &&
+    !isPausedLoading &&
+    !isAddressesLoading &&
+    (!address || (!isWhitelisted && isOriginal));
 
   useEffect(() => {
-    if (
-      address &&
-      modalNeeded &&
-      item.whitelist.length > 0 &&
-      !isAddressesLoading
-    ) {
+    if (address && modalNeeded) {
       handleModal();
     }
-  }, [modalNeeded, isAddressesLoading]);
+  }, [modalNeeded]);
 
   const handleMint = async () => {
     await buyNft(

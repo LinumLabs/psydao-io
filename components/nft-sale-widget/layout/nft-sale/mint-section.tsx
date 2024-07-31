@@ -21,7 +21,6 @@ interface MintSectionProps {
   activeSale: Sale | undefined;
   isFullscreen?: boolean;
   isOriginal: boolean;
-  elementRef: React.RefObject<HTMLDivElement>;
 }
 
 interface WhitelistedTokenItem extends TokenItem {
@@ -39,8 +38,7 @@ interface UserCopyBalance {
 const MintSection = ({
   isRandom,
   activeSale,
-  isOriginal,
-  elementRef
+  isOriginal
 }: MintSectionProps) => {
   const { loading, error, data } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
@@ -151,6 +149,7 @@ const MintSection = ({
       try {
         const addresses = await getAddresses(activeSale.ipfsHash);
         if (addresses && !isAddressesLoading) {
+          console.log("Fetched whitelist addresses:", addresses);
           setWhitelist((prev) => ({
             ...prev,
             [activeSale.ipfsHash]: addresses
@@ -249,11 +248,7 @@ const MintSection = ({
           ))}
         </Grid>
       )}
-      <ConnectWalletModal
-        isOpen={isOpen}
-        onClose={handleModal}
-        elementRef={elementRef}
-      />
+      <ConnectWalletModal isOpen={isOpen} onClose={handleModal} />
     </Flex>
   );
 };

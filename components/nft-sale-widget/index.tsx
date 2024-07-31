@@ -1,12 +1,11 @@
-import { createRef, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Image,
   useMediaQuery,
   TabPanel,
   TabPanels,
   Tabs,
-  Grid,
-  Box
+  Grid
 } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
@@ -18,7 +17,6 @@ import type { Sale, GetSaleByIdData } from "@/lib/types";
 import { useQuery } from "@apollo/client";
 import { getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
-import AdminDashboardEmptyState from "../admin-dashboard/admin-dashboard-empty";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
@@ -52,8 +50,6 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
     return state.fullScreen === "nft-sale";
   }, [state]);
 
-  const elementRef = createRef<HTMLDivElement>();
-
   return (
     <Window
       id="nft-sale"
@@ -68,58 +64,50 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
       fullScreenWindow={fullScreenWindow}
     >
-      <Box
-        height={"100%"}
-        width={"100%"}
-        ref={elementRef}
-        position={"relative"}
-      >
-        <Window.TitleBar />
-        <Window.Content py={2} px={0} height={"100%"} width={"100%"}>
-          <TokenProvider>
-            <Tabs variant={"unstyled"}>
-              <MintPsycHeader
-                activeSale={activeSale}
-                setActiveSale={setActiveSale}
-                isOriginal={isOriginal}
-                setIsOriginal={setIsOriginal}
-              />
-              {loading ? (
-                <InterimState type="loading" />
-              ) : error ? (
-                <InterimState type="error" />
-              ) : data?.sale ? (
-                <TabPanels>
-                  <TabPanel px={0}>
-                    <PsycSaleContent
-                      isFullScreen={fullScreenWindow}
-                      activeSale={activeSale}
-                      isOriginal={isOriginal}
-                      elementRef={elementRef}
-                    />
-                  </TabPanel>
-                  <TabPanel h="100%" w="100%">
-                    <OwnedNftsContent isFullScreen={fullScreenWindow} />
-                  </TabPanel>
-                </TabPanels>
-              ) : (
-                <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
-                  <NFTSaleWidgetEmptyState />
-                </Grid>
-              )}
-            </Tabs>
-          </TokenProvider>
-          <Image
-            src="/windows/alchemist/clouds.png"
-            alt=""
-            position="absolute"
-            right="0"
-            bottom="0"
-            zIndex="-1"
-            filter="blur(12px)"
-          />
-        </Window.Content>
-      </Box>
+      <Window.TitleBar />
+      <Window.Content py={2} px={0} height={"100%"} width={"100%"}>
+        <TokenProvider>
+          <Tabs variant={"unstyled"}>
+            <MintPsycHeader
+              activeSale={activeSale}
+              setActiveSale={setActiveSale}
+              isOriginal={isOriginal}
+              setIsOriginal={setIsOriginal}
+            />
+            {loading ? (
+              <InterimState type="loading" />
+            ) : error ? (
+              <InterimState type="error" />
+            ) : data?.sale ? (
+              <TabPanels>
+                <TabPanel px={0}>
+                  <PsycSaleContent
+                    isFullScreen={fullScreenWindow}
+                    activeSale={activeSale}
+                    isOriginal={isOriginal}
+                  />
+                </TabPanel>
+                <TabPanel h="100%" w="100%">
+                  <OwnedNftsContent isFullScreen={fullScreenWindow} />
+                </TabPanel>
+              </TabPanels>
+            ) : (
+              <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
+                <NFTSaleWidgetEmptyState />
+              </Grid>
+            )}
+          </Tabs>
+        </TokenProvider>
+        <Image
+          src="/windows/alchemist/clouds.png"
+          alt=""
+          position="absolute"
+          right="0"
+          bottom="0"
+          zIndex="-1"
+          filter="blur(12px)"
+        />
+      </Window.Content>
     </Window>
   );
 };
