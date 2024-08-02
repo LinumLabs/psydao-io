@@ -16,6 +16,7 @@ import usePrivateSale from "@/hooks/usePrivateSale";
 import { useAccount } from "wagmi";
 import ConnectWalletModal from "../../commons/connect-wallet-modal";
 import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
+import useGetBaseUri from "@/services/web3/useGetBaseUri";
 
 interface MintSectionProps {
   isRandom: boolean;
@@ -123,10 +124,20 @@ const MintSection = ({
     console.log("Refetched balances");
   }, []);
 
+  const { baseUri, isError: baseURIError } = useGetBaseUri();
+
+  const contractBaseUri = useMemo(() => {
+    if (baseUri) {
+      return baseUri;
+    } else if (baseURIError) {
+      // throw error
+    }
+  }, [baseUri, baseURIError]);
+
   const images = useMemo(() => {
     if (!activeSale) return [];
     return activeSale.tokensOnSale.map(
-      (_, index) => `/psyc${(index % 3) + 1}.webp`
+      (token) => `${contractBaseUri}/${token.metadata.imageURI}`
     );
   }, [activeSale]);
 
@@ -140,8 +151,8 @@ const MintSection = ({
     } else {
       setIsSoldOut(false);
     }
-    return availableTokens.map((token, index) => ({
-      src: images[index] ?? "",
+    return availableTokens.map((token) => ({
+      src: token.metadata.imageURI, // base link / image uri
       price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
       isSold: false,
       batchId: activeSale.batchID,
@@ -189,7 +200,7 @@ const MintSection = ({
       );
     } else if (isRandom && activeTokens.length === 0 && activeSale) {
       setRandomToken({
-        src: `/psyc${(currentImageIndex % 3) + 1}.webp`,
+        src: activeSale.tokensOnSale[0]?.metadata.imageURI ?? "",
         price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
         isSold: false,
         batchId: activeSale.batchID,
@@ -236,7 +247,7 @@ const MintSection = ({
             <PsycItem
               key={token.id}
               item={{
-                src: `/psyc${(index % 3) + 1}.webp`,
+                src: token.metadata.imageURI, // base uri / image uri
                 price: `${formatUnits(BigInt(activeSale.ceilingPrice), 18)}`,
                 isSold: false,
                 batchId: activeSale.batchID,

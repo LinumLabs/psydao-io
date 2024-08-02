@@ -1,9 +1,15 @@
 import type { Address } from "viem";
 
+interface Metadata {
+  id: string;
+  description: string;
+  imageURI: string;
+}
 export interface TokenOnSale {
   id: string;
   tokenID: string;
   buyer: Address | null;
+  metadata: Metadata;
 }
 
 export interface Sale {

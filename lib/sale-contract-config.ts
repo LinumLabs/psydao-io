@@ -1,5 +1,6 @@
 import psycSaleAbiSepolia from "../abis/psycSaleAbiSepolia.json";
-import { psycSaleSepolia } from "../constants/contracts";
+import psyNFTAbiSepolia from "../abis/psyNFTAbiSepolia.json";
+import { psycSaleSepolia, psyNFTSepolia } from "../constants/contracts";
 import { type AbiItem } from "web3-utils";
 
 const psycSaleContractConfig = {
@@ -7,4 +8,9 @@ const psycSaleContractConfig = {
   abi: psycSaleAbiSepolia as AbiItem[]
 };
 
-export { psycSaleContractConfig };
+const psyNftContractConfig = {
+  address: psyNFTSepolia as `0x${string}`,
+  abi: psyNFTAbiSepolia as AbiItem[]
+};
+
+export { psycSaleContractConfig, psyNftContractConfig };

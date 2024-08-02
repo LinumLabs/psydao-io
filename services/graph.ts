@@ -1,22 +1,5 @@
 import { gql } from "@apollo/client";
 
-export const getTokensOnSale = gql`
-  query GetAllTokensOnSale {
-    tokenOnSales {
-      tokenID
-      id
-      price
-      sale {
-        batchID
-        blockNumber
-        ceilingPrice
-        floorPrice
-        id
-      }
-    }
-  }
-`;
-
 export const getAllSalesWithTokens = gql`
   query GetAllSalesWithTokens {
     sales(orderBy: batchID) {
@@ -30,6 +13,11 @@ export const getAllSalesWithTokens = gql`
         id
         tokenID
         buyer
+        metadata {
+          id
+          description
+          imageURI
+        }
       }
     }
   }
@@ -48,6 +36,11 @@ export const getSaleById = gql`
         id
         tokenID
         buyer
+        metadata {
+          id
+          description
+          imageURI
+        }
       }
     }
   }
@@ -71,7 +64,11 @@ export const getTokensByOwner = gql`
       owner
       tokenId
       tokenAddress
-      uri
+      metadata {
+        id
+        description
+        imageURI
+      }
     }
   }
 `;
