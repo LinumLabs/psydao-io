@@ -11,6 +11,8 @@ import SubmitSaleButton from "../commons/submit-sale-button";
 import { useEditSaleForm } from "@/hooks/useEditSaleForm";
 import { useResize } from "@/hooks/useResize";
 import { getSaleComplete } from "@/utils/getSaleComplete";
+import { useGetAddresses } from "@/hooks/useGetAddresses";
+import AdminDashboardEmptyState from "./admin-dashboard-empty";
 
 export const AdminSalesSection = ({
   setOpenCreateSale,
@@ -33,12 +35,14 @@ export const AdminSalesSection = ({
 }) => {
   const { width } = useResize();
   const { address } = useAccount();
+  const { getAddresses } = useGetAddresses();
   const { handleEditSale, isSubmitting } = useEditSaleForm(
     address,
     setOpenEditSale,
     selectedSale?.batchID ?? "",
     triggerNftSaleUpdate,
-    refetchSalesData
+    refetchSalesData,
+    getAddresses
   );
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [existingWhitelistedAddresses, setExistingWhitelistedAddresses] =
@@ -68,6 +72,7 @@ export const AdminSalesSection = ({
     <Box textAlign={"start"} py={4} px={4} position="relative">
       {!openEditSale ? (
         <Flex
+          key={0}
           justifyContent="center"
           gap={5}
           flexDirection="column"
@@ -76,32 +81,34 @@ export const AdminSalesSection = ({
           height="100%"
           overflowY="auto"
         >
-          {saleData.length > 0
-            ? saleData.map((sale, index: number) => {
-                const isComplete = getSaleComplete(sale);
-                return (
-                  <>
-                    <AdminSaleComponent
-                      key={index}
-                      sale={sale}
-                      index={index}
-                      setWhitelistedAddresses={setExistingWhitelistedAddresses}
-                      setSelectedSale={setSelectedSale}
-                      setOpenEditSale={setOpenEditSale}
-                      isComplete={isComplete}
-                      isPaused={isPaused}
-                      setIsPaused={setIsPaused}
-                    />
-                    <Divider
-                      border={"none"}
-                      height={"1px"}
-                      bg={"#F2BEBE"}
-                      width={"100%"}
-                    />
-                  </>
-                );
-              })
-            : null}
+          {saleData.length > 0 ? (
+            saleData.map((sale, index: number) => {
+              const isComplete = getSaleComplete(sale);
+              return (
+                <>
+                  <AdminSaleComponent
+                    key={index}
+                    sale={sale}
+                    index={index}
+                    setWhitelistedAddresses={setExistingWhitelistedAddresses}
+                    setSelectedSale={setSelectedSale}
+                    setOpenEditSale={setOpenEditSale}
+                    isComplete={isComplete}
+                    isPaused={isPaused}
+                    setIsPaused={setIsPaused}
+                  />
+                  <Divider
+                    border={"none"}
+                    height={"1px"}
+                    bg={"#F2BEBE"}
+                    width={"100%"}
+                  />
+                </>
+              );
+            })
+          ) : (
+            <AdminDashboardEmptyState />
+          )}
           <SubmitButtonContainer>
             <PsyButton
               customStyle={{ width: "100%", maxWidth: "550px" }}
