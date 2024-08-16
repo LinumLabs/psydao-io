@@ -47,7 +47,7 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   );
 
   const CHAINID = env.NEXT_PUBLIC_CHAIN_ID ?? 1;
-  const isWrongNetwork = chainId !== Number(CHAINID);
+  const isWrongNetwork = chainId !== CHAINID;
 
   useEffect(() => {
     if (
