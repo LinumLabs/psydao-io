@@ -6,7 +6,7 @@ import psycSaleSepoliaAbi from "../abis/psycSaleAbiSepolia.json";
 import { psycSaleMainnet, psycSaleSepolia } from "../constants/contracts";
 import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "./useResize";
-import { env } from "../config/env";
+import { env } from "../config/env.mjs";
 
 const useActivateSale = () => {
   const { writeContract, isPending, isSuccess, error } = useWriteContract();

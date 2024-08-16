@@ -2,7 +2,7 @@ import { Flex, Text, Image } from "@chakra-ui/react";
 import SubmitButtonContainer from "./submit-button-container";
 import PsyButton from "../ui/psy-button";
 import { useChainModal } from "@rainbow-me/rainbowkit";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 const WrongNetworkWindow = () => {
   const { openChainModal } = useChainModal();

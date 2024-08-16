@@ -4,7 +4,7 @@ import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import psycSaleAbi from "@/abis/psycSaleAbi.json";
 import psycSaleAbiSepolia from "@/abis/psycSaleAbiSepolia.json";
 import { parseUnits } from "viem";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 export const useBuySpecificPsycPrivate = () => {
   const { data, writeContract, isPending, error } = useWriteContract();

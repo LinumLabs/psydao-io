@@ -18,7 +18,7 @@ import useFetchTokenOwners from "@/hooks/useFetchTokenOwner";
 import { getSaleComplete } from "@/utils/getSaleComplete";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 interface EditSaleWindowProps {
   selectedSale: Sale | undefined;

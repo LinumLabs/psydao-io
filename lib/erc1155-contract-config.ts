@@ -1,4 +1,4 @@
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 import ERC1155Abi from "../abis/ERC1155Abi.json";
 import ERC1155AbiSepolia from "../abis/ERC115AbiSepolia.json";
 import { ERC1155Mainnet, ERC1155Sepolia } from "../constants/contracts";

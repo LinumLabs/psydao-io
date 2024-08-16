@@ -1,4 +1,4 @@
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 import mixpanel from "mixpanel-browser";
 
 export class MixpanelTracking {

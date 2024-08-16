@@ -1,4 +1,4 @@
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 import psycSaleAbi from "../abis/psycSaleAbi.json";
 import psycSaleAbiSepolia from "../abis/psycSaleAbiSepolia.json";
 import { psycSaleMainnet, psycSaleSepolia } from "../constants/contracts";

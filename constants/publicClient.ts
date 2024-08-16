@@ -1,4 +1,4 @@
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 import { createPublicClient, http } from "viem";
 import { mainnet } from "wagmi/chains";
 

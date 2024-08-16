@@ -15,7 +15,7 @@ import { WagmiProvider, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 import { useColorMode } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 const { wallets } = getDefaultWallets();
 

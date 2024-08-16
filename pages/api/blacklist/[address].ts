@@ -1,7 +1,7 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 
 import cors from "cors";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 const corsMiddleware = cors({
   methods: ["GET"],

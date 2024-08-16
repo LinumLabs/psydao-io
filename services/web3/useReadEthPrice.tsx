@@ -2,7 +2,7 @@ import { useReadContract } from "wagmi";
 import { chainLinkMainnet, chainLinkSepolia } from "@/constants/contracts";
 import chainLinkAbi from "@/abis/chainLinkAbi.json";
 import chainLinkAbiSepolia from "@/abis/chainLinkAbiSepolia.json";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 export const useReadEthPrice = () => {
   const { data, isPending, error }: any = useReadContract({

@@ -4,7 +4,7 @@ import { psycSaleMainnet, psycSaleSepolia } from "@/constants/contracts";
 import { parseUnits } from "viem";
 import psycSaleAbi from "@/abis/psycSaleAbi.json";
 import psycSaleAbiSepolia from "@/abis/psycSaleAbiSepolia.json";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 export const useBuyRandomPsycPrivate = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
 

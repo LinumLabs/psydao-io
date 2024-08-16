@@ -6,7 +6,7 @@ import {
   tokenSaleContractSepolia
 } from "@/constants/contracts";
 import { useEffect, useMemo } from "react";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 const useGetTokenBalances = (refetchNeeded: boolean) => {
   const { address } = useAccount();

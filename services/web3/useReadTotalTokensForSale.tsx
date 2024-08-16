@@ -5,7 +5,7 @@ import {
   tokenSaleContract,
   tokenSaleContractSepolia
 } from "@/constants/contracts";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 export const useReadTotalTokensForSale = () => {
   const { data, isPending, error } = useReadContract({

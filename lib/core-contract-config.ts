@@ -1,4 +1,4 @@
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 import coreAbi from "../abis/coreAbi.json";
 import coreAbiSepolia from "../abis/coreAbiSepolia.json";
 import { CoreMainnet, CoreSepolia } from "../constants/contracts";

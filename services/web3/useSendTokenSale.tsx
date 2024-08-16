@@ -7,7 +7,7 @@ import {
 } from "@/constants/contracts";
 import tokenSaleAbi from "@/abis/tokenSaleAbi.json";
 import tokenSaleAbiSepolia from "@/abis/tokenSaleAbiSepolia.json";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 export const useSendTokenSale = () => {
   const { data, writeContract, isPending, error } = useWriteContract();

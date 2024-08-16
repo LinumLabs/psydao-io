@@ -8,7 +8,7 @@ import {
 import tokenSaleAbi from "@/abis/tokenSaleAbi.json";
 import tokenSaleAbiSepolia from "@/abis/tokenSaleAbiSepolia.json";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 export const useWithdrawTokens = (tokenBalance: number, width: number) => {
   const { data, writeContract, isPending, error } = useWriteContract();

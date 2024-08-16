@@ -1,7 +1,7 @@
 import { useAccount, useSignMessage } from "wagmi";
 import { useToast } from "@chakra-ui/react";
 import { SiweMessage } from "siwe";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 export const useSignInWallet = () => {
   const { address: account } = useAccount();

@@ -24,7 +24,7 @@ import { InterimState } from "../commons/interim-state";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
 import { useAccount } from "wagmi";
 import WrongNetworkWindow from "../commons/wrong-network";
-import { env } from "@/config/env";
+import { env } from "@/config/env.mjs";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const { address, chainId } = useAccount();
