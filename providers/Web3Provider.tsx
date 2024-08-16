@@ -15,12 +15,13 @@ import { WagmiProvider, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 import { useColorMode } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { env } from "@/config/env";
 
 const { wallets } = getDefaultWallets();
 
 export const wagmiConfig = getDefaultConfig({
-  appName: process.env.NEXT_PUBLIC_APP_NAME ?? "",
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID ?? "",
+  appName: env.NEXT_PUBLIC_APP_NAME ?? "",
+  projectId: env.NEXT_PUBLIC_PROJECT_ID ?? "",
   wallets: [
     ...wallets,
     {

@@ -24,6 +24,7 @@ import { InterimState } from "../commons/interim-state";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
 import { useAccount } from "wagmi";
 import WrongNetworkWindow from "../commons/wrong-network";
+import { env } from "@/config/env";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const { address, chainId } = useAccount();
@@ -45,7 +46,7 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
     }
   );
 
-  const CHAINID = process.env.NEXT_PUBLIC_CHAIN_ID ?? 1;
+  const CHAINID = env.NEXT_PUBLIC_CHAIN_ID ?? 1;
   const isWrongNetwork = chainId !== Number(CHAINID);
 
   useEffect(() => {

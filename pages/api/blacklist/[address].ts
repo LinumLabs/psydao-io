@@ -1,6 +1,7 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 
 import cors from "cors";
+import { env } from "@/config/env";
 
 const corsMiddleware = cors({
   methods: ["GET"],
@@ -26,7 +27,7 @@ export default async function handler(
     try {
       const response = await fetch(`${chainalysisURL}/${address as string}`, {
         headers: {
-          "X-API-Key": process.env.CHAINALYSIS_API_KEY ?? "",
+          "X-API-Key": env.CHAINALYSIS_API_KEY ?? "",
           Accept: "application/json"
         }
       });
