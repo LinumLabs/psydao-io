@@ -1,20 +1,33 @@
-import React, { useEffect } from 'react';
-import { useFieldArray, useForm, Controller } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { useFieldArray, useForm, Controller, Control, FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Box, Button, FormControl, FormLabel, Input, VStack, HStack, IconButton, FormErrorMessage, Image, Text } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Input, VStack, HStack, IconButton, FormErrorMessage, Image, Text, Textarea, Progress, useToast } from '@chakra-ui/react';
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
-import { useQuery, useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import psyNFTAbi from '@/abis/psyNFTAbiSepolia.json'
+import { useReadContract } from 'wagmi';
+import { useAccount } from 'wagmi';
 
-const nftFolderBaseURL = "https://red-literary-tiglon-645.mypinata.cloud/ipfs/QmW4B6c7faRwsSzd5H3D28ECzFELrn5X8Z1TLTUAhKHWfW/"
-const DEFAULT_NFT_AMOUNT = 13;
+const contractAddress = '0x64e78537782095a38E3785431bE3647856980FfA';
 
-const getJSONMeta = async (nftIndex: number) => {
-  const res = await fetch(`${nftFolderBaseURL}${nftIndex}`)
+type NftMetadata = {
+  name: string;
+  description: string;
+  image: string;
+  attributes: Array<{
+    trait_type: string;
+    value: string;
+  }>;
+}
+
+const getJSONMeta = async (nftIndex: number, baseUri: string): Promise<NftMetadata> => {
+  if (!baseUri) throw new Error('Base URI not available');
+  const res = await fetch(`${baseUri}${nftIndex}`)
   if (!res.ok) {
     throw new Error('Failed to fetch JSON metadata');
   }
-  return res.json()
+  return res.json() as Promise<NftMetadata>
 }
 
 const urlSchema = z
@@ -37,18 +50,48 @@ const NFTMetadataSchema = z.object({
 });
 
 const NFTUploaderSchema = z.object({
-  nfts: z.array(NFTMetadataSchema).length(DEFAULT_NFT_AMOUNT, `Must have exactly ${DEFAULT_NFT_AMOUNT} NFTs`),
+  nfts: z.array(NFTMetadataSchema).min(1, 'Must have at least one NFT'),
 });
 
 type NFTUploaderForm = z.infer<typeof NFTUploaderSchema>;
 
 const NFTUploaderForm = () => {
-  const { data: existingNfts, isLoading, isError } = useQuery({
-    queryKey: ['nftMetadata'],
+  const { address } = useAccount()
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const toast = useToast();
+
+  const { data: baseUri, isError: isBaseUriError, isLoading: isBaseUriLoading } = useReadContract({
+    address: contractAddress,
+    abi: psyNFTAbi,
+    functionName: 'baseUri',
+  });
+
+  const { data: tokenIdData, isError: isTokenIdError, isLoading: isTokenIdLoading } = useReadContract({
+    address: contractAddress,
+    abi: psyNFTAbi,
+    functionName: 'tokenId',
+  });
+
+  const nftCount = tokenIdData ? Number((tokenIdData as string).toString()) : 0;
+
+  const { data: existingNfts, isLoading: areNftsLoading, isError: isNftsError } = useQuery({
+    queryKey: ['nftMetadata', baseUri, nftCount],
     queryFn: async () => {
-      const promises = Array.from({ length: DEFAULT_NFT_AMOUNT }, (_, i) => getJSONMeta(i));
-      return Promise.all(promises);
+      if (!baseUri) throw new Error('Base URI not available');
+      const promises = Array.from({ length: nftCount }, (_, i) => getJSONMeta(i, baseUri as string));
+      const results = await Promise.allSettled(promises);
+      return results
+        .map((result, index) => {
+          if (result.status === 'fulfilled') {
+            return result.value;
+          } else {
+            console.error(`Failed to fetch NFT ${index}:`, result.reason);
+            return null;
+          }
+        })
+        .filter(result => result !== null);
     },
+    enabled: !!baseUri && nftCount > 0,
   });
 
 
@@ -59,7 +102,7 @@ const NFTUploaderForm = () => {
     },
   });
 
-  const { fields: nftFields } = useFieldArray({
+  const { fields: nftFields, append } = useFieldArray({
     control,
     name: 'nfts',
   });
@@ -77,8 +120,10 @@ const NFTUploaderForm = () => {
     // Handle form submission, e.g., upload to IPFS
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading NFT metadata</div>;
+  if (isBaseUriLoading || isTokenIdLoading || areNftsLoading) return <div>Loading...</div>;
+  if (isBaseUriError || isTokenIdError || isNftsError) return <div>Error loading NFT data</div>;
+
+
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmit)}>
@@ -138,7 +183,7 @@ const NFTUploaderForm = () => {
                 render={({ field }) => (
                   <FormControl isInvalid={!!errors.nfts?.[nftIndex]?.description}>
                     <FormLabel>Description</FormLabel>
-                    <Input {...field} />
+                    <Textarea {...field} rows={4} />
                     <FormErrorMessage>{errors.nfts?.[nftIndex]?.description?.message}</FormErrorMessage>
                   </FormControl>
                 )}
@@ -149,6 +194,20 @@ const NFTUploaderForm = () => {
           </Box>
         ))}
 
+        <Button
+          onClick={() => append({
+            name: '',
+            description: '',
+            image: '',
+            attributes: []
+          })}
+          leftIcon={<AddIcon />}
+        >
+          Add New NFT
+        </Button>
+
+        {uploadProgress > 0 && <Progress value={uploadProgress} />}
+
         <Button type="submit" colorScheme="blue">
           Submit All NFTs
         </Button>
@@ -157,11 +216,13 @@ const NFTUploaderForm = () => {
   );
 };
 
-const AttributesFieldArray: React.FC<{
+type AttributesFieldArrayProps = {
   nestIndex: number;
-  control: any;
-  errors: any;
-}> = ({ nestIndex, control, errors }) => {
+  control: Control<NFTUploaderForm>;
+  errors: FieldErrors<NFTUploaderForm>;
+}
+
+const AttributesFieldArray = ({ nestIndex, control, errors }: AttributesFieldArrayProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: `nfts.${nestIndex}.attributes`,
