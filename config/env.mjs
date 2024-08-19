@@ -19,11 +19,11 @@ export const env = createEnv({
     NEXT_PUBLIC_ETHERSCAN_BASE_URL: z.string().url(),
     NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL: z.string().url(),
     NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL: z.string().url(),
-    NEXT_PUBLIC_MAINNET_CLIENT: z.string()
-    // NEXT_PUBLIC_WHITELISTED_ADDRESSES: z
-    //   .array(z.string())
-    //   .or(z.string())
-    //   .transform((val) => (typeof val === "string" ? val.split(",") : val))
+    NEXT_PUBLIC_MAINNET_CLIENT: z.string(),
+    NEXT_PUBLIC_WHITELISTED_ADDRESSES: z
+      .array(z.string())
+      .or(z.string())
+      .transform((val) => (typeof val === "string" ? val.split(",") : val))
   },
   runtimeEnv: {
     CHAINALYSIS_API_KEY: process.env.CHAINALYSIS_API_KEY,
@@ -45,8 +45,8 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL,
     NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL:
       process.env.NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL,
-    // NEXT_PUBLIC_WHITELISTED_ADDRESSES:
-    //   process.env.NEXT_PUBLIC_WHITELISTED_ADDRESSES,
+    NEXT_PUBLIC_WHITELISTED_ADDRESSES:
+      process.env.NEXT_PUBLIC_WHITELISTED_ADDRESSES,
     NEXT_PUBLIC_MAINNET_CLIENT: process.env.NEXT_PUBLIC_MAINNET_CLIENT
   }
 });

@@ -1,2 +1,3 @@
-export const whitelistedAddresses =
-  process.env.NEXT_PUBLIC_WHITELISTED_ADDRESSES ?? [];
+import { env } from "../../config/env.mjs";
+
+export const whitelistedAddresses = env.NEXT_PUBLIC_WHITELISTED_ADDRESSES ?? [];
