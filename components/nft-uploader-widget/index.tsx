@@ -8,8 +8,13 @@ import { useQuery } from "@tanstack/react-query";
 import psyNFTAbi from '@/abis/psyNFTAbiSepolia.json'
 import { useReadContract } from 'wagmi';
 import { useAccount } from 'wagmi';
+import { usePinataFolderContents } from '@/hooks/usePinataFolderContents';
+import { psyNFTMainnet, psyNFTSepolia } from '@/constants/contracts';
 
-const contractAddress = '0x64e78537782095a38E3785431bE3647856980FfA';
+// const contractAddress = '0x64e78537782095a38E3785431bE3647856980FfA';
+
+const contractAddress =
+  process.env.NEXT_PUBLIC_CHAIN_ID === "1" ? psyNFTMainnet : psyNFTSepolia;
 
 type NftMetadata = {
   name: string;
@@ -20,6 +25,16 @@ type NftMetadata = {
     value: string;
   }>;
 }
+
+function extractCIDFromBaseURI(baseUri: string): string {
+  try {
+    const parts = baseUri.split('/');
+    return parts[parts.length - 2] ?? '';
+  } catch (error) {
+    console.error("Error extracting CID from base URI:", error);
+    return '';
+  }
+};
 
 const getJSONMeta = async (nftIndex: number, baseUri: string): Promise<NftMetadata> => {
   if (!baseUri) throw new Error('Base URI not available');
@@ -66,13 +81,19 @@ const NFTUploaderForm = () => {
     functionName: 'baseUri',
   });
 
+  // const baseUri = "https://red-literary-tiglon-645.mypinata.cloud/ipfs/QmVpsuNPY3JVYC7YkttDjX1NXEA5tmj9cJfxqGYBQvi71J/"
+
   const { data: tokenIdData, isError: isTokenIdError, isLoading: isTokenIdLoading } = useReadContract({
     address: contractAddress,
     abi: psyNFTAbi,
     functionName: 'tokenId',
   });
 
-  const nftCount = tokenIdData ? Number((tokenIdData as string).toString()) : 0;
+  const folderCID = baseUri ? extractCIDFromBaseURI(baseUri as string) : null;
+  const { folderContents, isLoading: isFolderLoading, error: folderError } = usePinataFolderContents(folderCID);
+
+  // const nftCount = tokenIdData ? Number((tokenIdData as string).toString()) : 0;
+  const nftCount = 21;
 
   const { data: existingNfts, isLoading: areNftsLoading, isError: isNftsError } = useQuery({
     queryKey: ['nftMetadata', baseUri, nftCount],
@@ -123,7 +144,7 @@ const NFTUploaderForm = () => {
   if (isBaseUriLoading || isTokenIdLoading || areNftsLoading) return <div>Loading...</div>;
   if (isBaseUriError || isTokenIdError || isNftsError) return <div>Error loading NFT data</div>;
 
-
+  const mintedTokens = tokenIdData ? Number((tokenIdData as string).toString()) : 0;
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmit)}>
@@ -212,6 +233,20 @@ const NFTUploaderForm = () => {
           Submit All NFTs
         </Button>
       </VStack>
+
+      {folderContents.length > 0 && (
+        <Box mt={4}>
+          <Text fontWeight="bold">Current NFT Files (Total: {folderContents.length}, Minted: {mintedTokens}):</Text>
+          <VStack align="stretch">
+            {folderContents.map((file, index) => (
+              <Box key={file.ipfs_pin_hash} p={2} border="1px" borderColor={index < mintedTokens ? "green.200" : "gray.200"} borderRadius="md">
+                <Text>#{file.name} {index < mintedTokens ? "(Minted)" : "(Not Minted)"}</Text>
+                <Text>IPFS Hash: {file.ipfs_pin_hash}</Text>
+              </Box>
+            ))}
+          </VStack>
+        </Box>
+      )}
     </Box>
   );
 };
