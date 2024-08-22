@@ -11,8 +11,10 @@ import { useAccount } from 'wagmi';
 import { usePinataFolderContents } from '@/hooks/usePinataFolderContents';
 import { psyNFTMainnet, psyNFTSepolia } from '@/constants/contracts';
 
+const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
+
 const contractAddress =
-  process.env.NEXT_PUBLIC_CHAIN_ID === "1" ? psyNFTMainnet : psyNFTSepolia;
+  CHAIN_ID === "1" ? psyNFTMainnet : psyNFTSepolia;
 
 type NftMetadata = {
   name: string;
@@ -74,6 +76,9 @@ const NFTUploaderForm = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const toast = useToast();
 
+  console.log('contract address ->', contractAddress)
+  console.log('chain id ->', CHAIN_ID)
+
   const { data: baseUri, isError: isBaseUriError, isLoading: isBaseUriLoading } = useReadContract({
     address: contractAddress,
     abi: psyNFTAbi,
@@ -85,6 +90,8 @@ const NFTUploaderForm = () => {
     abi: psyNFTAbi,
     functionName: 'tokenId',
   });
+
+  console.log('contract data ->', { baseUri, tokenIdData })
 
   const folderCID = baseUri ? extractCIDFromBaseURI(baseUri as string) : null;
   const { folderContents, isLoading: isFolderLoading, error: folderError } = usePinataFolderContents(folderCID);
