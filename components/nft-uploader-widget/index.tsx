@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useFieldArray, useForm, Controller, Control, FieldErrors } from 'react-hook-form';
+import { useFieldArray, useForm, Controller, type Control, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Box, Button, FormControl, FormLabel, Input, VStack, HStack, IconButton, FormErrorMessage, Image, Text, Textarea, Progress, useToast } from '@chakra-ui/react';
@@ -10,8 +10,6 @@ import { useReadContract } from 'wagmi';
 import { useAccount } from 'wagmi';
 import { usePinataFolderContents } from '@/hooks/usePinataFolderContents';
 import { psyNFTMainnet, psyNFTSepolia } from '@/constants/contracts';
-
-// const contractAddress = '0x64e78537782095a38E3785431bE3647856980FfA';
 
 const contractAddress =
   process.env.NEXT_PUBLIC_CHAIN_ID === "1" ? psyNFTMainnet : psyNFTSepolia;
@@ -47,7 +45,7 @@ const getJSONMeta = async (nftIndex: number, baseUri: string): Promise<NftMetada
 
 const urlSchema = z
   .string()
-  .refine((value) => /^(https?):\/\/(?=.*\.[a-z]{2,})[^\s$.?#].[^\s]*$/i.test(value), {
+  .refine((value: string) => /^(https?):\/\/(?=.*\.[a-z]{2,})[^\s$.?#].[^\s]*$/i.test(value), {
     message: 'Please enter a valid URL',
   });
 
@@ -72,6 +70,7 @@ type NFTUploaderForm = z.infer<typeof NFTUploaderSchema>;
 
 const NFTUploaderForm = () => {
   const { address } = useAccount()
+
   const [uploadProgress, setUploadProgress] = useState(0);
   const toast = useToast();
 
@@ -80,8 +79,6 @@ const NFTUploaderForm = () => {
     abi: psyNFTAbi,
     functionName: 'baseUri',
   });
-
-  // const baseUri = "https://red-literary-tiglon-645.mypinata.cloud/ipfs/QmVpsuNPY3JVYC7YkttDjX1NXEA5tmj9cJfxqGYBQvi71J/"
 
   const { data: tokenIdData, isError: isTokenIdError, isLoading: isTokenIdLoading } = useReadContract({
     address: contractAddress,
@@ -131,7 +128,15 @@ const NFTUploaderForm = () => {
   useEffect(() => {
     if (existingNfts) {
       reset({
-        nfts: existingNfts
+        nfts: existingNfts.filter((nft): nft is NftMetadata => nft !== null).map(nft => ({
+          name: nft.name,
+          description: nft.description,
+          image: nft.image,
+          attributes: nft.attributes.map(attr => ({
+            trait_type: attr.trait_type,
+            value: attr.value
+          }))
+        }))
       })
     }
   }, [existingNfts, reset])

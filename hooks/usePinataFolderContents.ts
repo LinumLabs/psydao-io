@@ -7,6 +7,35 @@ interface PinataFile {
   ipfs_pin_hash: string;
 }
 
+interface PinataResponse {
+  rows: Array<{
+    metadata: {
+      name: string;
+    };
+    ipfs_pin_hash: string;
+  }>;
+}
+
+function isPinataResponse(data: unknown): data is PinataResponse {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'rows' in data &&
+    Array.isArray((data as PinataResponse).rows) &&
+    (data as PinataResponse).rows.every(row =>
+      typeof row === 'object' &&
+      row !== null &&
+      'metadata' in row &&
+      typeof row.metadata === 'object' &&
+      row.metadata !== null &&
+      'name' in row.metadata &&
+      typeof row.metadata.name === 'string' &&
+      'ipfs_pin_hash' in row &&
+      typeof row.ipfs_pin_hash === 'string'
+    )
+  );
+}
+
 export const usePinataFolderContents = (folderCID: string | null) => {
   const [folderContents, setFolderContents] = useState<PinataFile[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +43,14 @@ export const usePinataFolderContents = (folderCID: string | null) => {
 
   useEffect(() => {
     if (folderCID) {
-      fetchFolderContents(folderCID);
+
+      fetchFolderContents(folderCID)
+        .then(() => {
+          // Handle successful completion if needed
+        })
+        .catch((error) => {
+          console.error("Error fetching folder contents:", error);
+        });
     }
   }, [folderCID]);
 
@@ -43,12 +79,17 @@ export const usePinataFolderContents = (folderCID: string | null) => {
       }
 
       const data: unknown = await response.json();
+
+      if (!isPinataResponse(data)) {
+        throw new Error('Unexpected response structure from Pinata API');
+      }
+
       const files = data.rows
-        .map((pin: unknown) => ({
+        .map((pin) => ({
           name: pin.metadata.name,
           ipfs_pin_hash: pin.ipfs_pin_hash
         }))
-        .sort((a: PinataFile, b: PinataFile) => Number(a.name) - Number(b.name));
+        .sort((a, b) => Number(a.name) - Number(b.name));
 
       setFolderContents(files);
     } catch (err) {
