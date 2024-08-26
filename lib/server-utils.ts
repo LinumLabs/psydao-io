@@ -1,3 +1,4 @@
+import { env } from "@/config/env.mjs";
 import { PinataSDK } from "pinata";
 interface PinataResponse {
   IpfsHash: string;
@@ -7,11 +8,11 @@ interface PinataResponse {
 
 const pinAddresses = async (ipfsHash: string) => {
   const pinata = new PinataSDK({
-    pinataJwt: process.env.PINATA_JWT!,
-    pinataGateway: process.env.NEXT_PUBLIC_PINATA_BASE_URL
+    pinataJwt: env.PINATA_JWT,
+    pinataGateway: env.NEXT_PUBLIC_PINATA_BASE_URL
   });
   try {
-    if (process.env.PINATA_JWT && process.env.NEXT_PUBLIC_PINATA_BASE_URL) {
+    if (env.PINATA_JWT && env.NEXT_PUBLIC_PINATA_BASE_URL) {
       await pinata.upload.cid(ipfsHash);
     }
   } catch (error) {

@@ -11,6 +11,7 @@ import { useAccount } from "wagmi";
 import { getAllSalesWithTokens } from "@/services/graph";
 import type { Sale, GetAllSalesWithTokensData } from "@/lib/types";
 import { useWindowManager } from "@/components/ui/window-manager";
+import { env } from "@/config/env.mjs";
 
 interface SaleWidgetContextType {
   activeSale: Sale | undefined;
@@ -48,7 +49,7 @@ const SaleWidgetProvider: React.FC<SaleWidgetProviderProps> = ({
     refetch
   } = useQuery<GetAllSalesWithTokensData>(getAllSalesWithTokens);
 
-  const CHAINID = process.env.NEXT_PUBLIC_CHAIN_ID ?? 1;
+  const CHAINID = env.NEXT_PUBLIC_CHAIN_ID ?? 1;
   const isWrongNetwork = chainId !== Number(CHAINID);
 
   useEffect(() => {
