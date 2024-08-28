@@ -1,9 +1,10 @@
 import { ERC1155Mainnet, ERC1155Sepolia } from "@/constants/contracts";
 import ERC1155Abi from "@/abis/ERC1155Abi.json";
 import ERC1155SepoliaAbi from "@/abis/ERC115AbiSepolia.json";
-import { sepoliaClient } from "@/constants/publicClient";
+import { mainnetClient, sepoliaClient } from "@/constants/publicClient";
 import type { Sale } from "@/lib/types";
 import { useEffect, useState } from "react";
+import { env } from "@/config/env.mjs";
 
 export type TokenInformationReturn = [bigint, bigint, boolean];
 
@@ -20,9 +21,9 @@ const useGetRandomCopies = (
     const fetchRandomCopies = async () => {
       if (activeSale && isRandom && !isOriginal) {
         const randomCopies = await Promise.all(
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
+          env.NEXT_PUBLIC_IS_MAINNET
             ? activeSale.tokensOnSale.map(async (token) => {
-                const currentTokenInfo = (await sepoliaClient.readContract({
+                const currentTokenInfo = (await mainnetClient.readContract({
                   address: ERC1155Mainnet,
                   abi: ERC1155Abi,
                   functionName: "tokenInformation",

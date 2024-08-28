@@ -1,5 +1,3 @@
-import { env } from "@/config/env.mjs";
-import { PinataSDK } from "pinata";
 interface PinataResponse {
   IpfsHash: string;
   PinSize: number;
@@ -7,13 +5,14 @@ interface PinataResponse {
 }
 
 const pinAddresses = async (ipfsHash: string) => {
-  const pinata = new PinataSDK({
-    pinataJwt: env.PINATA_JWT,
-    pinataGateway: env.NEXT_PUBLIC_PINATA_BASE_URL
-  });
   try {
-    if (env.PINATA_JWT && env.NEXT_PUBLIC_PINATA_BASE_URL) {
-      await pinata.upload.cid(ipfsHash);
+    const pinataRes = await fetch("/api/pin-content", {
+      method: "POST",
+      body: JSON.stringify({ ipfsHash })
+    });
+
+    if (!pinataRes.ok) {
+      throw new Error(`Failed to fetch JWT: ${pinataRes.statusText}`);
     }
   } catch (error) {
     const errorMessage =
