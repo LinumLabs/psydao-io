@@ -20,8 +20,7 @@ type OwnedNftsProps = {
 };
 
 const OwnedNfts = (props: OwnedNftsProps) => {
-  const imageIds = props.nftData?.tokens.map((token) => token.tokenId) ?? [];
-  const { imageUris, loading: imageUrisLoading } = useImageData(imageIds);
+  const { imageUris, loading: imageUrisLoading } = useImageData(false);
 
   const { address } = useAccount();
   const {

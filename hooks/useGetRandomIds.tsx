@@ -58,6 +58,7 @@ const useGetRandomIds = (
         );
       }
     };
+
     fetchRandomCopies().catch(console.error);
   }, [activeSale, isRandom, isOriginal]);
   return availableRandomIds;

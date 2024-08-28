@@ -29,7 +29,7 @@ export const useMintSection = (isRandom: boolean) => {
     [activeSale, availableRandomIds, isOriginal]
   );
 
-  const { imageUris, loading: imageUrisLoading } = useImageData(imageIds);
+  const { imageUris, loading: imageUrisLoading } = useImageData(isRandom);
   const currentImageIndex = useRandomImage(isRandom, imageUris);
 
   const handleModal = useCallback(() => setIsOpen((prev) => !prev), []);
