@@ -89,7 +89,7 @@ export const useMintSection = (isRandom: boolean) => {
     };
 
     void fetchWhitelist();
-  }, [activeSale, getAddresses, isAddressesLoading]);
+  }, [activeSale]);
 
   const privateSaleStatus = !isPrivateSaleLoading && isPrivateSale;
 
