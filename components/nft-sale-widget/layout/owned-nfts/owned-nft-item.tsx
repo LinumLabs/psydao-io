@@ -76,7 +76,8 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
 
   const { showCustomErrorToast } = useCustomToasts();
   const { width } = useResize();
-  const { tokenInformationData } = useReadTokenInformation(props.item.tokenId);
+  const { tokenInformationData, tokenInformationLoading, refetch } =
+    useReadTokenInformation(props.item.tokenId);
   const [isActive, setIsActive] = useState<boolean>();
 
   const fetchSaleStatus = useCallback(() => {
@@ -86,11 +87,15 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
   }, [tokenInformationData, setIsActive]);
 
   useEffect(() => {
-    fetchSaleStatus();
+    if (!tokenInformationLoading) {
+      fetchSaleStatus();
+    }
   }, [fetchSaleStatus]);
 
   const { toggleSaleStatus, isPending: isLoading } = useToggleCopySales({
-    refetchSaleStatus: fetchSaleStatus
+    refetchSaleStatus: async () => {
+      await refetch();
+    }
   });
 
   const handleToggleSaleStatus = async () => {

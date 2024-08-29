@@ -8,7 +8,7 @@ import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "./useResize";
 
 interface ToggleCopySalesProps {
-  refetchSaleStatus: () => void;
+  refetchSaleStatus: () => Promise<void>;
 }
 
 const useToggleCopySales = ({ refetchSaleStatus }: ToggleCopySalesProps) => {
@@ -39,7 +39,7 @@ const useToggleCopySales = ({ refetchSaleStatus }: ToggleCopySalesProps) => {
 
   useEffect(() => {
     if (isSuccess) {
-      refetchSaleStatus();
+      refetchSaleStatus;
       showSuccessToast("Success! Sale status has been toggled.", width);
     } else if (error) {
       const message = (error as Error).message || "An error occurred";

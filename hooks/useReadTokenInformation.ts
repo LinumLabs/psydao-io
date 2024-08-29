@@ -8,7 +8,8 @@ const useReadTokenInformation = (tokenId: string) => {
   const {
     data,
     isError: tokenInformationError,
-    isLoading: tokenInformationLoading
+    isLoading: tokenInformationLoading,
+    refetch
   } = useReadContract({
     ...erc1155sContractConfig,
     functionName: "tokenInformation",
@@ -21,7 +22,8 @@ const useReadTokenInformation = (tokenId: string) => {
   return {
     tokenInformationData,
     tokenInformationError,
-    tokenInformationLoading
+    tokenInformationLoading,
+    refetch
   };
 };
 
