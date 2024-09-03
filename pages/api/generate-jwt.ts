@@ -1,3 +1,4 @@
+import { env } from "@/config/env.mjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const keyRestrictions = {
@@ -35,7 +36,7 @@ export default async function handler(
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.PINATA_JWT}`
+          Authorization: `Bearer ${env.PINATA_JWT}`
         },
         body: JSON.stringify(keyRestrictions)
       };
