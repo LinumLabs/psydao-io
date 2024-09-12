@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import "@shopify/shopify-api/adapters/node";
 import { shopifyApi, LATEST_API_VERSION } from "@shopify/shopify-api";
-import { type Address, getAddress, createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { type Address, getAddress } from "viem";
 import { env } from "@/config/env.mjs";
 import { psyNFTMainnet, psyNFTSepolia } from "@/constants/contracts";
+import { mainnetClient, sepoliaClient } from "@/constants/publicClient";
 
 interface ShopifyResponse {
   discountCodeBasicCreate: {
@@ -32,12 +32,6 @@ const SHOPIFY_PRODUCT_ID = env.SHOPIFY_PRODUCT_ID;
 const NFT_CONTRACT_ADDRESS = env.NEXT_PUBLIC_IS_MAINNET
   ? psyNFTMainnet
   : psyNFTSepolia;
-const ETHEREUM_RPC_URL = env.NEXT_PUBLIC_MAINNET_CLIENT;
-
-const publicClient = createPublicClient({
-  chain: mainnet,
-  transport: http(ETHEREUM_RPC_URL)
-});
 
 console.debug("SHOPIFY_API_ACCESS_TOKEN => ", SHOPIFY_API_ACCESS_TOKEN);
 
@@ -52,6 +46,8 @@ const shopifyClient = shopifyApi({
   isTesting: true
 });
 
+const client = env.NEXT_PUBLIC_IS_MAINNET ? mainnetClient : sepoliaClient;
+
 /**
  * Validates that the user has a valid NFT
  * @param ethAddress The user's Ethereum address
@@ -60,7 +56,7 @@ const shopifyClient = shopifyApi({
  */
 async function validateNFT(ethAddress: Address): Promise<boolean> {
   try {
-    const nftBalance: bigint = await publicClient.readContract({
+    const nftBalance: bigint = await client.readContract({
       address: NFT_CONTRACT_ADDRESS as Address,
       abi: [
         {
@@ -90,6 +86,7 @@ async function generateShopifyProductDiscount(
   ethAddress: Address
 ): Promise<string> {
   // generate a discount code for 100% off here
+  console.log(SHOPIFY_SHOP_NAME, "SHOP NAME");
   const session = shopifyClient.session.customAppSession(SHOPIFY_SHOP_NAME);
   session.accessToken = SHOPIFY_API_ACCESS_TOKEN;
   console.log("Session details -> ", {
@@ -111,7 +108,8 @@ async function generateShopifyProductDiscount(
     apiVersion: LATEST_API_VERSION
   });
 
-  const discountCode = `PSYDAO-${ethAddress.slice(2, 8)}-${Date.now()}`;
+  // const discountCode = `PSYDAO-${ethAddress.slice(2, 8)}-${Date.now()}`;
+  const discountCode = ethAddress;
 
   const mutation = `
       mutation discountCodeBasicCreate($basicCodeDiscount: DiscountCodeBasicInput!) {
@@ -178,6 +176,8 @@ async function generateShopifyProductDiscount(
       variables
     });
 
+    console.log(response, "response");
+
     if (response.data) {
       const result = response.data as ShopifyResponse;
       if (result.discountCodeBasicCreate?.userErrors?.length > 0) {
@@ -189,7 +189,8 @@ async function generateShopifyProductDiscount(
 
       return discountCode;
     }
-    throw new Error("Failed to generate discount code");
+    console.log(discountCode, "over here");
+    throw new Error(`Failed to generate discount code: ${discountCode}`);
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error details:", {
@@ -205,9 +206,54 @@ async function generateShopifyProductDiscount(
         hasAccessToken: !!SHOPIFY_API_ACCESS_TOKEN
       });
     }
-    throw new Error("Failed to generate discount code");
+    throw new Error(`Failed to generate discount code: ${discountCode}`);
   }
 }
+
+// async function validateDiscountCode(code: string) {
+//   const session = shopifyClient.session.customAppSession(SHOPIFY_SHOP_NAME);
+//   session.accessToken = SHOPIFY_API_ACCESS_TOKEN;
+//   const client = new shopifyClient.clients.Graphql({
+//     session,
+//     apiVersion: LATEST_API_VERSION
+//   });
+
+//   const query = `
+//           query getDiscountCode($code: String!) {
+//             codeDiscountNodeByCode(code: $code) {
+//               codeDiscount {
+//                 ... on DiscountCodeBasic {
+//                   codes(first: 1) {
+//                     edges {
+//                       node {
+//                         code
+//                         usageCount
+//                       }
+//                     }
+//                   }
+//                   usageLimit
+//                   status
+//                 }
+//               }
+//             }
+//           }
+//         `;
+//   try {
+//     const response = await client.request(query, {
+//       variables: {
+//         code: code
+//       }
+//     });
+
+//     if (response.data) {
+//       return response.data;
+//     }
+//     throw new Error("Failed to validate discount code");
+//   } catch (error) {
+//     console.error("Error validating discount code:", error);
+//     throw new Error("Failed to validate discount code");
+//   }
+// }
 
 export default async function handler(
   req: NextApiRequest,
@@ -235,9 +281,11 @@ export default async function handler(
     }
 
     const discountCode = await generateShopifyProductDiscount(ethAddress);
+    // const discountCodeValid = await validateDiscountCode(discountCode);
 
     return res.status(200).json({
       discountCode: discountCode
+      // discountCodeValid: discountCodeValid
     });
   } catch (error) {
     console.error("Error generating discount code:", error);

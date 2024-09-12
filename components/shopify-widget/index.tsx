@@ -4,8 +4,10 @@ import Image from "next/image";
 import PsyButton from "../ui/psy-button";
 import ShopifyImageModal from "./shopify-image-modal";
 import { useState } from "react";
+import { useAccount } from "wagmi";
 
 const ShopifyWidget = () => {
+  const { address } = useAccount();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleModal = () => {
@@ -57,8 +59,11 @@ const ShopifyWidget = () => {
                 </Text>
               </Flex>
               <PsyButton
-                onClick={() => {
+                onClick={async () => {
                   console.log("insert claim logic");
+                  await fetch(`/api/shopify?ethAddress=${address}`, {
+                    method: "GET"
+                  });
                 }}
               >
                 Claim Here
