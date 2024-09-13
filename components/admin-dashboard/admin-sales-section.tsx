@@ -1,7 +1,6 @@
 import { Box, Divider, Flex } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
-import { type Sale } from "@/lib/types";
 import PsyButton from "../ui/psy-button";
 import AdminSaleComponent from "./admin-sale-component";
 import SubmitButtonContainer from "../commons/submit-button-container";
@@ -9,31 +8,22 @@ import EditSaleWindow from "../edit-sale-window";
 import { formatEther } from "viem";
 import SubmitSaleButton from "../commons/submit-sale-button";
 import { useEditSaleForm } from "@/hooks/useEditSaleForm";
-import { useResize } from "@/hooks/useResize";
 import { getSaleComplete } from "@/utils/getSaleComplete";
 import { useGetAddresses } from "@/hooks/useGetAddresses";
 import AdminDashboardEmptyState from "./admin-dashboard-empty";
+import { useGlobalContext } from "@/contexts/globalContext";
 
-export const AdminSalesSection = ({
-  setOpenCreateSale,
-  openEditSale,
-  setOpenEditSale,
-  setSelectedSale,
-  saleData,
-  selectedSale,
-  triggerNftSaleUpdate,
-  refetchSalesData
-}: {
-  selectedSale: Sale | undefined;
-  setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>;
-  openEditSale: boolean;
-  setSelectedSale: React.Dispatch<React.SetStateAction<Sale | undefined>>;
-  setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>;
-  saleData: Sale[];
-  triggerNftSaleUpdate: () => void;
-  refetchSalesData: () => void;
-}) => {
-  const { width } = useResize();
+export const AdminSalesSection = () => {
+  const {
+    selectedSale,
+    setSelectedSale,
+    setOpenCreateSale,
+    openEditSale,
+    setOpenEditSale,
+    data,
+    refetchSalesData
+  } = useGlobalContext();
+
   const { address } = useAccount();
   const { getAddresses } = useGetAddresses();
 
@@ -48,6 +38,14 @@ export const AdminSalesSection = ({
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
   const [saleComplete, setSaleComplete] = useState<boolean>(false);
   const [addressesToDisplay, setAddressesToDisplay] = useState<string[]>([]);
+
+  const { setUpdateNftSaleTrigger } = useGlobalContext() as {
+    setUpdateNftSaleTrigger: React.Dispatch<React.SetStateAction<number>>;
+  };
+
+  const triggerNftSaleUpdate = () => {
+    setUpdateNftSaleTrigger((prev) => prev + 1);
+  };
 
   const { handleEditSale, isSubmitting } = useEditSaleForm(
     address,
@@ -103,29 +101,26 @@ export const AdminSalesSection = ({
           width="100%"
           height="100%"
           overflowY="auto"
+          marginBottom={5}
         >
-          {saleData.length > 0 ? (
-            saleData.map((sale, index: number) => {
-              const isComplete = getSaleComplete(sale);
+          {data && data.sales.length > 0 ? (
+            data.sales.map((sale, index) => {
+              const isLastItem = index === data.sales.length - 1;
               return (
                 <>
                   <AdminSaleComponent
-                    key={index}
+                    key={sale.batchID}
                     sale={sale}
-                    index={index}
                     setWhitelistedAddresses={setExistingWhitelistedAddresses}
-                    setSelectedSale={setSelectedSale}
-                    setOpenEditSale={setOpenEditSale}
-                    isComplete={isComplete}
-                    isPaused={isPaused}
-                    setIsPaused={setIsPaused}
                   />
-                  <Divider
-                    border={"none"}
-                    height={"1px"}
-                    bg={"#F2BEBE"}
-                    width={"100%"}
-                  />
+                  {!isLastItem && (
+                    <Divider
+                      border={"none"}
+                      height={"1px"}
+                      bg={"#F2BEBE"}
+                      width={"100%"}
+                    />
+                  )}
                 </>
               );
             })
@@ -154,8 +149,7 @@ export const AdminSalesSection = ({
                   existingWhitelistedAddresses,
                   floorPrice,
                   ceilingPrice,
-                  isPaused,
-                  width
+                  isPaused
                 )
               : console.error("no sale selected")
           }
@@ -167,7 +161,6 @@ export const AdminSalesSection = ({
             width="100%"
           >
             <EditSaleWindow
-              selectedSale={selectedSale}
               floorPrice={floorPrice}
               setFloorPrice={setFloorPrice}
               ceilingPrice={ceilingPrice}
