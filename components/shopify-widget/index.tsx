@@ -45,7 +45,7 @@ const ShopifyWidget = () => {
       }
     };
     checkUserEligibilityStatus();
-  }, [address]);
+  }, [address, userIsEligibleToClaim]);
 
   return (
     <Window
