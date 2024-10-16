@@ -10,19 +10,9 @@ import {
   SHOPIFY_SHOP_NAME
 } from "@/constants/shopifyWidget";
 
-interface DiscountReturnType {
-  codeDiscountNodes: {
-    edges: Array<{
-      node: {
-        id: string;
-        codeDiscount: {
-          title: string;
-          status: string;
-          usageLimit: number;
-          asyncUsageCount: number;
-        };
-      };
-    }>;
+interface OrdersReturnType {
+  ordersCount: {
+    count: number;
   };
 }
 
@@ -45,60 +35,41 @@ const shopifyAdminClient = new shopify.clients.Graphql({
   apiVersion: LATEST_API_VERSION
 });
 
-const GET_DISCOUNT_CODES = `
-  query getDiscountCodes($query: String!) {
-    codeDiscountNodes(first: 250, query: $query) {
-      edges {
-        node {
-          id
-          codeDiscount {
-            ... on DiscountCodeBasic {    
-              title
-              status
-              usageLimit
-              asyncUsageCount
-            }
-          }
-        }
-      }
-    }
-    }
-`;
+const GET_USER_ORDERS = `query getUserOrders($query: String!) {
+  ordersCount(query: $query) {
+    count
+  }
+  }`;
 
-export async function hasNeverUsedADiscountCode(address: Address | undefined) {
+export async function hasNeverPlacedOrder(address: Address | undefined) {
   try {
     if (!address) {
       throw new Error("No address provided");
     }
 
-    const response = await shopifyAdminClient.request(GET_DISCOUNT_CODES, {
-      variables: { query: `(title:*${address}*)` }
+    const ethAddress = await getAddressFromQuery(address);
+
+    const addressSnippet = ethAddress.slice(2, 8);
+
+    const response = await shopifyAdminClient.request(GET_USER_ORDERS, {
+      variables: { query: `discount_code:${addressSnippet}` }
     });
 
     if (!response.data) {
-      throw new Error("Could not fetch discount usage data");
+      throw new Error("Could not fetch order data");
     }
 
     if (response.errors?.message || response.errors?.graphQLErrors?.length) {
-      throw new Error("Could not fetch discount usage data");
+      throw new Error("Could not fetch order data");
     }
 
-    const responseData = response.data as DiscountReturnType;
-    const createdDiscountCodes = responseData.codeDiscountNodes.edges.map(
-      (edge) => {
-        return edge.node.codeDiscount;
-      }
-    );
-
-    const hasNeverUsedDiscountCode = createdDiscountCodes.every(
-      (codeDiscount) => codeDiscount.asyncUsageCount === 0
-    );
+    const responseData = (await response.data) as OrdersReturnType;
 
     return {
-      userHasNotUsedDiscountCode: hasNeverUsedDiscountCode
+      userHasNotPlacedOrder: responseData.ordersCount.count === 0
     };
   } catch (error) {
-    console.error("Error fetching discount codes:", error);
+    console.error("Error fetching orders:", error);
     throw error;
   }
 }
@@ -117,15 +88,15 @@ export default async function handler(
 
     const ethAddress = await getAddressFromQuery(address);
 
-    const hasNotUsedADiscountCode = await hasNeverUsedADiscountCode(ethAddress);
+    const hasNotPlacedOrder = await hasNeverPlacedOrder(ethAddress);
 
-    if (!hasNotUsedADiscountCode) {
+    if (!hasNotPlacedOrder) {
       return res.status(400).json({
-        message: "Could not fetch discount code usage data"
+        message: "Could not fetch orders placed"
       });
     }
 
-    return res.status(200).json(hasNotUsedADiscountCode);
+    return res.status(200).json(hasNotPlacedOrder);
   } catch (error) {
     console.error("Error creating cart:", error);
     return res.status(400).json({

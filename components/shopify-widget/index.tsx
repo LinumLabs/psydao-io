@@ -3,27 +3,19 @@ import { Window } from "../ui/window";
 import Image from "next/image";
 import PsyButton from "../ui/psy-button";
 import getPOAPStatus from "@/utils/getPOAPStatus";
-import type { Address } from "viem";
 import { useAccount } from "wagmi";
 import ShopifyImageModal from "./shopify-image-modal";
 import { useEffect, useState } from "react";
 import useRedirectToShopify from "@/hooks/useRedirectToShopify";
-import { determineDiscountCodeUsage } from "@/utils/determineDiscountCodeUsage";
-
-const handleEligibilityLogic = async (address: Address | undefined) => {
-  const userHasNotUsedDiscount = await determineDiscountCodeUsage(address);
-  const userPOAPStatus = await getPOAPStatus(address);
-
-  return { userPOAPStatus, userHasNotUsedDiscount };
-};
+import { determineOrderPlacementStatus } from "@/utils/determineDiscountCodeUsage";
 
 const ShopifyWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userIsEligibleToClaim, setUserIsEligibleToClaim] = useState(false);
 
-  const { redirectToShopify } = useRedirectToShopify();
-
   const { address } = useAccount();
+
+  const { redirectToShopify } = useRedirectToShopify();
 
   const handleModal = () => {
     setIsOpen((prev) => !prev);
@@ -32,12 +24,15 @@ const ShopifyWidget = () => {
   useEffect(() => {
     const checkUserEligibilityStatus = async () => {
       try {
-        const userEligibilityData = await handleEligibilityLogic(address);
+        const userHasNotPlacedOrder =
+          await determineOrderPlacementStatus(address);
+        const userPOAPStatus = await getPOAPStatus(address);
 
         const isEligible =
-          !!userEligibilityData.userPOAPStatus &&
-          !!userEligibilityData.userHasNotUsedDiscount &&
-          userEligibilityData.userHasNotUsedDiscount.userHasNotUsedDiscountCode;
+          !!userPOAPStatus &&
+          userPOAPStatus.hasValidPoap &&
+          !!userHasNotPlacedOrder &&
+          userHasNotPlacedOrder.userHasNotPlacedOrder;
 
         setUserIsEligibleToClaim(isEligible);
       } catch (error) {
