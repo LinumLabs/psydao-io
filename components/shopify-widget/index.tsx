@@ -54,6 +54,7 @@ const ShopifyWidget = () => {
       width={{ base: "90%", sm: "50%", lg: "231px" }}
       bottom={{ base: "5%", sm: "20%", lg: "18%" }}
       right={{ base: "5%", sm: "25%", lg: "6%" }}
+      zIndex={30}
     >
       <Window.TitleBar />
       <Window.Content p={4}>
