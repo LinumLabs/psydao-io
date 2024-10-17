@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import "@shopify/shopify-api/adapters/node";
 import { LATEST_API_VERSION, shopifyApi } from "@shopify/shopify-api";
 import {
   SHOPIFY_API_ACCESS_TOKEN,
@@ -44,7 +45,7 @@ export default async function handler(
       console.error("Shopify API Errors:", errors);
       return res.status(400).json({ message: "Error querying Shopify API" });
     }
-    res.status(200).json({ data });
+    return res.status(200).json({ data });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "";
     console.error("Shopify API Error:", errorMessage);
