@@ -7,13 +7,16 @@ import { useAccount } from "wagmi";
 import ShopifyImageModal from "./shopify-image-modal";
 import { useEffect, useState } from "react";
 import useRedirectToShopify from "@/hooks/useRedirectToShopify";
-import { determineOrderPlacementStatus } from "@/utils/determineDiscountCodeUsage";
+import useGetUserOrders from "@/hooks/useGetUserOrders";
 
 const ShopifyWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userIsEligibleToClaim, setUserIsEligibleToClaim] = useState(false);
+  const [addressSnippet, setAddressSnippet] = useState("");
 
   const { address } = useAccount();
+
+  const { data, error } = useGetUserOrders(addressSnippet);
 
   const { redirectToShopify } = useRedirectToShopify();
 
@@ -22,25 +25,26 @@ const ShopifyWidget = () => {
   };
 
   useEffect(() => {
+    if (!address) return;
+    const snippet = address.slice(2, 8);
+    setAddressSnippet(snippet);
     const checkUserEligibilityStatus = async () => {
       try {
-        const userHasNotPlacedOrder =
-          await determineOrderPlacementStatus(address);
         const userPOAPStatus = await getPOAPStatus(address);
 
         const isEligible =
           !!userPOAPStatus &&
           userPOAPStatus.hasValidPoap &&
-          !!userHasNotPlacedOrder &&
-          userHasNotPlacedOrder.userHasNotPlacedOrder;
+          data?.ordersCount.count === 0 &&
+          !error;
 
         setUserIsEligibleToClaim(isEligible);
       } catch (error) {
-        console.error("Error fetching eligibility status");
+        console.error("Error fetching eligibility status", error);
       }
     };
     checkUserEligibilityStatus();
-  }, [address, userIsEligibleToClaim]);
+  }, [address, data]);
 
   return (
     <Window
