@@ -6,6 +6,7 @@ export interface ClaimCardProps {
   claimStatus: ClaimStatus;
   batchNumber: number;
   expiry: string;
+  totalClaimable?: string;
 }
 
 const ClaimCardText = ({ text }: { text: string }) => (
@@ -69,7 +70,7 @@ const ClaimCard = (props: ClaimCardProps) => {
         <Box marginTop={4}>
           <Button
             onClick={() => true}
-            isDisabled={claimStatus !== "claimable"}
+            isDisabled={claimStatus === "claimed"}
             background={
               claimStatus === 'claimable'
                 ? "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)"
