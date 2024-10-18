@@ -232,13 +232,13 @@ export const SwapWidget = () => {
       top={{
         base: fullScreenWindow ? "0" : "56%",
         sm: fullScreenWindow ? "0" : "60%",
-        md: fullScreenWindow ? "0" : "52%"
+        md: fullScreenWindow ? "0" : "50%"
       }}
       left={fullScreenWindow && termsAndConditions ? "0" : "50%"}
       transform={
         fullScreenWindow && termsAndConditions
           ? "translate(0, 0)"
-          : "translate(-50%, -50%)"
+          : "translate(-48%, -50%)"
       }
       fullScreenWindow={fullScreenWindow}
       defaultIsOpen

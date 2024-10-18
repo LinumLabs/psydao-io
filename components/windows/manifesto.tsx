@@ -69,7 +69,7 @@ export const Manifesto = () => {
       top={{
         base: fullScreenWindow ? "0" : "53%",
         sm: fullScreenWindow ? "0" : "56%",
-        md: fullScreenWindow ? "0" : "48%"
+        md: fullScreenWindow ? "0" : "50%"
       }}
       left={"45%"}
       transform={
