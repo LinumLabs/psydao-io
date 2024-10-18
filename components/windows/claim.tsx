@@ -42,10 +42,9 @@ export const Claim = () => {
         sm: fullScreenWindow ? "0" : "58%",
         md: fullScreenWindow ? "0" : "50%"
       }}
-      left={"50%"}
+      left={"40%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-40%, -45%)"}
       fullScreenWindow={fullScreenWindow}
-      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content

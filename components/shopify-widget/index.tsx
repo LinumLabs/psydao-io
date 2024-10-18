@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, Text, useMediaQuery } from "@chakra-ui/react";
 import { Window } from "../ui/window";
 import Image from "next/image";
 import PsyButton from "../ui/psy-button";
@@ -13,6 +13,7 @@ const ShopifyWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userIsEligibleToClaim, setUserIsEligibleToClaim] = useState(false);
   const [addressSnippet, setAddressSnippet] = useState("");
+  const [isLargerThanLg] = useMediaQuery("(min-width: 1024px)");
 
   const { address } = useAccount();
 
