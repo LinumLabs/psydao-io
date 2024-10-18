@@ -230,9 +230,9 @@ export const SwapWidget = () => {
       }}
       width={"100%"}
       top={{
-        base: fullScreenWindow ? "0" : "55%",
-        sm: fullScreenWindow ? "0" : "58%",
-        md: fullScreenWindow ? "0" : "50%"
+        base: fullScreenWindow ? "0" : "56%",
+        sm: fullScreenWindow ? "0" : "60%",
+        md: fullScreenWindow ? "0" : "52%"
       }}
       left={fullScreenWindow && termsAndConditions ? "0" : "50%"}
       transform={
@@ -241,6 +241,7 @@ export const SwapWidget = () => {
           : "translate(-50%, -50%)"
       }
       fullScreenWindow={fullScreenWindow}
+      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content p={2}>

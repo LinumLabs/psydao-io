@@ -50,7 +50,7 @@ const ShopifyWidget = () => {
   return (
     <Window
       id="shopify-widget"
-      defaultIsOpen={isLargerThanLg}
+      defaultIsOpen
       height={{ base: "75%", sm: "60%", lg: "385px" }}
       width={{ base: "90%", sm: "50%", lg: "231px" }}
       bottom={{ base: "5%", sm: "20%", lg: "18%" }}
