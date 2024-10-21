@@ -26,7 +26,10 @@ const ShopifyWidget = () => {
   };
 
   useEffect(() => {
-    if (!address) return;
+    if (!address) {
+      setUserIsEligibleToClaim(false);
+      return;
+    }
     const snippet = address.slice(2, 8);
     setAddressSnippet(snippet);
     const checkUserEligibilityStatus = async () => {
