@@ -30,8 +30,6 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const { address } = useAccount();
   const [success, setSuccess] = useState(false);
 
-  console.log({ claims });
-
   const fetchMappedData = async (): Promise<{
     data?: any;
     error?: any;
@@ -56,7 +54,6 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
       }
 
       const result = await response.json();
-      console.log({ result });
       return { data: result };
     } catch (error) {
       console.error("Error calling API:", error);
@@ -80,8 +77,6 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
       setSuccess(false);
     }
   }, [claims, address, success]);
-
-  console.log({ mappedData });
 
   if (!mappedData) {
     return null;
@@ -110,7 +105,6 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
           >
             Claimable Rewards
           </Text>
-          {/* add href to claim creation */}
           {isAdmin && (
             <Button
               h={"100%"}

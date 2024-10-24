@@ -1,51 +1,54 @@
-import { Box, Flex, Grid, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, Text, useMediaQuery } from "@chakra-ui/react";
 import { Window } from "../ui/window";
 import Image from "next/image";
 import PsyButton from "../ui/psy-button";
 import getPOAPStatus from "@/utils/getPOAPStatus";
-import type { Address } from "viem";
 import { useAccount } from "wagmi";
 import ShopifyImageModal from "./shopify-image-modal";
 import { useEffect, useState } from "react";
 import useRedirectToShopify from "@/hooks/useRedirectToShopify";
-import { determineDiscountCodeUsage } from "@/utils/determineDiscountCodeUsage";
-
-const handleEligibilityLogic = async (address: Address | undefined) => {
-  const userHasNotUsedDiscount = await determineDiscountCodeUsage(address);
-  const userPOAPStatus = await getPOAPStatus(address);
-
-  return { userPOAPStatus, userHasNotUsedDiscount };
-};
+import useGetUserOrders from "@/hooks/useGetUserOrders";
 
 const ShopifyWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userIsEligibleToClaim, setUserIsEligibleToClaim] = useState(false);
-
-  const { redirectToShopify } = useRedirectToShopify();
+  const [addressSnippet, setAddressSnippet] = useState("");
+  const [isLargerThanLg] = useMediaQuery("(min-width: 1024px)");
 
   const { address } = useAccount();
+
+  const { data, error } = useGetUserOrders(addressSnippet);
+
+  const { redirectToShopify } = useRedirectToShopify();
 
   const handleModal = () => {
     setIsOpen((prev) => !prev);
   };
 
   useEffect(() => {
+    if (!address) {
+      setUserIsEligibleToClaim(false);
+      return;
+    }
+    const snippet = address.slice(2, 8);
+    setAddressSnippet(snippet);
     const checkUserEligibilityStatus = async () => {
       try {
-        const userEligibilityData = await handleEligibilityLogic(address);
+        const userPOAPStatus = await getPOAPStatus(address);
 
         const isEligible =
-          !!userEligibilityData.userPOAPStatus &&
-          !!userEligibilityData.userHasNotUsedDiscount &&
-          userEligibilityData.userHasNotUsedDiscount.userHasNotUsedDiscountCode;
+          !!userPOAPStatus &&
+          userPOAPStatus.hasValidPoap &&
+          data?.ordersCount.count === 0 &&
+          !error;
 
         setUserIsEligibleToClaim(isEligible);
       } catch (error) {
-        console.error("Error fetching eligibility status");
+        console.error("Error fetching eligibility status", error);
       }
     };
     checkUserEligibilityStatus();
-  }, [address]);
+  }, [address, data]);
 
   return (
     <Window
