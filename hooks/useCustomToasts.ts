@@ -38,7 +38,11 @@ const ERROR_MESSAGES = {
   "TokenSale: Tokens Locked":
     "Token withdrawal is locked. Please contact the administrator.",
   "TokenSale: Insufficient funds": "You must have a token balance to withdraw",
-  "Could not create cart": "Could not create cart for checkout."
+  "Could not create cart": "Could not create cart for checkout.",
+  "Invalid Proof": "Invalid proof submitted.",
+  "Not Enough Psy In Contract": "Not enough PSY in contract to fulfill claim.",
+  "All Psy Claimed": "All PSY has been claimed.",
+  "Claim Period Ended": "The claim period has already ended."
 };
 
 export const customErrorMessage = (message: string): string => {

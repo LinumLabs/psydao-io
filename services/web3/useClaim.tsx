@@ -2,24 +2,34 @@ import { psyClaimsMainnet, psyClaimsSepolia } from "@/constants/contracts";
 import { env } from "process";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import psyClaimsAbi from "@/abis/psyClaimsAbi.json";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { parseUnits } from "viem";
 
 interface ClaimProps {
   batchId: string;
   amount: string;
   merkleProof: any;
+  width: number;
 }
 
 export const useClaim = (props: ClaimProps) => {
   const [approvedSuccess, setApprovedSuccess] = useState(false);
 
-  const { batchId, amount, merkleProof } = props;
-
-  const { writeContract, data, isPending, status, error } = useWriteContract();
+  const { batchId, amount, merkleProof, width } = props;
 
   const {
+    writeContract,
+    data,
+    isPending,
+    status,
+    error,
     isSuccess,
+    isError,
+    reset
+  } = useWriteContract();
+
+  const {
+    isSuccess: writeContractSuccess,
     isFetching,
     refetch: refetchTxReceipt,
     fetchStatus,
@@ -61,11 +71,14 @@ export const useClaim = (props: ClaimProps) => {
     claim,
     data,
     // isFetching,
-    // isSuccess,
+    isSuccess,
+    writeContractSuccess,
     status,
     // fetchStatus,
     approvedSuccess,
-    error
-    // txError
+    error,
+    txError,
+    isError,
+    reset
   };
 };

@@ -1,7 +1,10 @@
+import { useCustomToasts } from "@/hooks/useCustomToasts";
+import { useResize } from "@/hooks/useResize";
 import { type ClaimStatus } from "@/lib/types";
 import { useClaim } from "@/services/web3/useClaim";
 import { getExpirationStatus } from "@/utils/getExpirationStatus";
 import { Box, Button, Divider, Flex, Text } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 export interface ClaimCardProps {
   amount: string;
@@ -31,12 +34,39 @@ const ClaimCardText = ({ text }: { text: string }) => (
 
 const ClaimCard = (props: ClaimCardProps) => {
   const { amount, claimStatus, batchId, expiry, proof, text, disabled } = props;
+  const { width } = useResize();
+  const { showCustomErrorToast, showErrorToast, showSuccessToast } =
+    useCustomToasts();
 
-  const { claim } = useClaim({
+  const {
+    claim,
+    isSuccess,
+    writeContractSuccess,
+    isError,
+    txError,
+    error,
+    reset
+  } = useClaim({
     batchId: batchId.toString(),
     amount: amount,
-    merkleProof: proof 
+    merkleProof: proof,
+    width: width
   });
+
+  useEffect(() => {
+    if (isSuccess && writeContractSuccess) {
+      showSuccessToast("Claim successful.", width);
+      reset();
+      return;
+    }
+
+    if (txError || isError) {
+      showCustomErrorToast(error?.message ?? "", width);
+      reset();
+      console.error(error);
+      return;
+    }
+  }, [isSuccess, writeContractSuccess, txError, error]);
 
   return (
     <Flex
@@ -76,6 +106,7 @@ const ClaimCard = (props: ClaimCardProps) => {
         <Divider borderColor={"#E0E0E0"} my={3} />
         <ClaimCardText text={`${getExpirationStatus(expiry)}`} />
         <Box marginTop={4}>
+          {/* Add claim loading state */}
           <Button
             onClick={() => true}
             isDisabled={disabled}
