@@ -1,12 +1,18 @@
 import { type ClaimStatus } from "@/lib/types";
+import { useClaim } from "@/services/web3/useClaim";
+import { getExpirationStatus } from "@/utils/getExpirationStatus";
 import { Box, Button, Divider, Flex, Text } from "@chakra-ui/react";
 
 export interface ClaimCardProps {
   amount: string;
   claimStatus: ClaimStatus;
-  batchNumber: number;
+  batchId: string;
   expiry: string;
   totalClaimable?: string;
+  onClaim?: () => void;
+  proof?: string[];
+  text: string;
+  disabled?: boolean;
 }
 
 const ClaimCardText = ({ text }: { text: string }) => (
@@ -24,15 +30,17 @@ const ClaimCardText = ({ text }: { text: string }) => (
 );
 
 const ClaimCard = (props: ClaimCardProps) => {
-  const { amount, claimStatus, batchNumber, expiry } = props;
-  const buttonText =
-    claimStatus === "claimed"
-      ? "Claimed"
-      : claimStatus === "expired"
-        ? "Expired"
-        : "Claim";
+  const { amount, claimStatus, batchId, expiry, proof, text, disabled } = props;
+
+  const { claim } = useClaim({
+    batchId: batchId.toString(),
+    amount: amount,
+    merkleProof: proof 
+  });
+
   return (
     <Flex
+      onClick={claim}
       maxW={"593px"}
       mx="auto"
       w="100%"
@@ -52,7 +60,7 @@ const ClaimCard = (props: ClaimCardProps) => {
         gap={2}
         fontFamily={"Inter Medium"}
       >
-        <ClaimCardText text={`Batch ${batchNumber.toString()}`} />
+        <ClaimCardText text={`Batch ${batchId.toString()}`} />
         <Divider borderColor={"#E0E0E0"} my={3} />
         <ClaimCardText text={claimStatus} />
         <Text
@@ -63,16 +71,16 @@ const ClaimCard = (props: ClaimCardProps) => {
             md: "16px"
           }}
         >
-          {amount} PSY
+          {parseFloat(amount).toFixed(2)} PSY
         </Text>
         <Divider borderColor={"#E0E0E0"} my={3} />
-        <ClaimCardText text={`Exp. ${expiry}`} />
+        <ClaimCardText text={`${getExpirationStatus(expiry)}`} />
         <Box marginTop={4}>
           <Button
             onClick={() => true}
-            isDisabled={claimStatus === "claimed"}
+            isDisabled={disabled}
             background={
-              claimStatus === 'claimable'
+              claimStatus === "claimable"
                 ? "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)"
                 : "gray.500"
             }
@@ -89,7 +97,7 @@ const ClaimCard = (props: ClaimCardProps) => {
               opacity: claimStatus === "claimed" ? "" : "0.8"
             }}
           >
-            {buttonText}
+            {disabled ? text : "Claim"}
           </Button>
         </Box>
       </Box>
