@@ -53,7 +53,11 @@ const ERROR_MESSAGES = {
   "Minimum claim deadline must be at least a week after claim period starts.":
     "Minimum claim deadline must be at least a week after claim period starts.",
   "The selected deadline is too close to the current date.":
-    "The selected deadline is too close to the current date."
+    "The selected deadline is too close to the current date.",
+  "Invalid Proof": "Invalid proof submitted.",
+  "Not Enough Psy In Contract": "Not enough PSY in contract to fulfill claim.",
+  "All Psy Claimed": "All PSY has been claimed.",
+  "Claim Period Ended": "The claim period has already ended."
 };
 
 export const customErrorMessage = (message: string): string => {
