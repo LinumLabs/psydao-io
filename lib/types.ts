@@ -84,6 +84,8 @@ export type ClaimDetail = {
 };
 
 export type BatchClaim = {
+  // My attempt at solving build issues
+  __typename: string;
   id: string;
   claims: ClaimDetail[];
   ipfsHash: string;

@@ -58,13 +58,11 @@ const ClaimCard = (props: ClaimCardProps) => {
   useEffect(() => {
     if (isSuccess && writeContractSuccess) {
       showSuccessToast("Claim successful.", width);
-      reset();
       return;
     }
 
     if (txError || isError) {
       showCustomErrorToast(error?.message ?? "", width);
-      reset();
       console.error(error);
       return;
     }
@@ -72,7 +70,6 @@ const ClaimCard = (props: ClaimCardProps) => {
 
   return (
     <Flex
-      onClick={claim}
       maxW={"593px"}
       mx="auto"
       w="100%"
@@ -108,9 +105,8 @@ const ClaimCard = (props: ClaimCardProps) => {
         <Divider borderColor={"#E0E0E0"} my={3} />
         <ClaimCardText text={`${getExpirationStatus(expiry)}`} />
         <Box marginTop={4}>
-          {/* Add claim loading state */}
           <Button
-            onClick={() => true}
+            onClick={claim}
             isDisabled={disabled}
             background={
               claimStatus === "claimable"

@@ -8,6 +8,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 
 export const useGetBatchClaims = () => {
+  const [refetchClaims, setRefetchClaims] = useState<boolean>(false);
   const [claims, setClaims] = useState<BatchClaim[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
@@ -17,14 +18,6 @@ export const useGetBatchClaims = () => {
     setLoading(true);
     setError(null);
 
-    //   id: string;
-    // claims: ClaimDetail[];
-    // ipfsHash: string;
-    // merkleRoot: string;
-    // amount: string;
-    // claimed: boolean;
-    // deadline: string;
-
     try {
       const { data } = await client.query({
         query: getBatchClaims,
@@ -32,8 +25,6 @@ export const useGetBatchClaims = () => {
       });
 
       if (data && data.batchClaims) {
-       
-        
         setClaims(data.batchClaims);
       } else {
         setClaims([]);
@@ -49,5 +40,13 @@ export const useGetBatchClaims = () => {
     void fetchClaims();
   }, [fetchClaims]);
 
-  return { claims, loading, error };
+  const refetch = async () => {
+    await fetchClaims();
+  };
+
+  setTimeout(async () => {
+    await refetch().then(() => {});
+  }, 20000);
+
+  return { claims, loading, error, refetch };
 };

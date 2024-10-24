@@ -25,9 +25,10 @@ type MappedClaimData = {
 
 const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const { nextStep } = useWizard();
-  const { claims } = useGetBatchClaims();
+  const { claims, refetch } = useGetBatchClaims();
   const [mappedData, setMappedData] = useState<MappedClaimData[]>([]);
   const { address } = useAccount();
+  const [success, setSuccess] = useState(false);
 
   console.log({ claims });
 
@@ -73,7 +74,12 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
           console.log(error);
         });
     }
-  }, [claims, address]);
+
+    if (success) {
+      refetch();
+      setSuccess(false);
+    }
+  }, [claims, address, success]);
 
   console.log({ mappedData });
 
@@ -144,7 +150,13 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
               <ClaimCard
                 key={index}
                 amount={item.amount}
-                claimStatus={item.claimed ? "claimed" : item.buttonDisabled ? "expired" : "claimable"}
+                claimStatus={
+                  item.claimed
+                    ? "claimed"
+                    : item.buttonDisabled
+                      ? "expired"
+                      : "claimable"
+                }
                 batchId={item.batchId}
                 expiry={item.deadline}
                 onClaim={() => {}}
