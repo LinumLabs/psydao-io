@@ -212,9 +212,6 @@ const CreateRewardClaim = () => {
     const end = endTimeStamp / 1000;
 
     const { data, error } = await fetchDistributionData(
-      // the problem lies here with dynamic values: merkleroot is not returned
-      // startTimeStamp,
-      // endTimeStamp,
       start,
       end,
       totalAmountOfTokens,
@@ -228,7 +225,6 @@ const CreateRewardClaim = () => {
     }
 
     try {
-      console.log("Calling createNewClaimableBatch");
       await createNewClaimableBatch(
         data?.merkleRoot as string,
         claimDeadlineAsString,
