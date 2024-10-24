@@ -30,7 +30,7 @@ export const useClaim = (props: ClaimProps) => {
 
   const {
     isSuccess: writeContractSuccess,
-    isFetching,
+    isLoading,
     refetch: refetchTxReceipt,
     fetchStatus,
     error: txError
@@ -70,11 +70,11 @@ export const useClaim = (props: ClaimProps) => {
   return {
     claim,
     data,
-    // isFetching,
     isSuccess,
     writeContractSuccess,
+    isPending,
+    isLoading,
     status,
-    // fetchStatus,
     approvedSuccess,
     error,
     txError,

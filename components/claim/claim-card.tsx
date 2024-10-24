@@ -45,7 +45,9 @@ const ClaimCard = (props: ClaimCardProps) => {
     isError,
     txError,
     error,
-    reset
+    reset,
+    isLoading,
+    isPending
   } = useClaim({
     batchId: batchId.toString(),
     amount: amount,
@@ -127,6 +129,8 @@ const ClaimCard = (props: ClaimCardProps) => {
             _hover={{
               opacity: claimStatus === "claimed" ? "" : "0.8"
             }}
+            isLoading={isPending || isLoading}
+            loadingText={"Claiming..."}
           >
             {disabled ? text : "Claim"}
           </Button>
