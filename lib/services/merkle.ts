@@ -22,33 +22,6 @@ export type Claim = {
   amountForClaim: string;
 };
 
-export const getMerkleProof = async (ipfsHash: string, address: string, batchId: number) => {
-
-    const balances: Balance[] = await getIpfsHash(ipfsHash);
-    const addressBalance = balances.find((holder: any) => holder.address === address.toLowerCase());
-    if(!addressBalance) {
-        return {proof: [], root: '', amount: 0};
-    }
-    const leaves = balances.map(holder =>
-        keccak256(
-            encodePacked(
-            ['uint256', 'uint256', 'address'],
-            [
-                BigInt(batchId),
-                parseUnits(holder.tokens, 18),
-                holder.address as `0x${string}`,
-
-            ]
-            )
-        )
-    );
-    const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
-    const leaf = keccak256(encodePacked(['uint256', 'uint256', 'address'], [BigInt(batchId), parseUnits(addressBalance.tokens, 18), address as `0x${string}`]));
-    const proof = tree.getHexProof(leaf);
-    const root = tree.getHexRoot();
-    const verified = tree.verify(proof, leaf, root);
-    return {proof, root, amount: addressBalance.tokens, verified};
-}
 export const sortOutData = async (data: Claim[], address: string) => {
 
     if(data.length === 0 || !address || data === undefined) {
@@ -101,3 +74,31 @@ const processClaim = async (claim: Claim, address: string) => {
     }
   return updatedClaim;
 };
+
+export const getMerkleProof = async (ipfsHash: string, address: string, batchId: number) => {
+
+    const balances: Balance[] = await getIpfsHash(ipfsHash);
+    const addressBalance = balances.find((holder: any) => holder.address === address.toLowerCase());
+    if(!addressBalance) {
+        return {proof: [], root: '', amount: 0};
+    }
+    const leaves = balances.map(holder =>
+        keccak256(
+            encodePacked(
+            ['uint256', 'uint256', 'address'],
+            [
+                BigInt(batchId),
+                parseUnits(holder.tokens, 18),
+                holder.address as `0x${string}`,
+
+            ]
+            )
+        )
+    );
+    const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
+    const leaf = keccak256(encodePacked(['uint256', 'uint256', 'address'], [BigInt(batchId), parseUnits(addressBalance.tokens, 18), address as `0x${string}`]));
+    const proof = tree.getHexProof(leaf);
+    const root = tree.getHexRoot();
+    const verified = tree.verify(proof, leaf, root);
+    return {proof, root, amount: addressBalance.tokens, verified};
+}

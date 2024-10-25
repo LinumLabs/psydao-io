@@ -18,7 +18,7 @@ export const main = async (startTimeStamp: number, endTimeStamp: number, totalAm
         // Exclude random created proposals with ID 0x71166758c2aa68fe1d1d5eb52135a3caafc07284ec1d0b2c6dba8ef161bf7a4c
         const filteredProposals = proposals.filter((proposal: any) => proposal.id !== '0x71166758c2aa68fe1d1d5eb52135a3caafc07284ec1d0b2c6dba8ef161bf7a4c');    
 
-        const sgData = await getPsycHolders(Number(filteredProposals[filteredProposals.length - 1].snapshot));
+        const sgData = await getPsycHolders(Number(filteredProposals[filteredProposals.length - 1]?.snapshot));
         psycHolders = sgData.map((psycHolder: any) => process.env.TEST_ENV ? userTestMapping[psycHolder.owner] ?? psycHolder.owner.toLowerCase() : psycHolder.owner.toLowerCase());
         const tokenPerHolder = totalAmountOfTokens / psycHolders.length;
 
@@ -28,9 +28,12 @@ export const main = async (startTimeStamp: number, endTimeStamp: number, totalAm
         for (const proposal of filteredProposals) {
             const votes = await getVotesOnProposalById(proposal.id) ?? [];
             votes.forEach((vote: any) => {
-                if(psycHolders.includes(process.env.TEST_ENV ? userTestMapping[vote.voter.toLowerCase()]?? vote.voter.toLowerCase() : vote.voter.toLowerCase())) {
-                    votesCountMap[process.env.TEST_ENV ? userTestMapping[vote.voter.toLowerCase()] ?? vote.voter.toLowerCase() : vote.voter.toLowerCase()]++;
-                    totalVotes++;
+                const voterAddress = process.env.TEST_ENV ? userTestMapping[vote.voter.toLowerCase()] ?? vote.voter.toLowerCase() : vote.voter.toLowerCase();
+                if (psycHolders.includes(voterAddress)) {
+                    if (votesCountMap[voterAddress] !== undefined) {
+                        votesCountMap[voterAddress]++;
+                        totalVotes++;
+                    }
                 }
             });
         }
@@ -57,7 +60,7 @@ export const main = async (startTimeStamp: number, endTimeStamp: number, totalAm
     const balances: Balance[] = psycHolderTokenDistribution.map(holder => {
         return {
             address: holder.address as `0x${string}`,
-            tokens: (holder.tokens + unAllocatedTokens*votesCountMap[holder.address]/totalVotes).toFixed(10),
+            tokens: (holder.tokens + unAllocatedTokens * (votesCountMap[holder.address] ?? 0) / totalVotes).toFixed(10),
         };
     });
 
