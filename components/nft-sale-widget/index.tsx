@@ -50,7 +50,7 @@ const NftSaleWidgetContent = () => {
       }}
       width={"100%"}
       top={{
-        base: fullScreenWindow ? "0" : "55%",
+        base: fullScreenWindow ? "0" : "65%",
         sm: fullScreenWindow ? "0" : "58%",
         md: fullScreenWindow ? "0" : "50%"
       }}
