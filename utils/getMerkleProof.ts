@@ -49,10 +49,11 @@ const fetchDistributionData = async (
     }
 
     const result = await response.json();
-    console.log(result);
     return { data: result };
   } catch (error) {
     console.error("Error calling API:", error);
     return { error };
   }
 };
+
+// Trigger a build.
