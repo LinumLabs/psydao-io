@@ -61,9 +61,10 @@ const EmptyState = () => {
 
 const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const { nextStep } = useWizard();
-  const { claims } = useGetBatchClaims();
+  const { claims, refetch } = useGetBatchClaims();
   const [mappedData, setMappedData] = useState<MappedClaimData[]>([]);
   const { address } = useAccount();
+  const [success, setSuccess] = useState(false);
 
   const fetchMappedData = async (): Promise<{
     data?: any;
@@ -106,7 +107,12 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
           console.log(error);
         });
     }
-  }, [claims, address]);
+
+    if (success) {
+      refetch();
+      setSuccess(false);
+    }
+  }, [claims, address, success]);
 
   if (!mappedData) {
     return null;
