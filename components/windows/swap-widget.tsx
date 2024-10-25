@@ -234,7 +234,10 @@ export const SwapWidget = () => {
         sm: fullScreenWindow ? "0" : "60%",
         md: fullScreenWindow ? "0" : "50%"
       }}
-      left={fullScreenWindow && termsAndConditions ? "0" : "50%"}
+      left={{
+        base: fullScreenWindow && termsAndConditions ? "0" : "50%",
+        xl: fullScreenWindow && termsAndConditions ? "0" : "25%"
+      }}
       transform={
         fullScreenWindow && termsAndConditions
           ? "translate(0, 0)"
