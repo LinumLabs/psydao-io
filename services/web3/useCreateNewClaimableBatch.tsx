@@ -6,12 +6,16 @@ import { psyClaimsMainnet, psyClaimsSepolia } from "@/constants/contracts";
 import psyClaimsAbi from "@/abis/psyClaimsAbi.json";
 
 export const useCreateNewClaimableBatch = () => {
-  const { data, writeContract, isPending, error, reset } = useWriteContract();
+  const { data, writeContract, isPending, error, reset, isError, isSuccess } =
+    useWriteContract();
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash: data
-    });
+  const {
+    isLoading: isConfirming,
+    isSuccess: isConfirmed,
+    isError: txError
+  } = useWaitForTransactionReceipt({
+    hash: data
+  });
 
   const createNewClaimableBatch = useCallback(
     async (merkleRoot: string, deadline: string, ipfsHash: string) => {
@@ -29,9 +33,12 @@ export const useCreateNewClaimableBatch = () => {
 
   return {
     createNewClaimableBatch,
-    isConfirmed,
+    isConfirmed: isConfirmed && isSuccess,
     isConfirming,
     isPending,
-    error
+    error,
+    createBatchError: isError,
+    resetBatchCreate: reset,
+    createBatchTxError: txError
   };
 };

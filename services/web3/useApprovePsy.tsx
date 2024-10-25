@@ -58,6 +58,7 @@ export const useApprovePsy = (amount: BigInt) => {
     fetchStatus,
     approvedSuccess,
     error,
-    txError
+    txError,
+    resetApprove: reset
   };
 };
