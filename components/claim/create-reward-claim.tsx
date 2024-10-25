@@ -222,6 +222,10 @@ const CreateRewardClaim = () => {
       return;
     }
 
+    if (!data?.ipfsHash) {
+      return showCustomErrorToast("Error creating distribution data: review IPFS hash", width);
+    }
+
     try {
       await createNewClaimableBatch(
         data?.merkleRoot as string,
