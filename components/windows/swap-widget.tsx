@@ -236,7 +236,7 @@ export const SwapWidget = () => {
       }}
       left={{
         base: fullScreenWindow && termsAndConditions ? "0" : "50%",
-        xl: fullScreenWindow && termsAndConditions ? "0" : "25%"
+        xl: fullScreenWindow && termsAndConditions ? "0" : "30%"
       }}
       transform={
         fullScreenWindow && termsAndConditions

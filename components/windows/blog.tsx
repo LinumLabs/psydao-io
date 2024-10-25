@@ -40,7 +40,7 @@ export const Blog = () => {
       }}
       left={{
         base: fullScreenWindow ? "0" : "50%",
-        xl: fullScreenWindow ? "0" : "25%"
+        xl: fullScreenWindow ? "0" : "30%"
       }}
       fullScreenWindow={fullScreenWindow}
     >
