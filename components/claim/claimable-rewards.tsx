@@ -1,15 +1,122 @@
 import { Box, Button, Flex, Grid, Text } from "@chakra-ui/react";
 import ClaimCard from "./claim-card";
-import { dummyData } from "./dummyData";
-import { type ClaimStatus } from "@/lib/types";
 import { useWizard } from "react-use-wizard";
+import { useGetBatchClaims } from "@/hooks/useGetBatchClaims";
+import { useAccount } from "wagmi";
+import { useEffect, useState } from "react";
 
 interface ClaimableRewardsProps {
   isAdmin: boolean;
 }
 
+type MappedClaimData = {
+  id: string;
+  claims: [];
+  batchId: string;
+  ipfsHash: string;
+  merkleRoot: string;
+  amount: string;
+  claimed: boolean;
+  deadline: string;
+  merkleProof: string[];
+  buttonDisabled: boolean;
+  reason: string;
+};
+
+const EmptyState = () => {
+  return (
+    <Flex
+      gap={8}
+      direction={"column"}
+      p={{
+        base: "4",
+        md: "8"
+      }}
+    >
+      <Flex
+        direction={"column"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+        border={"1px solid rgba(242,190,190,0.45)"}
+        borderRadius={"20px"}
+        w={"fit-content"}
+        marginX={"auto"}
+        padding={{
+          base: "4",
+          md: "6"
+        }}
+      >
+        <Text
+          fontSize={{
+            base: "16px",
+            md: "18px"
+          }}
+        >
+          No claimable rewards yet
+        </Text>
+      </Flex>
+    </Flex>
+  );
+};
+
 const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const { nextStep } = useWizard();
+  const { claims, refetch } = useGetBatchClaims();
+  const [mappedData, setMappedData] = useState<MappedClaimData[]>([]);
+  const { address } = useAccount();
+  const [success, setSuccess] = useState(false);
+
+  const fetchMappedData = async (): Promise<{
+    data?: any;
+    error?: any;
+  }> => {
+    const cleanedClaimsArray = claims.map(({ __typename, ...rest }) => rest);
+    try {
+      const response = await fetch("/api/mapped-data", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          claims: cleanedClaimsArray,
+          address: address
+        })
+      });
+
+      if (!response.ok) {
+        const result = await response.json();
+        console.error("Error:", result.error);
+        return { error: result.error };
+      }
+
+      const result = await response.json();
+      return { data: result };
+    } catch (error) {
+      console.error("Error calling API:", error);
+      return { error };
+    }
+  };
+
+  useEffect(() => {
+    if (claims && address) {
+      fetchMappedData()
+        .then((result) => {
+          setMappedData(result.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    if (success) {
+      refetch();
+      setSuccess(false);
+    }
+  }, [claims, address, success]);
+
+  if (!mappedData) {
+    return null;
+  }
 
   return (
     <Box>
@@ -34,7 +141,6 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
           >
             Claimable Rewards
           </Text>
-          {/* add href to claim creation */}
           {isAdmin && (
             <Button
               h={"100%"}
@@ -68,15 +174,31 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
         maxW="100%"
         padding={{ base: "4", md: "8" }}
       >
-        {dummyData.map((item, index) => (
-          <ClaimCard
-            key={index}
-            amount={item.amount}
-            claimStatus={item.claimStatus as ClaimStatus}
-            batchNumber={item.batchNumber}
-            expiry={item.expiry}
-          />
-        ))}
+        {mappedData.length > 0 ? (
+          mappedData.map((item, index) => {
+            return (
+              <ClaimCard
+                key={index}
+                amount={item.amount}
+                claimStatus={
+                  item.claimed
+                    ? "claimed"
+                    : item.buttonDisabled
+                      ? "expired"
+                      : "claimable"
+                }
+                batchId={item.batchId}
+                expiry={item.deadline}
+                onClaim={() => {}}
+                proof={item.merkleProof}
+                text={item.reason}
+                disabled={item.buttonDisabled}
+              />
+            );
+          })
+        ) : (
+          <EmptyState />
+        )}
       </Grid>
     </Box>
   );

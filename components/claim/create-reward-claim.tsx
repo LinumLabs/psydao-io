@@ -2,9 +2,18 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, Text, Flex, Button, Input, Image, Grid } from "@chakra-ui/react";
 import { useWizard } from "react-use-wizard";
 import CreateClaimButton from "./claim-button";
-import React, { useState } from "react";
-import CustomDatePicker from "./date-time-input";
-import { start } from "repl";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import CustomDatePicker from "./custom-date-picker";
+import { useCreateNewClaimableBatch } from "@/services/web3/useCreateNewClaimableBatch";
+import { useGetMinimumClaimDeadline } from "@/services/web3/useGetMinimumClaimDeadline";
+import { getDeadlineTimeStamp } from "@/utils/getDeadlineTimeStamp";
+import { useApprovePsy } from "@/services/web3/useApprovePsy";
+import { formatUnits, parseUnits } from "viem";
+import { usePsyPerBatch } from "@/services/web3/usePsyPerBatch";
+import { useCustomToasts } from "@/hooks/useCustomToasts";
+import { useResize } from "@/hooks/useResize";
+import useGetAvailableAllowance from "@/hooks/useGetAvailableAllowance";
+import { useNextBatchId } from "@/services/web3/useNextBatchId";
 
 const Section = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -32,47 +41,227 @@ type Claim = {
 
 const CreateRewardClaim = () => {
   const { previousStep } = useWizard();
+  const { width } = useResize();
   const [loading, setLoading] = useState(false);
+  const [claimDeadlineAsString, setClaimDeadlineAsString] = useState("");
+  const { showCustomErrorToast, showSuccessToast } = useCustomToasts();
+  const [claimsAllowance, setClaimsAllowance] = useState("");
+  const {
+    allowance,
+    error: allowanceError,
+    loading: allowanceLoading,
+    refetch: refetchAvailableAllowance
+  } = useGetAvailableAllowance();
+
   const [claimInput, setClaimInput] = useState<Claim>({
     fromDate: null,
     toDate: null,
     claimDeadline: null,
     amount: ""
   });
+  const [minDate, setMinDate] = useState<Date | null>(null);
 
-  const callDistributionAPI = async () => {
-    setLoading(true);
-    const startTimeStamp = claimInput.fromDate?.getTime();
-    const endTimeStamp = claimInput.toDate?.getTime();
-    const data = {
-      startTimeStamp: Math.floor((startTimeStamp as number) / 1000),
-      endTimeStamp: Math.floor((endTimeStamp as number) / 1000),
-      totalAmountOfTokens: claimInput.amount
-    };
+  const {
+    minimumClaimDeadline,
+    isSuccess,
+    refetch,
+    error: minimumClaimError
+  } = useGetMinimumClaimDeadline();
 
+  const { nextBatchId } = useNextBatchId();
+
+  useEffect(() => {
+    if (minimumClaimError) {
+      showCustomErrorToast("Could not fetch minimum claim deadline.", width);
+      return;
+    }
+    if (minimumClaimDeadline && claimInput.fromDate) {
+      const minimumClaimDeadlineMs =
+        parseInt(minimumClaimDeadline.toString()) * 1000;
+
+      const calculatedMinDate = new Date(
+        claimInput.fromDate.getTime() + minimumClaimDeadlineMs
+      );
+
+      setMinDate(calculatedMinDate);
+    }
+  }, [claimInput.fromDate, minimumClaimDeadline, minimumClaimError, isSuccess]);
+
+  const {
+    approve,
+    data,
+    error: approveError,
+    txError,
+    approvedSuccess,
+    isSuccess: approveTxSuccess,
+    isFetching: approvePsyFetching,
+    isPending: approvePsyPending
+  } = useApprovePsy(parseUnits(claimInput.amount.toString(), 18));
+
+  const { data: psyPerBatch, isFetched } = usePsyPerBatch();
+
+  useMemo(() => {
+    if (isFetched && psyPerBatch) {
+      setClaimInput({
+        ...claimInput,
+        amount: formatUnits(psyPerBatch as bigint, 18)
+      });
+    }
+
+    if (!allowanceError && !allowanceLoading) {
+      setClaimsAllowance(formatUnits(allowance, 18).toString());
+    }
+  }, [isFetched, psyPerBatch, allowanceError, allowanceLoading]);
+
+  useEffect(() => {
+    const claimDeadline = getDeadlineTimeStamp(
+      claimInput.fromDate?.getTime() as number,
+      minimumClaimDeadline?.toString()
+    );
+
+    setClaimDeadlineAsString(claimDeadline);
+  }, [claimInput.fromDate]);
+
+  const { createNewClaimableBatch, isConfirmed, error } =
+    useCreateNewClaimableBatch();
+
+  const fetchDistributionData = async (
+    startTimeStamp: number,
+    endTimeStamp: number,
+    totalAmountOfTokens: string,
+    batchId: string
+  ): Promise<{
+    data?: { merkleRoot: string; ipfsHash: string };
+    error?: any;
+  }> => {
     try {
       const response = await fetch("/api/distribution", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+          startTimeStamp: startTimeStamp,
+          endTimeStamp: endTimeStamp,
+          totalAmountOfTokens: totalAmountOfTokens.toString(),
+          batchId: batchId
+        })
       });
 
-      const result = await response.json();
-
       if (!response.ok) {
+        const result = await response.json();
         console.error("Error:", result.error);
-        setLoading(false);
-      } else {
-        console.log("Merkle Tree:", result);
-        setLoading(false);
+        return { error: result.error };
       }
+
+      const result = await response.json();
+      return { data: result };
     } catch (error) {
       console.error("Error calling API:", error);
-      setLoading(false);
+      return { error };
     }
   };
+
+  const handleDistributionProcess = useCallback(async () => {
+    setLoading(true);
+
+    const startTimeStamp = claimInput.fromDate?.getTime();
+    const endTimeStamp = claimInput.toDate?.getTime();
+    const deadlineTimeStamp = claimInput.claimDeadline?.getTime();
+    const totalAmountOfTokens = claimInput.amount;
+
+    // This is messy. I will turn this into a util function or something.
+
+    if (!startTimeStamp) {
+      showCustomErrorToast("Start timestamp missing.", width);
+      setLoading(false);
+      return;
+    } else if (!endTimeStamp) {
+      showCustomErrorToast("End timestamp missing.", width);
+      setLoading(false);
+      return;
+    } else if (!deadlineTimeStamp) {
+      showCustomErrorToast("Please indicate a valid claim deadline.", width);
+      setLoading(false);
+      return;
+    } else if (endTimeStamp < startTimeStamp) {
+      showCustomErrorToast("End date before start date", width);
+      setLoading(false);
+      return;
+    } else if (
+      claimInput.claimDeadline &&
+      minDate &&
+      claimInput.claimDeadline.getTime() < minDate.getTime()
+    ) {
+      showCustomErrorToast(
+        "The selected deadline is too close to the current date.",
+        width
+      );
+      setLoading(false);
+      return;
+    } else if (!totalAmountOfTokens) {
+      showCustomErrorToast("Total amount of tokens missing.", width);
+      setLoading(false);
+      return;
+    }
+
+    const start = startTimeStamp / 1000;
+    const end = endTimeStamp / 1000;
+    const deadline = deadlineTimeStamp / 1000;
+
+    const { data, error } = await fetchDistributionData(
+      start,
+      end,
+      totalAmountOfTokens,
+      nextBatchId.toString()
+    );
+
+    if (error) {
+      showCustomErrorToast("Error creating distribution data", width);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      await createNewClaimableBatch(
+        data?.merkleRoot as string,
+        deadline.toString(),
+        data?.ipfsHash as string
+      );
+    } catch (error) {
+      showCustomErrorToast("Error creating new claimable batch", width);
+      console.error("Error creating new claimable batch:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [createNewClaimableBatch, claimInput, claimDeadlineAsString]);
+
+  useEffect(() => {
+    if (approveError) {
+      showCustomErrorToast("Error approving claimable funds", width);
+      setLoading(false);
+      return;
+    }
+
+    if (isConfirmed) {
+      showSuccessToast("Successfully created new claimable batch.", width);
+      setLoading(false);
+      return;
+    }
+
+    if (error) {
+      showCustomErrorToast(error.message, width);
+      setLoading(false);
+      return;
+    }
+
+    if (approvedSuccess && approveTxSuccess) {
+      showSuccessToast("Successfully approved claimable funds.", width);
+      setLoading(false);
+      refetchAvailableAllowance();
+      return;
+    }
+  }, [approveError, approvedSuccess, isConfirmed, error, approveTxSuccess]);
 
   return (
     <Box height={"100%"}>
@@ -197,6 +386,7 @@ const CreateRewardClaim = () => {
             <Text>Claim deadline</Text>
             <CustomDatePicker
               label="Date"
+              minDate={minDate || undefined}
               selectedDate={claimInput.claimDeadline}
               setSelectedDate={(deadline) =>
                 setClaimInput({
@@ -216,7 +406,6 @@ const CreateRewardClaim = () => {
               base: "1fr",
               md: "1fr 2fr"
             }}
-            // templateColumns={"1fr 2fr"}
           >
             <Text>Amount</Text>
             <Box
@@ -231,22 +420,13 @@ const CreateRewardClaim = () => {
               w={{ base: "100%", md: "auto" }}
             >
               <Input
+                disabled
                 type="number"
-                step={0.001}
                 w={{ base: "100%" }}
                 fontSize="18px"
                 fontFamily={"Inter"}
                 value={claimInput.amount}
-                onChange={(e) => {
-                  setClaimInput({
-                    ...claimInput,
-                    amount: e.target.value
-                  });
-                }}
-                required
                 border={"none"}
-                focusBorderColor="transparent"
-                onWheel={(e) => e.currentTarget.blur()}
               />
               <Flex
                 alignItems={"center"}
@@ -277,14 +457,23 @@ const CreateRewardClaim = () => {
           p={6}
           background="#fffafa"
         >
-          <CreateClaimButton
-            isLoading={loading}
-            loadingText={"Creating..."}
-            // handleClick={previousStep}
-            handleClick={callDistributionAPI}
-            fullWidth={true}
-            buttonText={"Create"}
-          />
+          {parseFloat(claimsAllowance) < parseFloat(claimInput.amount) ? (
+            <CreateClaimButton
+              isLoading={approvePsyFetching || approvePsyPending}
+              loadingText={"Approving..."}
+              handleClick={approve}
+              fullWidth={true}
+              buttonText={allowanceLoading ? "Please wait..." : "Approve"}
+            />
+          ) : (
+            <CreateClaimButton
+              isLoading={loading}
+              loadingText={"Creating..."}
+              handleClick={handleDistributionProcess}
+              fullWidth={true}
+              buttonText={allowanceLoading ? "Please wait..." : "Create"}
+            />
+          )}
         </Box>
       </Box>
     </Box>
