@@ -13,6 +13,7 @@ import { usePsyPerBatch } from "@/services/web3/usePsyPerBatch";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
 import useGetAvailableAllowance from "@/hooks/useGetAvailableAllowance";
+import { useNextBatchId } from "@/services/web3/useNextBatchId";
 
 const Section = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -67,6 +68,8 @@ const CreateRewardClaim = () => {
     error: minimumClaimError
   } = useGetMinimumClaimDeadline();
 
+  const { nextBatchId } = useNextBatchId();
+
   useEffect(() => {
     if (minimumClaimError) {
       showCustomErrorToast("Could not fetch minimum claim deadline.", width);
@@ -95,7 +98,7 @@ const CreateRewardClaim = () => {
     isPending: approvePsyPending
   } = useApprovePsy(parseUnits(claimInput.amount.toString(), 18));
 
-  const { data: psyPerBatch, isError, isLoading, isFetched } = usePsyPerBatch();
+  const { data: psyPerBatch, isFetched } = usePsyPerBatch();
 
   useMemo(() => {
     if (isFetched && psyPerBatch) {
@@ -115,16 +118,12 @@ const CreateRewardClaim = () => {
       claimInput.fromDate?.getTime() as number,
       minimumClaimDeadline?.toString()
     );
+
     setClaimDeadlineAsString(claimDeadline);
   }, [claimInput.fromDate]);
 
-  const {
-    createNewClaimableBatch,
-    isConfirmed,
-    isConfirming,
-    isPending,
-    error
-  } = useCreateNewClaimableBatch();
+  const { createNewClaimableBatch, isConfirmed, error } =
+    useCreateNewClaimableBatch();
 
   const fetchDistributionData = async (
     startTimeStamp: number,
@@ -163,15 +162,13 @@ const CreateRewardClaim = () => {
     }
   };
 
-  const currentDateTimeStamp = new Date().getTime();
-
   const handleDistributionProcess = useCallback(async () => {
     setLoading(true);
 
     const startTimeStamp = claimInput.fromDate?.getTime();
     const endTimeStamp = claimInput.toDate?.getTime();
+    const deadlineTimeStamp = claimInput.claimDeadline?.getTime();
     const totalAmountOfTokens = claimInput.amount;
-    const currentDateTimeStamp = new Date().getTime();
 
     // This is messy. I will turn this into a util function or something.
 
@@ -183,7 +180,7 @@ const CreateRewardClaim = () => {
       showCustomErrorToast("End timestamp missing.", width);
       setLoading(false);
       return;
-    } else if (!claimInput.claimDeadline) {
+    } else if (!deadlineTimeStamp) {
       showCustomErrorToast("Please indicate a valid claim deadline.", width);
       setLoading(false);
       return;
@@ -210,12 +207,13 @@ const CreateRewardClaim = () => {
 
     const start = startTimeStamp / 1000;
     const end = endTimeStamp / 1000;
+    const deadline = deadlineTimeStamp / 1000;
 
     const { data, error } = await fetchDistributionData(
       start,
       end,
       totalAmountOfTokens,
-      "16"
+      nextBatchId.toString()
     );
 
     if (error) {
@@ -227,7 +225,7 @@ const CreateRewardClaim = () => {
     try {
       await createNewClaimableBatch(
         data?.merkleRoot as string,
-        claimDeadlineAsString,
+        deadline.toString(),
         data?.ipfsHash as string
       );
     } catch (error) {

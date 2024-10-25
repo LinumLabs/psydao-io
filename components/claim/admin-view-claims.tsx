@@ -8,12 +8,10 @@ import {
   Table,
   TableContainer,
   Tbody,
-  Switch,
   Grid
 } from "@chakra-ui/react";
 import { useWizard } from "react-use-wizard";
 import CreateClaimButton from "./claim-button";
-import { useState } from "react";
 import { getExpirationStatus } from "@/utils/getExpirationStatus";
 import { useGetBatchClaims } from "@/hooks/useGetBatchClaims";
 
@@ -84,8 +82,6 @@ const PsyIcon = () => {
 
 const AdminViewClaims = () => {
   const { previousStep, nextStep } = useWizard();
-  //  remove showEmptyState when done
-  const [showEmptyState, setShowEmptyState] = useState(false);
   const { claims } = useGetBatchClaims();
 
   const formatClaimAmount = (amount: string) => {
@@ -129,20 +125,9 @@ const AdminViewClaims = () => {
           >
             Create Claims
           </Text>
-          <Box position={"absolute"} right={2}>
-            Empty state
-            <Switch
-              isChecked={showEmptyState}
-              onChange={() => setShowEmptyState(!showEmptyState)}
-              id="show-empty-state"
-              ml={2}
-            />
-          </Box>
         </Flex>
       </Flex>
-      {/* remove showEmptyState when done  */}
-      {showEmptyState && <EmptyState />}
-      {!showEmptyState && (
+      {claims.length ? (
         <>
           <TableContainer paddingBottom={"100px"}>
             <Table variant="simple">
@@ -192,6 +177,8 @@ const AdminViewClaims = () => {
             />
           </Box>
         </>
+      ) : (
+        <EmptyState />
       )}
     </Box>
   );

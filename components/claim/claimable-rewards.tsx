@@ -23,6 +23,42 @@ type MappedClaimData = {
   reason: string;
 };
 
+const EmptyState = () => {
+  return (
+    <Flex
+      gap={8}
+      direction={"column"}
+      p={{
+        base: "4",
+        md: "8"
+      }}
+    >
+      <Flex
+        direction={"column"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+        border={"1px solid rgba(242,190,190,0.45)"}
+        borderRadius={"20px"}
+        w={"fit-content"}
+        marginX={"auto"}
+        padding={{
+          base: "4",
+          md: "6"
+        }}
+      >
+        <Text
+          fontSize={{
+            base: "16px",
+            md: "18px"
+          }}
+        >
+          No claimable rewards yet
+        </Text>
+      </Flex>
+    </Flex>
+  );
+};
+
 const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const { nextStep } = useWizard();
   const { claims, refetch } = useGetBatchClaims();
@@ -138,7 +174,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
         maxW="100%"
         padding={{ base: "4", md: "8" }}
       >
-        {mappedData.length > 0 &&
+        {mappedData.length > 0 ? (
           mappedData.map((item, index) => {
             return (
               <ClaimCard
@@ -159,7 +195,10 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
                 disabled={item.buttonDisabled}
               />
             );
-          })}
+          })
+        ) : (
+          <EmptyState />
+        )}
       </Grid>
     </Box>
   );
