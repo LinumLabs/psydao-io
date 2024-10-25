@@ -122,7 +122,7 @@ const CreateRewardClaim = () => {
     setClaimDeadlineAsString(claimDeadline);
   }, [claimInput.fromDate]);
 
-  const { createNewClaimableBatch, isConfirmed, error } =
+  const { createNewClaimableBatch, isConfirmed, error, isPending, isFetching } =
     useCreateNewClaimableBatch();
 
   const fetchDistributionData = async (
@@ -227,6 +227,7 @@ const CreateRewardClaim = () => {
     }
 
     try {
+      setLoading(true);
       await createNewClaimableBatch(
         data?.merkleRoot as string,
         deadline.toString(),
@@ -471,7 +472,7 @@ const CreateRewardClaim = () => {
             />
           ) : (
             <CreateClaimButton
-              isLoading={loading}
+              isLoading={loading || isPending || isFetching}
               loadingText={"Creating..."}
               handleClick={handleDistributionProcess}
               fullWidth={true}

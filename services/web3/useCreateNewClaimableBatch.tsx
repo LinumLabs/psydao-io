@@ -8,7 +8,7 @@ import psyClaimsAbi from "@/abis/psyClaimsAbi.json";
 export const useCreateNewClaimableBatch = () => {
   const { data, writeContract, isPending, error, reset } = useWriteContract();
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+  const { isLoading: isConfirming, isSuccess: isConfirmed, isFetching } =
     useWaitForTransactionReceipt({
       hash: data
     });
@@ -32,6 +32,7 @@ export const useCreateNewClaimableBatch = () => {
     isConfirmed,
     isConfirming,
     isPending,
-    error
+    error,
+    isFetching,
   };
 };
