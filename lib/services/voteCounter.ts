@@ -5,6 +5,7 @@ import { keccak256, encodePacked, parseUnits } from 'viem';
 import { MerkleTree } from 'merkletreejs';
 import { Balance, uploadArrayToIpfs } from './ipfs';
 import { userTestMapping } from './config/test-mapping';
+import { env } from '@/config/env.mjs';
 
 
 export const main = async (startTimeStamp: number, endTimeStamp: number, totalAmountOfTokens: number, batchId: number) => {
@@ -19,7 +20,7 @@ export const main = async (startTimeStamp: number, endTimeStamp: number, totalAm
         const filteredProposals = proposals.filter((proposal: any) => proposal.id !== '0x71166758c2aa68fe1d1d5eb52135a3caafc07284ec1d0b2c6dba8ef161bf7a4c');    
 
         const sgData = await getPsycHolders(Number(filteredProposals[filteredProposals.length - 1]?.snapshot));
-        psycHolders = sgData.map((psycHolder: any) => process.env.TEST_ENV ? userTestMapping[psycHolder.owner] ?? psycHolder.owner.toLowerCase() : psycHolder.owner.toLowerCase());
+        psycHolders = sgData.map((psycHolder: any) => env.TEST_ENV ? userTestMapping[psycHolder.owner] ?? psycHolder.owner.toLowerCase() : psycHolder.owner.toLowerCase());
         const tokenPerHolder = totalAmountOfTokens / psycHolders.length;
 
         psycHolders.forEach(holder => {
@@ -28,7 +29,7 @@ export const main = async (startTimeStamp: number, endTimeStamp: number, totalAm
         for (const proposal of filteredProposals) {
             const votes = await getVotesOnProposalById(proposal.id) ?? [];
             votes.forEach((vote: any) => {
-                const voterAddress = process.env.TEST_ENV ? userTestMapping[vote.voter.toLowerCase()] ?? vote.voter.toLowerCase() : vote.voter.toLowerCase();
+                const voterAddress = env.TEST_ENV ? userTestMapping[vote.voter.toLowerCase()] ?? vote.voter.toLowerCase() : vote.voter.toLowerCase();
                 if (psycHolders.includes(voterAddress)) {
                     if (votesCountMap[voterAddress] !== undefined) {
                         votesCountMap[voterAddress]++;
