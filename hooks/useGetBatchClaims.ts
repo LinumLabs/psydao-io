@@ -8,7 +8,6 @@ import {
 import { useCallback, useEffect, useState } from "react";
 
 export const useGetBatchClaims = () => {
-  const [refetchClaims, setRefetchClaims] = useState<boolean>(false);
   const [claims, setClaims] = useState<BatchClaim[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
@@ -40,13 +39,5 @@ export const useGetBatchClaims = () => {
     void fetchClaims();
   }, [fetchClaims]);
 
-  const refetch = async () => {
-    await fetchClaims();
-  };
-
-  setTimeout(async () => {
-    await refetch().then(() => {});
-  }, 20000);
-
-  return { claims, loading, error, refetch };
+  return { claims, loading, error };
 };

@@ -57,7 +57,8 @@ const ERROR_MESSAGES = {
   "Invalid Proof": "Invalid proof submitted.",
   "Not Enough Psy In Contract": "Not enough PSY in contract to fulfill claim.",
   "All Psy Claimed": "All PSY has been claimed.",
-  "Claim Period Ended": "The claim period has already ended."
+  "Claim Period Ended": "The claim period has already ended.",
+  "Already Claimed": "You have already claimed this reward."
 };
 
 export const customErrorMessage = (message: string): string => {
