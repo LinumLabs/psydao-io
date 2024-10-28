@@ -1,9 +1,14 @@
-import { Box, Button, Flex, Grid, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Grid, Image, Text } from "@chakra-ui/react";
 import ClaimCard from "./claim-card";
 import { useWizard } from "react-use-wizard";
 import { useGetBatchClaims } from "@/hooks/useGetBatchClaims";
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
+import { Address } from "viem";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import WrongNetworkWindow from "../common/wrong-network";
+import DiagonalRectangle from "../nft-sale-widget/common/diagonal-rectangle";
+import { env } from "@/config/env.mjs";
 
 interface ClaimableRewardsProps {
   isAdmin: boolean;
@@ -23,8 +28,13 @@ type MappedClaimData = {
   reason: string;
 };
 
-const EmptyState = () => {
-  return (
+const EmptyState = (props: {
+  address: Address | undefined;
+  loading: boolean;
+}) => {
+  const { openConnectModal } = useConnectModal();
+
+  return props.address ? (
     <Flex
       gap={8}
       direction={"column"}
@@ -52,9 +62,67 @@ const EmptyState = () => {
             md: "18px"
           }}
         >
-          No claimable rewards yet
+          {props.loading ? "Loading rewards..." : "No claimable rewards yet"}
         </Text>
       </Flex>
+    </Flex>
+  ) : (
+    <Flex
+      direction={"column"}
+      justifyContent="center"
+      alignItems="center"
+      height="100%"
+      px={4}
+    >
+      <Box
+        p={6}
+        display={"inline-flex"}
+        borderRadius={"30px"}
+        border={"2px solid #F2BEBE73"}
+        gap={2.5}
+        position={"relative"}
+        flexDirection={"column"}
+        alignItems={"center"}
+        height={"fit-content"}
+        width={"fit-content"}
+      >
+        <Box>
+          <Image src={"/psy-logo.svg"} />
+        </Box>
+        <Flex
+          flexWrap={"nowrap"}
+          gap={4}
+          alignItems={"center"}
+          direction={"column"}
+          justifyContent={"center"}
+        >
+          <DiagonalRectangle position="left" />
+          <Text
+            fontSize={18}
+            color={"black"}
+            lineHeight={"26px"}
+            textAlign={"center"}
+          >
+            Connect your wallet <br /> to view rewards
+          </Text>
+          <DiagonalRectangle position="right" />
+          <Button
+            variant={"unstyled"}
+            w={"100%"}
+            borderRadius={"24px"}
+            border={"2px solid #F2BEBE"}
+            color={"#F2BEBE"}
+            fontSize={18}
+            fontFamily={"Amiri"}
+            fontWeight={"bold"}
+            onClick={() => {
+              openConnectModal && openConnectModal();
+            }}
+          >
+            Connect Wallet
+          </Button>
+        </Flex>
+      </Box>
     </Flex>
   );
 };
@@ -63,15 +131,21 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const { nextStep } = useWizard();
   const { claims, refetch } = useGetBatchClaims();
   const [mappedData, setMappedData] = useState<MappedClaimData[]>([]);
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const CHAIN_ID = env.NEXT_PUBLIC_CHAIN_ID;
+  const isWrongNetwork = chainId !== CHAIN_ID;
 
   const fetchMappedData = async (): Promise<{
     data?: any;
     error?: any;
   }> => {
     const cleanedClaimsArray = claims.map(({ __typename, ...rest }) => rest);
+
     try {
+      setLoading(true);
       const response = await fetch("/api/mapped-data", {
         method: "POST",
         headers: {
@@ -94,6 +168,8 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
     } catch (error) {
       console.error("Error calling API:", error);
       return { error };
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -174,7 +250,9 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
         maxW="100%"
         padding={{ base: "4", md: "8" }}
       >
-        {mappedData.length > 0 ? (
+        {address && isWrongNetwork ? (
+          <WrongNetworkWindow />
+        ) : address && mappedData.length > 0 ? (
           mappedData.map((item, index) => {
             return (
               <ClaimCard
@@ -197,7 +275,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
             );
           })
         ) : (
-          <EmptyState />
+          <EmptyState address={address} loading={loading} />
         )}
       </Grid>
     </Box>

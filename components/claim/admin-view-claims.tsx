@@ -52,8 +52,9 @@ const EmptyState = () => {
               base: "16px",
               md: "18px"
             }}
+            textAlign={"center"}
           >
-            There are no claims rewards added yet
+            No claims rewards have been added yet
           </Text>
           <Image src="/diagonal-rectangle.png" />
         </Flex>
