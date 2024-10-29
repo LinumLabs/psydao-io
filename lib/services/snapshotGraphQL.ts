@@ -1,4 +1,4 @@
-import { snapshotGraphQLClient } from "./config/graphql";
+import { snapshotGraphQLClient } from "../../config/graphqlClients";
 import { getProposals, getVotesOnProposal } from "@/services/graph";
 
 export interface Proposal {

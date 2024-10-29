@@ -1,5 +1,5 @@
-import { psycGraphQLClient } from "./config/graphql";
 import { getNFTHolders } from "@/services/graph";
+import { psycGraphQLClient } from "../../config/graphqlClients";
 
 export interface PsycHolder {
   owner: string;
