@@ -16,7 +16,6 @@ export const env = createEnv({
     SHOPIFY_VARIANT_ID: z.string().min(1),
     POAP_API_KEY: z.string().min(1),
     POAP_EVENT_ID: z.string().min(1),
-    PSYDAO_API_URL: z.string().url(),
     SNAPSHOT_GRAPHQL_URL: z.string().url(),
     TEST_ENV: z.boolean(),
   },
@@ -52,7 +51,6 @@ export const env = createEnv({
     SHOPIFY_VARIANT_ID: process.env.SHOPIFY_VARIANT_ID,
     POAP_API_KEY: process.env.POAP_API_KEY,
     POAP_EVENT_ID: process.env.POAP_EVENT_ID,
-    PSYDAO_API_URL: process.env.PSYDAO_API_URL,
 
     SNAPSHOT_GRAPHQL_URL: process.env.SNAPSHOT_GRAPHQL_URL,
     
