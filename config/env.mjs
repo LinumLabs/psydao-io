@@ -17,7 +17,7 @@ export const env = createEnv({
     POAP_API_KEY: z.string().min(1),
     POAP_EVENT_ID: z.string().min(1),
     SNAPSHOT_GRAPHQL_URL: z.string().url(),
-    TEST_ENV: z.boolean(),
+    TEST_ENV: z.boolean()
   },
   client: {
     NEXT_PUBLIC_IS_MAINNET: z.coerce.boolean(),
@@ -26,7 +26,6 @@ export const env = createEnv({
     NEXT_PUBLIC_MIXPANEL_ID: z.string(),
     NEXT_PUBLIC_PROJECT_ID: z.string(),
     NEXT_PUBLIC_SUBGRAPH_URL: z.string().url(),
-    NEXT_PUBLIC_PSYC_SUBGRAPH_URL: z.string().url(),
     NEXT_PUBLIC_PINATA_BASE_URL: z.string().url(),
     NEXT_PUBLIC_ETHERSCAN_BASE_URL: z.string().url(),
     NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL: z.string().url(),
@@ -53,10 +52,9 @@ export const env = createEnv({
     POAP_EVENT_ID: process.env.POAP_EVENT_ID,
 
     SNAPSHOT_GRAPHQL_URL: process.env.SNAPSHOT_GRAPHQL_URL,
-    
-    TEST_ENV: process.env.TEST_ENV === 'true',
-    
-    NEXT_PUBLIC_PSYC_SUBGRAPH_URL: process.env.NEXT_PUBLIC_PSYC_SUBGRAPH_URL,
+
+    TEST_ENV: process.env.TEST_ENV === "true",
+
     NEXT_PUBLIC_IS_MAINNET: Number(process.env.NEXT_PUBLIC_CHAIN_ID) === 1,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_CHAIN_ID: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
