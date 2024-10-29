@@ -1,4 +1,4 @@
-import { env } from "process";
+import { env } from "@/config/env.mjs";
 
 const SHOPIFY_API_ACCESS_TOKEN = env.SHOPIFY_API_ACCESS_TOKEN ?? "";
 const SHOPIFY_API_KEY = env.SHOPIFY_API_KEY ?? "";

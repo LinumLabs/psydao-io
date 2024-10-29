@@ -133,6 +133,8 @@ const CreateRewardClaim = () => {
     createNewClaimableBatch,
     isConfirmed,
     error,
+    isPending,
+    isFetching,
     createBatchError,
     resetBatchCreate
   } = useCreateNewClaimableBatch();
@@ -234,7 +236,15 @@ const CreateRewardClaim = () => {
       return;
     }
 
+    if (!data?.ipfsHash) {
+      return showCustomErrorToast(
+        "Error creating distribution data: review IPFS hash",
+        width
+      );
+    }
+
     try {
+      setLoading(true);
       await createNewClaimableBatch(
         data?.merkleRoot as string,
         deadline.toString(),
@@ -484,7 +494,7 @@ const CreateRewardClaim = () => {
             />
           ) : (
             <CreateClaimButton
-              isLoading={loading}
+              isLoading={loading || isPending || isFetching}
               loadingText={"Creating..."}
               handleClick={handleDistributionProcess}
               fullWidth={true}

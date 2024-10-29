@@ -12,6 +12,7 @@ export const useCreateNewClaimableBatch = () => {
   const {
     isLoading: isConfirming,
     isSuccess: isConfirmed,
+    isFetching,
     isError: txError
   } = useWaitForTransactionReceipt({
     hash: data
@@ -37,6 +38,7 @@ export const useCreateNewClaimableBatch = () => {
     isConfirming,
     isPending,
     error,
+    isFetching,
     createBatchError: isError,
     resetBatchCreate: reset,
     createBatchTxError: txError
