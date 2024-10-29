@@ -26,7 +26,6 @@ export const env = createEnv({
     NEXT_PUBLIC_MIXPANEL_ID: z.string(),
     NEXT_PUBLIC_PROJECT_ID: z.string(),
     NEXT_PUBLIC_SUBGRAPH_URL: z.string().url(),
-    NEXT_PUBLIC_PSYC_SUBGRAPH_URL: z.string().url(),
     NEXT_PUBLIC_PINATA_BASE_URL: z.string().url(),
     NEXT_PUBLIC_ETHERSCAN_BASE_URL: z.string().url(),
     NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL: z.string().url(),
@@ -56,7 +55,6 @@ export const env = createEnv({
 
     TEST_ENV: process.env.TEST_ENV === "true",
 
-    NEXT_PUBLIC_PSYC_SUBGRAPH_URL: process.env.NEXT_PUBLIC_PSYC_SUBGRAPH_URL,
     NEXT_PUBLIC_IS_MAINNET: Number(process.env.NEXT_PUBLIC_CHAIN_ID) === 1,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_CHAIN_ID: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
