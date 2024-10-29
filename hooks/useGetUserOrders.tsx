@@ -1,16 +1,9 @@
+import { getUserOrders } from "@/services/graph";
 import { client } from "@/utils/apolloClient";
-import { gql, useQuery } from "@apollo/client";
-
-const GET_USER_ORDERS = gql`
-  query getUserOrders($query: String!) {
-    ordersCount(query: $query) {
-      count
-    }
-  }
-`;
+import { useQuery } from "@apollo/client";
 
 const useGetUserOrders = (addressSnippet: string) => {
-  const { data, error } = useQuery(GET_USER_ORDERS, {
+  const { data, error } = useQuery(getUserOrders, {
     client: client,
     variables: { query: `discount_code:${addressSnippet}` },
     pollInterval: 10000
