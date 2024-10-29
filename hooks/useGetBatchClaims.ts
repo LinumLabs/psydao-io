@@ -38,15 +38,17 @@ export const useGetBatchClaims = () => {
 
   useEffect(() => {
     void fetchClaims();
+
+    const claimsIntervalId = setInterval(() => {
+      void fetchClaims();
+    }, 20000);
+
+    return () => clearInterval(claimsIntervalId);
   }, [fetchClaims]);
 
   const refetch = async () => {
     await fetchClaims();
   };
-
-  setTimeout(async () => {
-    await refetch().then(() => {});
-  }, 20000);
 
   return { claims, loading, error, refetch };
 };

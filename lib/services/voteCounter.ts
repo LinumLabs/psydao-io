@@ -3,7 +3,7 @@ import {
   getSnapshotProposals,
   getVotesOnProposalById
 } from "./getSnapshotProposalsAndVotes";
-import { keccak256, encodePacked, parseUnits } from "viem";
+import { keccak256, encodePacked, parseUnits, Address } from "viem";
 import { MerkleTree } from "merkletreejs";
 import { Balance, uploadArrayToIpfs } from "./ipfs";
 import { userTestMapping } from "./config/test-mapping";
@@ -15,17 +15,30 @@ export const main = async (
   totalAmountOfTokens: number,
   batchId: number
 ) => {
+  console.log('Starting distribution calculation:', {
+    startTimeStamp,
+    endTimeStamp,
+    totalAmountOfTokens,
+    batchId
+  });
+
   const proposals = await getSnapshotProposals(startTimeStamp, endTimeStamp);
-  let psycHolders: string[] = [];
-  let psycHolderVotesPercentage: { address: string; percentage: number }[] = [];
+  if (!proposals?.length) {
+    console.log('No proposals found for time period')
+    return { balances: [], merkleRoot: "0x", ipfsHash: "" }
+  }
+
+  let psycHolders: Address[] = [];
+  let psycHolderVotesPercentage: { address: Address; percentage: number }[] = [];
   let psycHolderTokenDistribution: {
-    address: string;
+    address: Address;
     tokens: number;
     leftOver: number;
     percentage: number;
   }[] = [];
-  const votesCountMap: { [address: string]: number } = {};
+  const votesCountMap: { [address: Address]: number } = {};
   let totalVotes: number = 0;
+
   if (!!proposals && proposals.length > 0) {
     // Exclude random created proposals with ID 0x71166758c2aa68fe1d1d5eb52135a3caafc07284ec1d0b2c6dba8ef161bf7a4c
     const filteredProposals = proposals.filter(
@@ -37,24 +50,32 @@ export const main = async (
     const sgData = await getPsycHolders(
       Number(filteredProposals[filteredProposals.length - 1]?.snapshot)
     );
-    psycHolders = sgData.map((psycHolder: any) =>
+
+    console.log('getPsycHolders', sgData);
+
+    psycHolders = sgData.map<Address>((psycHolder) =>
       TEST_ENV
-        ? (userTestMapping[psycHolder.owner] ?? psycHolder.owner.toLowerCase())
-        : psycHolder.owner.toLowerCase()
+        ? (userTestMapping[psycHolder.owner] ?? psycHolder.owner.toLowerCase() as Address)
+        : psycHolder.owner.toLowerCase() as Address
     );
+    console.log('psycHolders', psycHolders);
+
     const tokenPerHolder = totalAmountOfTokens / psycHolders.length;
 
     psycHolders.forEach((holder) => {
-      votesCountMap[holder] = 0;
+      votesCountMap[holder.toLowerCase() as Address] = 0;
     });
+
+    console.log('votesCountMap', votesCountMap);
+
     for (const proposal of filteredProposals) {
       const votes = (await getVotesOnProposalById(proposal.id)) ?? [];
-      votes.forEach((vote: any) => {
+      votes.forEach((vote) => {
         const voterAddress = TEST_ENV
-          ? (userTestMapping[vote.voter.toLowerCase()] ??
-            vote.voter.toLowerCase())
-          : vote.voter.toLowerCase();
-        if (psycHolders.includes(voterAddress)) {
+          ? (userTestMapping[vote.voter.toLowerCase() as Address] ??
+            vote.voter.toLowerCase() as Address)
+          : vote.voter.toLowerCase() as Address;
+        if (psycHolders.includes(voterAddress.toLowerCase() as Address)) {
           if (votesCountMap[voterAddress] !== undefined) {
             votesCountMap[voterAddress]++;
             totalVotes++;
@@ -65,7 +86,7 @@ export const main = async (
     psycHolderVotesPercentage = Object.entries(votesCountMap).map(
       ([address, count]) => {
         return {
-          address,
+          address: address as Address,
           percentage: Number((count / filteredProposals.length).toFixed(2))
         };
       }
@@ -88,10 +109,11 @@ export const main = async (
     (acc, curr) => acc + curr.leftOver,
     0
   );
+
   // Upload array to IPFS and get the hash
   const balances: Balance[] = psycHolderTokenDistribution.map((holder) => {
     return {
-      address: holder.address as `0x${string}`,
+      address: holder.address,
       tokens: (
         holder.tokens +
         (unAllocatedTokens * (votesCountMap[holder.address] ?? 0)) / totalVotes
@@ -106,11 +128,13 @@ export const main = async (
         [
           BigInt(batchId),
           parseUnits(holder.tokens, 18),
-          holder.address as `0x${string}`
+          holder.address
         ]
       )
     )
   );
+  console.log('leaves', leaves);
+
   const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
   const merkleRoot = tree.getHexRoot();
 

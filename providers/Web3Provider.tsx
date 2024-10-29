@@ -15,6 +15,7 @@ import { WagmiProvider, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 import { useColorMode } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const { wallets } = getDefaultWallets();
 
@@ -46,7 +47,10 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={theme}>{children}</RainbowKitProvider>
+        <RainbowKitProvider theme={theme}>
+          {children}
+          <ReactQueryDevtools initialIsOpen={false} />
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

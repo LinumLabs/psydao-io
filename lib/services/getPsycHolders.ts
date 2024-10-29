@@ -1,8 +1,9 @@
 import { getNFTHolders } from "@/services/graph";
 import { psycGraphQLClient } from "../../config/graphqlClients";
+import { Address } from "viem";
 
 export interface PsycHolder {
-  owner: string;
+  owner: Address;
 }
 
 export const getPsycHolders = async (blockNumber: number) => {
