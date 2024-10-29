@@ -1,6 +1,12 @@
+import {
+  NEXT_PUBLIC_PSYC_SUBGRAPH_URL,
+  SNAPSHOT_GRAPHQL_URL
+} from "@/constants/claims";
+import { GraphQLClient } from "graphql-request";
 
-import { GraphQLClient } from 'graphql-request';
-import { env } from "process";
-
-export const snapshotGraphQLClient = new GraphQLClient(env.SNAPSHOT_GRAPHQL_URL as string);
-export const psycGraphQLClient = new GraphQLClient(env.NEXT_PUBLIC_PSYC_SUBGRAPH_URL as string);
+export const snapshotGraphQLClient = new GraphQLClient(
+  SNAPSHOT_GRAPHQL_URL as string
+);
+export const psycGraphQLClient = new GraphQLClient(
+  NEXT_PUBLIC_PSYC_SUBGRAPH_URL as string
+);

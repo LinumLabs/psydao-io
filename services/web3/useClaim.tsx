@@ -1,9 +1,9 @@
 import { psyClaimsMainnet, psyClaimsSepolia } from "@/constants/contracts";
-import { env } from "process";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import psyClaimsAbi from "@/abis/psyClaimsAbi.json";
 import { useCallback, useEffect, useState } from "react";
 import { parseUnits } from "viem";
+import { env } from "@/config/env.mjs";
 
 interface ClaimProps {
   batchId: string;
