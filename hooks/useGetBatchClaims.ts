@@ -1,52 +1,21 @@
 import { BatchClaim } from "@/lib/types";
 import { getBatchClaims } from "@/services/graph";
-import {
-  ApolloClient,
-  NormalizedCacheObject,
-  useApolloClient
-} from "@apollo/client";
-import { useCallback, useEffect, useState } from "react";
+import { useApolloClient } from "@apollo/client";
+import { useQuery } from "@tanstack/react-query";
 
-export const useGetBatchClaims = () => {
-  const [refetchClaims, setRefetchClaims] = useState<boolean>(false);
-  const [claims, setClaims] = useState<BatchClaim[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
-  const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
+export function useGetBatchClaims() {
+  const client = useApolloClient();
 
-  const fetchClaims = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
+  const { data: claims } = useQuery({
+    queryKey: ["batchClaims"],
+    queryFn: async () => {
       const { data } = await client.query({
         query: getBatchClaims,
         fetchPolicy: "network-only"
       });
-
-      if (data && data.batchClaims) {
-        setClaims(data.batchClaims);
-      } else {
-        setClaims([]);
-      }
-    } catch (err) {
-      setError(err as Error);
-    } finally {
-      setLoading(false);
-    }
-  }, [client]);
-
-  useEffect(() => {
-    void fetchClaims();
-  }, [fetchClaims]);
-
-  const refetch = async () => {
-    await fetchClaims();
-  };
-
-  setTimeout(async () => {
-    await refetch().then(() => {});
-  }, 20000);
-
-  return { claims, loading, error, refetch };
-};
+      return data?.batchClaims ?? [];
+    },
+    refetchInterval: 20000 // Refetch every 20 seconds
+  });
+  return claims as BatchClaim[];
+}

@@ -1,7 +1,7 @@
 import { useReadContract } from "wagmi";
 import psyClaimsAbi from "@/abis/psyClaimsAbi.json";
 import { psyClaimsMainnet, psyClaimsSepolia } from "@/constants/contracts";
-import { env } from "process";
+import { env } from "@/config/env.mjs";
 
 export const useGetMinimumClaimDeadline = () => {
   const { data, isSuccess, refetch, error } = useReadContract({

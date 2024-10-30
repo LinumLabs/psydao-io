@@ -129,10 +129,9 @@ const EmptyState = (props: {
 
 const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const { nextStep } = useWizard();
-  const { claims, refetch } = useGetBatchClaims();
+  const claims = useGetBatchClaims();
   const [mappedData, setMappedData] = useState<MappedClaimData[]>([]);
   const { address, chainId } = useAccount();
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const CHAIN_ID = env.NEXT_PUBLIC_CHAIN_ID;
@@ -183,12 +182,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
           console.log(error);
         });
     }
-
-    if (success) {
-      refetch();
-      setSuccess(false);
-    }
-  }, [claims, address, success]);
+  }, [address, claims]);
 
   if (!mappedData) {
     return null;

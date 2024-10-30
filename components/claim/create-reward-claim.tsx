@@ -95,7 +95,8 @@ const CreateRewardClaim = () => {
     approvedSuccess,
     isSuccess: approveTxSuccess,
     isFetching: approvePsyFetching,
-    isPending: approvePsyPending
+    isPending: approvePsyPending,
+    resetApprove
   } = useApprovePsy(parseUnits(claimInput.amount.toString(), 18));
 
   const { data: psyPerBatch, isFetched } = usePsyPerBatch();
@@ -111,7 +112,13 @@ const CreateRewardClaim = () => {
     if (!allowanceError && !allowanceLoading) {
       setClaimsAllowance(formatUnits(allowance, 18).toString());
     }
-  }, [isFetched, psyPerBatch, allowanceError, allowanceLoading]);
+  }, [
+    isFetched,
+    psyPerBatch,
+    allowanceError,
+    allowanceLoading,
+    claimsAllowance
+  ]);
 
   useEffect(() => {
     const claimDeadline = getDeadlineTimeStamp(
@@ -122,8 +129,15 @@ const CreateRewardClaim = () => {
     setClaimDeadlineAsString(claimDeadline);
   }, [claimInput.fromDate]);
 
-  const { createNewClaimableBatch, isConfirmed, error, isPending, isFetching } =
-    useCreateNewClaimableBatch();
+  const {
+    createNewClaimableBatch,
+    isConfirmed,
+    error,
+    isPending,
+    isFetching,
+    createBatchError,
+    resetBatchCreate
+  } = useCreateNewClaimableBatch();
 
   const fetchDistributionData = async (
     startTimeStamp: number,
@@ -223,7 +237,10 @@ const CreateRewardClaim = () => {
     }
 
     if (!data?.ipfsHash) {
-      return showCustomErrorToast("Error creating distribution data: review IPFS hash", width);
+      return showCustomErrorToast(
+        "Error creating distribution data: review IPFS hash",
+        width
+      );
     }
 
     try {
@@ -242,27 +259,32 @@ const CreateRewardClaim = () => {
   }, [createNewClaimableBatch, claimInput, claimDeadlineAsString]);
 
   useEffect(() => {
+    if (createBatchError) {
+      console.error(error?.message);
+      showCustomErrorToast(error?.message ?? "", width);
+      resetBatchCreate();
+      setLoading(false);
+      return;
+    }
+
     if (approveError) {
       showCustomErrorToast("Error approving claimable funds", width);
       setLoading(false);
+      resetApprove();
       return;
     }
 
     if (isConfirmed) {
       showSuccessToast("Successfully created new claimable batch.", width);
       setLoading(false);
-      return;
-    }
-
-    if (error) {
-      showCustomErrorToast(error.message, width);
-      setLoading(false);
+      resetBatchCreate();
       return;
     }
 
     if (approvedSuccess && approveTxSuccess) {
       showSuccessToast("Successfully approved claimable funds.", width);
       setLoading(false);
+      resetApprove();
       refetchAvailableAllowance();
       return;
     }

@@ -47,7 +47,7 @@ const processClaim = async (claim: Claim, address: string) => {
     if (claim.claimed) {
         updatedClaim.buttonDisabled = true;
         updatedClaim.reason = "Claimed";
-        let owner = claim.claims.find(c => c.account === address);
+        let owner = claim.claims.find(c => c.account.toLowerCase() === address.toLowerCase());
         if(owner) {
             updatedClaim.amount = formatUnits(owner.amount, 18);
         } else {
@@ -57,7 +57,7 @@ const processClaim = async (claim: Claim, address: string) => {
         updatedClaim.buttonDisabled = claim.claimed;
         updatedClaim.reason = claim.claimed ? "Claimed" : "Expired";
         updatedClaim.amount = claim.amount;
-    } else if (address && claim.claims.some(c => c.account === address)) {
+    } else if (address && claim.claims.some(c => c.account.toLowerCase() === address.toLowerCase())) {
         updatedClaim.buttonDisabled = true;
         updatedClaim.reason = "Claimed";
     } else {

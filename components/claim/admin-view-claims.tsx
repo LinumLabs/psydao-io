@@ -83,7 +83,7 @@ const PsyIcon = () => {
 
 const AdminViewClaims = () => {
   const { previousStep, nextStep } = useWizard();
-  const { claims } = useGetBatchClaims();
+  const claims = useGetBatchClaims();
 
   const formatClaimAmount = (amount: string) => {
     const formattedAmount = Number(amount) / 1e18;
