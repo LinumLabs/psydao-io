@@ -1,4 +1,4 @@
-import { env } from "process";
+import { env } from "@/config/env.mjs";
 import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
@@ -25,7 +25,7 @@ export const useCreateNewClaimableBatch = () => {
           ? psyClaimsMainnet
           : psyClaimsSepolia,
         functionName: "createNewClaimableBatch",
-        abi: env.NEXT_PUBLIC_IS_MAINNET ? psyClaimsAbi : psyClaimsAbi,
+        abi: psyClaimsAbi,
         args: [merkleRoot, BigInt(deadline), ipfsHash]
       });
     },
