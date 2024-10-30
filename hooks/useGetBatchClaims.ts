@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 export function useGetBatchClaims() {
   const client = useApolloClient();
 
-  const { data } = useQuery({
+  const { data: claims } = useQuery({
     queryKey: ["batchClaims"],
     queryFn: async () => {
       const { data } = await client.query({
@@ -17,5 +17,5 @@ export function useGetBatchClaims() {
     },
     refetchInterval: 20000 // Refetch every 20 seconds
   });
-  return data as BatchClaim[];
+  return claims as BatchClaim[];
 }
