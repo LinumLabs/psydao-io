@@ -58,12 +58,14 @@ const ClaimCard = (props: ClaimCardProps) => {
   useEffect(() => {
     if (isSuccess && writeContractSuccess) {
       showSuccessToast("Claim successful.", width);
+      reset();
       return;
     }
 
     if (txError || isError) {
       showCustomErrorToast(error?.message ?? "", width);
       console.error(error);
+      reset();
       return;
     }
   }, [isSuccess, writeContractSuccess, txError, error]);
