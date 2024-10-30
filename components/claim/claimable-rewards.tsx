@@ -6,7 +6,6 @@ import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
 import { Address } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import WrongNetworkWindow from "../common/wrong-network";
 import DiagonalRectangle from "../nft-sale-widget/common/diagonal-rectangle";
 import { env } from "@/config/env.mjs";
 
@@ -131,11 +130,8 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const { nextStep } = useWizard();
   const claims = useGetBatchClaims();
   const [mappedData, setMappedData] = useState<MappedClaimData[]>([]);
-  const { address, chainId } = useAccount();
+  const { address } = useAccount();
   const [loading, setLoading] = useState(false);
-
-  const CHAIN_ID = env.NEXT_PUBLIC_CHAIN_ID;
-  const isWrongNetwork = chainId !== CHAIN_ID;
 
   const fetchMappedData = async (): Promise<{
     data?: any;
@@ -244,9 +240,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
         maxW="100%"
         padding={{ base: "4", md: "8" }}
       >
-        {address && isWrongNetwork ? (
-          <WrongNetworkWindow />
-        ) : address && mappedData.length > 0 ? (
+        {address && mappedData.length > 0 ? (
           mappedData.map((item, index) => {
             return (
               <ClaimCard

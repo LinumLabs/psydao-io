@@ -7,10 +7,12 @@ import { useAccount } from "wagmi";
 import ClaimableRewards from "../claim/claimable-rewards";
 import CreateRewardClaim from "../claim/create-reward-claim";
 import AdminViewClaims from "../claim/admin-view-claims";
+import WrongNetworkWindow from "../common/wrong-network";
+import { env } from "@/config/env.mjs";
 
 export const Claim = () => {
   const { state } = useWindowManager();
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
 
   const fullScreenWindow = useMemo(() => {
     if (state.fullScreen === "claim") {
@@ -21,6 +23,7 @@ export const Claim = () => {
   }, [state]);
 
   const isAdmin = whitelistedAddresses.includes(address ?? "0x");
+  const isWrongNetwork = chainId !== env.NEXT_PUBLIC_CHAIN_ID;
 
   return (
     <Window
@@ -53,11 +56,15 @@ export const Claim = () => {
         p={0}
         overflowX={"hidden"}
       >
-        <Wizard startIndex={0}>
-          <ClaimableRewards isAdmin={isAdmin} />
-          <AdminViewClaims />
-          <CreateRewardClaim />
-        </Wizard>
+        {address && isWrongNetwork ? (
+          <WrongNetworkWindow />
+        ) : (
+          <Wizard startIndex={0}>
+            <ClaimableRewards isAdmin={isAdmin} />
+            <AdminViewClaims />
+            <CreateRewardClaim />
+          </Wizard>
+        )}
       </Window.Content>
     </Window>
   );
