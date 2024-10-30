@@ -1,5 +1,5 @@
+import { sortOutData } from '@/lib/services/merkle';
 import { NextApiRequest, NextApiResponse } from "next";
-import { env } from "process";
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,25 +16,7 @@ export default async function handler(
   }
 
   try {
-    const response = await fetch(`${env.PSYDAO_API_URL}/mapped-data`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        claimBatches: claims,
-        address
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res
-        .status(response.status)
-        .json({ error: data.error || "An error occurred" });
-    }
-
+    const data = await sortOutData(claims, address);
     return res.status(200).json(data);
   } catch (error) {
     console.error("Error calling backend API:", error);

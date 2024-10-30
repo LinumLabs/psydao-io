@@ -8,7 +8,7 @@ import {
   psyNFTSepolia,
   psyTokenSepolia
 } from "@/constants/contracts";
-import { env } from "process";
+import { env } from "@/config/env.mjs";
 
 export const useApprovePsy = (amount: BigInt) => {
   const [approvedSuccess, setApprovedSuccess] = useState(false);
@@ -58,6 +58,7 @@ export const useApprovePsy = (amount: BigInt) => {
     fetchStatus,
     approvedSuccess,
     error,
-    txError
+    txError,
+    resetApprove: reset
   };
 };
