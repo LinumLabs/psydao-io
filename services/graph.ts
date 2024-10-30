@@ -117,7 +117,7 @@ export const getUserCopyBalance = gql`
 
 export const getBatchClaims = gql`
   query GetBatchClaims {
-    batchClaims {
+    batchClaims(orderBy: batchId) {
       id
       claims {
         account

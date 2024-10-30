@@ -1,4 +1,15 @@
-export const userTestMapping: { [key: string]: string } = {
+import { Address } from "viem";
+
+/**
+ * Maps production addresses to test wallets for development/testing.
+ * When TEST_ENV is true, any distributions or votes from production addresses
+ * will be redirected to their corresponding test wallet.
+ * 
+ * Example:
+ * If address1 voted on a proposal, in test mode that vote will be counted
+ * as coming from testWallet1 instead.
+ */
+export const userTestMapping: { [key: Address]: Address } = {
     "0xc3ac5ef1a15c40241233c722fe322d83b010e445": "0xfeeb9546e9501f03aec345fb4fbc8e255048c67d",
     "0x1db67d560813ea7aba48bd8a9429cbecbeb2118e": "0x7c6d212e46e38f7c1a9c12d1664ce90b202715a4",
     "0x07effc25352088e044d2e91e57d06877c5d49e46": "0x8754a4c886f8cb77a1d2f38470c653ddb4727f21",
