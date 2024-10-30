@@ -1,10 +1,11 @@
+import { shopifyClient } from "@/config/apolloClients";
 import { getUserOrders } from "@/services/graph";
-import { client } from "@/utils/apolloClient";
+
 import { useQuery } from "@apollo/client";
 
 const useGetUserOrders = (addressSnippet: string) => {
   const { data, error } = useQuery(getUserOrders, {
-    client: client,
+    client: shopifyClient,
     variables: { query: `discount_code:${addressSnippet}` },
     pollInterval: 10000
   });
