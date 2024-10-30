@@ -61,16 +61,15 @@ const EmptyState = () => {
 
 const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const { nextStep } = useWizard();
-  const { claims, refetch } = useGetBatchClaims();
+  const data = useGetBatchClaims();
   const [mappedData, setMappedData] = useState<MappedClaimData[]>([]);
   const { address } = useAccount();
-  const [success, setSuccess] = useState(false);
 
   const fetchMappedData = async (): Promise<{
     data?: any;
     error?: any;
   }> => {
-    const cleanedClaimsArray = claims.map(({ __typename, ...rest }) => rest);
+    const cleanedClaimsArray = data.map(({ __typename, ...rest }) => rest);
     try {
       const response = await fetch("/api/mapped-data", {
         method: "POST",
@@ -98,7 +97,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   };
 
   useEffect(() => {
-    if (claims && address) {
+    if (data && address) {
       fetchMappedData()
         .then((result) => {
           setMappedData(result.data);
@@ -107,12 +106,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
           console.log(error);
         });
     }
-
-    if (success) {
-      refetch();
-      setSuccess(false);
-    }
-  }, [claims, address, success]);
+  }, [address, data]);
 
   if (!mappedData) {
     return null;
