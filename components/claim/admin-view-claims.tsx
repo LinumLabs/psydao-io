@@ -127,7 +127,7 @@ const AdminViewClaims = () => {
           </Text>
         </Flex>
       </Flex>
-      {claims.length ? (
+      {claims?.length ? (
         <>
           <TableContainer paddingBottom={"100px"}>
             <Table variant="simple">
