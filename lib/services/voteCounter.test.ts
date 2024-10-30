@@ -13,7 +13,8 @@ vi.mock('@/constants/claims', () => ({
   TEST_ENV: true,
   SNAPSHOT_GRAPHQL_URL: 'https://hub.snapshot.org/graphql',
   PSYDAO_ENS: 'psydao.eth',
-  NEXT_PUBLIC_SUBGRAPH_URL: 'https://api.studio.thegraph.com/query/83978/psydao-sepolia/version/latest'
+  NEXT_PUBLIC_SUBGRAPH_URL: 'https://api.studio.thegraph.com/query/83978/psydao-sepolia/version/latest',
+  NEXT_PUBLIC_MAINNET_SUBGRAPH_URL: 'https://api.studio.thegraph.com/query/83978/psydao-mainnet/version/latest'
 }))
 
 describe('voteCounter main function', () => {
