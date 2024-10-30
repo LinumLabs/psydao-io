@@ -15,16 +15,8 @@ export const main = async (
   totalAmountOfTokens: number,
   batchId: number
 ) => {
-  console.log('Starting distribution calculation:', {
-    startTimeStamp,
-    endTimeStamp,
-    totalAmountOfTokens,
-    batchId
-  });
-
   const proposals = await getSnapshotProposals(startTimeStamp, endTimeStamp);
   if (!proposals?.length) {
-    console.log('No proposals found for time period')
     return { balances: [], merkleRoot: "0x", ipfsHash: "" }
   }
 
@@ -51,22 +43,17 @@ export const main = async (
       Number(filteredProposals[filteredProposals.length - 1]?.snapshot)
     );
 
-    console.log('getPsycHolders', sgData);
-
     psycHolders = sgData.map<Address>((psycHolder) =>
       TEST_ENV
         ? (userTestMapping[psycHolder.owner] ?? psycHolder.owner.toLowerCase() as Address)
         : psycHolder.owner.toLowerCase() as Address
     );
-    console.log('psycHolders', psycHolders);
 
     const tokenPerHolder = totalAmountOfTokens / psycHolders.length;
 
     psycHolders.forEach((holder) => {
       votesCountMap[holder.toLowerCase() as Address] = 0;
     });
-
-    console.log('votesCountMap', votesCountMap);
 
     for (const proposal of filteredProposals) {
       const votes = (await getVotesOnProposalById(proposal.id)) ?? [];
@@ -133,7 +120,6 @@ export const main = async (
       )
     )
   );
-  console.log('leaves', leaves);
 
   const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
   const merkleRoot = tree.getHexRoot();
