@@ -249,10 +249,10 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
                 amount={item.amount}
                 claimStatus={
                   item.claimed
-                    ? "claimed"
+                    ? "Claimed"
                     : item.reason
                       ? item.reason
-                      : "claimable"
+                      : "Claimable"
                 }
                 batchId={item.batchId}
                 expiry={item.deadline}

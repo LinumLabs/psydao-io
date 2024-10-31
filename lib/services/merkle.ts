@@ -58,14 +58,14 @@ const processClaim = async (claim: Claim, address: string) => {
     }
   } else if (deadlineTimestamp <= currentTimestamp) {
     updatedClaim.buttonDisabled = claim.claimed;
-    updatedClaim.reason = claim.claimed ? "claimed" : "expired";
+    updatedClaim.reason = claim.claimed ? "Claimed" : "Expired";
     updatedClaim.amount = claim.amount;
   } else if (
     address &&
     claim.claims.some((c) => c.account.toLowerCase() === address.toLowerCase())
   ) {
     updatedClaim.buttonDisabled = true;
-    updatedClaim.reason = "claimed";
+    updatedClaim.reason = "Claimed";
   } else {
     const merkleProof = await getMerkleProof(
       claim.ipfsHash,
@@ -82,7 +82,7 @@ const processClaim = async (claim: Claim, address: string) => {
       updatedClaim.buttonDisabled = false;
     } else {
       updatedClaim.buttonDisabled = true;
-      updatedClaim.reason = "not eligible";
+      updatedClaim.reason = "Not eligible";
       updatedClaim.amount = "0";
     }
   }
