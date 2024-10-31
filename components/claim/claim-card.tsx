@@ -4,7 +4,8 @@ import { type ClaimStatus } from "@/lib/types";
 import { useClaim } from "@/services/web3/useClaim";
 import { getExpirationStatus } from "@/utils/getExpirationStatus";
 import { Box, Button, Divider, Flex, Text } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { formatUnits } from "viem";
 
 export interface ClaimCardProps {
   amount: string;
@@ -70,6 +71,18 @@ const ClaimCard = (props: ClaimCardProps) => {
     }
   }, [isSuccess, writeContractSuccess, txError, error]);
 
+  const formattedAmount = useMemo(() => {
+    try {
+      // Format from wei (18 decimals) to a human-readable number
+      const formatted = formatUnits(BigInt(amount), 18)
+      // Round to 2 decimal places
+      return Number(formatted).toFixed(2)
+    } catch (err) {
+      console.error('Error formatting amount:', err)
+      return '0.00'
+    }
+  }, [amount])
+
   return (
     <Flex
       maxW={"593px"}
@@ -102,7 +115,7 @@ const ClaimCard = (props: ClaimCardProps) => {
             md: "16px"
           }}
         >
-          {parseFloat(amount).toFixed(2)} PSY
+          {formattedAmount} PSY
         </Text>
         <Divider borderColor={"#E0E0E0"} my={3} />
         <ClaimCardText text={`${getExpirationStatus(expiry)}`} />
