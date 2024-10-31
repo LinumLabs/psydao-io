@@ -16,9 +16,6 @@ export const main = async (
   batchId: number
 ) => {
   const proposals = await getSnapshotProposals(startTimeStamp, endTimeStamp);
-  if (!proposals?.length) {
-    return { balances: [], merkleRoot: "0x", ipfsHash: "" }
-  }
 
   let psycHolders: Address[] = [];
   let psycHolderVotesPercentage: { address: Address; percentage: number }[] = [];
