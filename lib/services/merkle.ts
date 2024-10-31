@@ -19,7 +19,6 @@ export type Claim = {
   reason: string;
   buttonDisabled: boolean;
   merkleProof: string[];
-  amountForClaim: string;
 };
 
 export const sortOutData = async (data: Claim[], address: string) => {
@@ -48,18 +47,9 @@ const processClaim = async (claim: Claim, address: string) => {
   if (claim.claimed) {
     updatedClaim.buttonDisabled = true;
     updatedClaim.reason = "Claimed";
-    let owner = claim.claims.find(
-      (c) => c.account.toLowerCase() === address.toLowerCase()
-    );
-    if (owner) {
-      updatedClaim.amount = formatUnits(owner.amount, 18);
-    } else {
-      updatedClaim.amount = "0";
-    }
   } else if (deadlineTimestamp <= currentTimestamp) {
     updatedClaim.buttonDisabled = claim.claimed;
     updatedClaim.reason = claim.claimed ? "Claimed" : "Expired";
-    updatedClaim.amount = claim.amount;
   } else if (
     address &&
     claim.claims.some((c) => c.account.toLowerCase() === address.toLowerCase())
