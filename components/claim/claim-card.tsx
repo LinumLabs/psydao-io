@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 export interface ClaimCardProps {
   amount: string;
-  claimStatus: ClaimStatus;
+  claimStatus: string;
   batchId: string;
   expiry: string;
   totalClaimable?: string;

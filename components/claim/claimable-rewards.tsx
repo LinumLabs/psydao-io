@@ -70,6 +70,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
     error?: any;
   }> => {
     const cleanedClaimsArray = claims.map(({ __typename, ...rest }) => rest);
+
     try {
       const response = await fetch("/api/mapped-data", {
         method: "POST",
@@ -111,6 +112,12 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   if (!mappedData) {
     return null;
   }
+
+  const meeeee = mappedData.map((item) => {
+    return { reason: item.reason, isDisabled: item.buttonDisabled };
+  });
+
+  console.log(meeeee);
 
   return (
     <Box>
@@ -177,8 +184,8 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
                 claimStatus={
                   item.claimed
                     ? "claimed"
-                    : item.buttonDisabled
-                      ? "expired"
+                    : item.reason
+                      ? item.reason
                       : "claimable"
                 }
                 batchId={item.batchId}
@@ -186,7 +193,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
                 onClaim={() => {}}
                 proof={item.merkleProof}
                 text={item.reason}
-                disabled={item.buttonDisabled}
+                disabled={!!item.reason}
               />
             );
           })
