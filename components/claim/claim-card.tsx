@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 export interface ClaimCardProps {
   amount: string;
-  claimStatus: string;
+  claimStatus: ClaimStatus;
   batchId: string;
   expiry: string;
   totalClaimable?: string;
@@ -130,7 +130,7 @@ const ClaimCard = (props: ClaimCardProps) => {
             isLoading={isPending || isLoading}
             loadingText={"Claiming..."}
           >
-            {disabled ? text : "Claim"}
+            {text}
           </Button>
         </Box>
       </Box>

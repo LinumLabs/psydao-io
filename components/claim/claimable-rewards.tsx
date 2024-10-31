@@ -8,6 +8,7 @@ import { Address } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import DiagonalRectangle from "../nft-sale-widget/common/diagonal-rectangle";
 import { env } from "@/config/env.mjs";
+import { ClaimStatus } from "@/lib/types";
 
 interface ClaimableRewardsProps {
   isAdmin: boolean;
@@ -24,7 +25,7 @@ type MappedClaimData = {
   deadline: string;
   merkleProof: string[];
   buttonDisabled: boolean;
-  reason: string;
+  reason: ClaimStatus | undefined;
 };
 
 const EmptyState = (props: {
@@ -257,7 +258,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
                 expiry={item.deadline}
                 onClaim={() => {}}
                 proof={item.merkleProof}
-                text={item.reason}
+                text={item.reason ? item.reason : "Claim"}
                 disabled={!!item.reason}
               />
             );
