@@ -109,7 +109,7 @@ const ClaimCard = (props: ClaimCardProps) => {
         <ClaimCardText text={claimStatus} />
         <Text
           fontWeight={700}
-          color={claimStatus !== "claimable" ? "#A9A9A9" : "#AF52DE"}
+          color={claimStatus !== "Claimable" ? "#A9A9A9" : "#AF52DE"}
           fontSize={{
             sm: "14px",
             md: "16px"
@@ -124,7 +124,7 @@ const ClaimCard = (props: ClaimCardProps) => {
             onClick={claim}
             isDisabled={disabled}
             background={
-              claimStatus === "claimable"
+              claimStatus === "Claimable"
                 ? "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)"
                 : "gray.500"
             }
@@ -138,12 +138,12 @@ const ClaimCard = (props: ClaimCardProps) => {
             justifyContent={"center"}
             fontFamily={"Poppins Semibold"}
             _hover={{
-              opacity: claimStatus === "claimed" ? "" : "0.8"
+              opacity: claimStatus === "Claimed" ? "" : "0.8"
             }}
             isLoading={isPending || isLoading}
             loadingText={"Claiming..."}
           >
-            {disabled ? text : "Claim"}
+            {text}
           </Button>
         </Box>
       </Box>

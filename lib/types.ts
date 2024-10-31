@@ -76,7 +76,7 @@ export type GeneralSettings = {
   openPublicSale: boolean;
 };
 
-export type ClaimStatus = "claimable" | "claimed" | "expired";
+export type ClaimStatus = "Claimable" | "Claimed" | "Expired" | "Not eligible";
 
 export type ClaimDetail = {
   account: string;
