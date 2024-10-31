@@ -184,12 +184,6 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
     return null;
   }
 
-  const meeeee = mappedData.map((item) => {
-    return { reason: item.reason, isDisabled: item.buttonDisabled };
-  });
-
-  console.log(meeeee);
-
   return (
     <Box>
       <Flex
