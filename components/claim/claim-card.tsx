@@ -73,8 +73,13 @@ const ClaimCard = (props: ClaimCardProps) => {
 
   const formattedAmount = useMemo(() => {
     try {
+      if (!amount) return '0.00'
+      if (amount.includes('.')) {
+        return Number(amount).toFixed(2)
+      }
       // Format from wei (18 decimals) to a human-readable number
       const formatted = formatUnits(BigInt(amount), 18)
+      console.log('formatted => ', formatted)
       // Round to 2 decimal places
       return Number(formatted).toFixed(2)
     } catch (err) {
