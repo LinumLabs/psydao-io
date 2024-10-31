@@ -165,6 +165,14 @@ export const getVotesOnProposal = gql`
   }
 `;
 
+
+// const mainnetNFTAddress = "0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d";
+
+/**
+ * Get the owners of the NFTs on the mainnet
+ * The hardcoded address `0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d` 
+ * is the NFT contract address on mainnet
+ */
 export const getNFTHolders = gql`
   query NFTHolders($blockNumber: Int!) {
     tokens(

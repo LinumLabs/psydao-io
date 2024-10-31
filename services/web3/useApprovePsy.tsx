@@ -42,7 +42,10 @@ export const useApprovePsy = (amount: BigInt) => {
           setApprovedSuccess(true);
         },
         onSettled() {
-          refetchTxReceipt();
+          // refetchTxReceipt();
+        },
+        onError(error) {
+          console.log("useApprovePsyError", error);
         }
       }
     );

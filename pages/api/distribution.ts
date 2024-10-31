@@ -1,3 +1,4 @@
+import { pinAddresses } from "@/lib/server-utils";
 import { main } from "@/lib/services/voteCounter";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -20,6 +21,11 @@ export default async function handler(
         Number(totalAmountOfTokens),
         Number(batchId)
       );
+
+      if (merkleTree?.ipfsHash !== "") {
+        await pinAddresses(merkleTree.ipfsHash);
+      }
+
       return res.status(200).json(merkleTree);
     } catch (error) {
       console.error("Error:", error);
@@ -30,3 +36,4 @@ export default async function handler(
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
+

@@ -1,7 +1,7 @@
 import { psyClaimsMainnet, psyClaimsSepolia } from "@/constants/contracts";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import psyClaimsAbi from "@/abis/psyClaimsAbi.json";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { parseUnits } from "viem";
 import { env } from "@/config/env.mjs";
 
@@ -14,7 +14,6 @@ interface ClaimProps {
 
 export const useClaim = (props: ClaimProps) => {
   const [approvedSuccess, setApprovedSuccess] = useState(false);
-
   const { batchId, amount, merkleProof, width } = props;
 
   const {
@@ -61,7 +60,7 @@ export const useClaim = (props: ClaimProps) => {
           //   refetchTxReceipt();
         },
         onError(error) {
-          console.log("Error", error);
+          console.log("useClaimError", error);
         }
       }
     );

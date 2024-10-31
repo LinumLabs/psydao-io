@@ -278,6 +278,7 @@ const CreateRewardClaim = () => {
       showSuccessToast("Successfully created new claimable batch.", width);
       setLoading(false);
       resetBatchCreate();
+      previousStep();
       return;
     }
 
