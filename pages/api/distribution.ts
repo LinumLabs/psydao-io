@@ -22,10 +22,6 @@ export default async function handler(
         Number(batchId)
       );
 
-      if (merkleTree?.ipfsHash !== "") {
-        await pinAddresses(merkleTree.ipfsHash);
-      }
-
       return res.status(200).json(merkleTree);
     } catch (error) {
       console.error("Error:", error);
