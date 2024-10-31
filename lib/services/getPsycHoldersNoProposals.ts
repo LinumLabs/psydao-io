@@ -1,5 +1,5 @@
 import { getPsycHoldersByTimestamps } from "./getPsycHolders";
-import { keccak256, encodePacked, parseUnits } from "viem";
+import { keccak256, encodePacked, parseUnits, Address } from "viem";
 import { MerkleTree } from "merkletreejs";
 import { Balance, uploadArrayToIpfs } from "./ipfs";
 import { userTestMapping } from "./config/test-mapping";
@@ -13,19 +13,22 @@ export const psycHoldersNoProposals = async (
 ) => {
   let psycHolderTokenDistribution: Balance[] = [];
   const sgData = await getPsycHoldersByTimestamps(startTimeStamp, endTimeStamp);
-  const psycHolders = sgData.map((psycHolder) => psycHolder.owner);
+
+  const psycHolders = sgData.map((psycHolder) =>
+    TEST_ENV
+      ? (userTestMapping[psycHolder.owner] ?? psycHolder.owner.toLowerCase() as Address)
+      : psycHolder.owner.toLowerCase() as Address
+  );
   const tokenPerHolder = totalAmountOfTokens / psycHolders.length;
 
   // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
   psycHolderTokenDistribution = psycHolders.map((psycHolder) => {
     return {
-      address: TEST_ENV
-        ? ((userTestMapping[psycHolder] as `0x${string}`) ??
-          (psycHolder as `0x${string}`))
-        : (psycHolder as `0x${string}`),
+      address: psycHolder as Address,
       tokens: tokenPerHolder.toString()
     };
   });
+
   const leaves = psycHolderTokenDistribution.map((holder) =>
     keccak256(
       encodePacked(
@@ -33,12 +36,13 @@ export const psycHoldersNoProposals = async (
         [
           BigInt(batchId),
           parseUnits(holder.tokens, 18),
-          holder.address as `0x${string}`
+          holder.address as Address
         ]
       )
     )
   );
-  const tree = new MerkleTree(leaves);
+
+  const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
   const merkleRoot = tree.getHexRoot();
 
   const ipfsHash = await uploadArrayToIpfs(psycHolderTokenDistribution);
