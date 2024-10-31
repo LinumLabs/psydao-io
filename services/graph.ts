@@ -188,6 +188,27 @@ export const getNFTHolders = gql`
   }
 `;
 
+/**
+ * Get the owners of the NFTs on the mainnet by timestamps
+ * The hardcoded address `0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d` 
+ * is the NFT contract address on mainnet 
+ */
+export const getNFTHoldersByTimestamps = gql`
+  query NFTHolders($startTimeStamp: Int!, $endTimeStamp: Int!) {
+    tokens(
+      where: {
+        tokenAddress: "0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d"
+        blockTimestamp_gte: $startTimeStamp
+        blockTimestamp_lt: $endTimeStamp
+      }
+      orderBy: tokenId
+      orderDirection: asc
+    ) {
+      owner
+    }
+  }
+`;
+
 export const getUserOrders = gql`
   query getUserOrders($query: String!) {
     ordersCount(query: $query) {
