@@ -76,4 +76,20 @@ export type GeneralSettings = {
   openPublicSale: boolean;
 };
 
-export type ClaimStatus = "claimable" | "claimed" | "expired";
+export type ClaimStatus = "Claimable" | "Claimed" | "Expired" | "Not eligible";
+
+export type ClaimDetail = {
+  account: string;
+  amount: string;
+};
+
+export type BatchClaim = {
+  id: string;
+  __typename: string;
+  claims: ClaimDetail[];
+  ipfsHash: string;
+  merkleRoot: string;
+  amount: string;
+  claimed: boolean;
+  deadline: string;
+};
