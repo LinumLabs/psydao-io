@@ -37,8 +37,6 @@ export const main = async (
         "0x71166758c2aa68fe1d1d5eb52135a3caafc07284ec1d0b2c6dba8ef161bf7a4c"
     );
 
-    console.log('filteredProposals', filteredProposals);
-
     const sgData = await getPsycHolders(
       Number(filteredProposals[filteredProposals.length - 1]?.snapshot)
     );
@@ -48,8 +46,6 @@ export const main = async (
         ? (userTestMapping[psycHolder.owner] ?? psycHolder.owner.toLowerCase() as Address)
         : psycHolder.owner.toLowerCase() as Address
     );
-
-    console.log('psycHolders', psycHolders);
 
     const tokenPerHolder = totalAmountOfTokens / psycHolders.length;
 
@@ -95,7 +91,6 @@ export const main = async (
   }
 
   if (proposals?.length === 0) {
-    console.log('No proposals found, calculating for empty proposals');
     const emptyProposalsCalculation = await psycHoldersNoProposals(startTimeStamp, endTimeStamp, totalAmountOfTokens, batchId);
     return emptyProposalsCalculation;
   }
