@@ -73,15 +73,20 @@ const ClaimCard = (props: ClaimCardProps) => {
 
   const formattedAmount = useMemo(() => {
     try {
+      if (!amount) return "0.00";
+      if (amount.includes(".")) {
+        return Number(amount).toFixed(2);
+      }
       // Format from wei (18 decimals) to a human-readable number
-      const formatted = formatUnits(BigInt(amount), 18)
+      const formatted = formatUnits(BigInt(amount), 18);
+
       // Round to 2 decimal places
-      return Number(formatted).toFixed(2)
+      return Number(formatted).toFixed(2);
     } catch (err) {
-      console.error('Error formatting amount:', err)
-      return '0.00'
+      console.error("Error formatting amount:", err);
+      return "0.00";
     }
-  }, [amount])
+  }, [amount]);
 
   return (
     <Flex
@@ -104,7 +109,7 @@ const ClaimCard = (props: ClaimCardProps) => {
         gap={2}
         fontFamily={"Inter Medium"}
       >
-        <ClaimCardText text={`Batch ${batchId.toString()}`} />
+        <ClaimCardText text={`Batch ${Number(batchId) + 1}`} />
         <Divider borderColor={"#E0E0E0"} my={3} />
         <ClaimCardText text={claimStatus} />
         <Text

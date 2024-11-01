@@ -9,6 +9,7 @@ import { Balance, uploadArrayToIpfs } from "./ipfs";
 import { userTestMapping } from "./config/test-mapping";
 import { TEST_ENV } from "@/constants/claims";
 
+import { psycHoldersNoProposals } from "./getPsycHoldersNoProposals";
 export const main = async (
   startTimeStamp: number,
   endTimeStamp: number,
@@ -40,7 +41,7 @@ export const main = async (
       Number(filteredProposals[filteredProposals.length - 1]?.snapshot)
     );
 
-    psycHolders = sgData.map<Address>((psycHolder) =>
+    psycHolders = sgData.map((psycHolder) =>
       TEST_ENV
         ? (userTestMapping[psycHolder.owner] ?? psycHolder.owner.toLowerCase() as Address)
         : psycHolder.owner.toLowerCase() as Address
@@ -87,6 +88,11 @@ export const main = async (
         };
       }
     );
+  }
+
+  if (proposals?.length === 0) {
+    const emptyProposalsCalculation = await psycHoldersNoProposals(startTimeStamp, endTimeStamp, totalAmountOfTokens, batchId);
+    return emptyProposalsCalculation;
   }
 
   const unAllocatedTokens = psycHolderTokenDistribution.reduce(

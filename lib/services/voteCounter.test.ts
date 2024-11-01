@@ -1,9 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { main } from './voteCounter'
-import { getPsycHolders, PsycHolder } from './getPsycHolders'
+import { getPsycHolders, getPsycHoldersByTimestamps, PsycHolder } from './getPsycHolders'
 import { getSnapshotProposals, getVotesOnProposalById, Proposal, type Vote } from './getSnapshotProposalsAndVotes'
 import { uploadArrayToIpfs } from './ipfs'
-import { TEST_ENV } from '@/constants/claims'
+
+// Mock env before any other imports
+vi.mock('@/config/env.mjs', () => ({
+  env: {
+    // Add only the env variables used in the test
+    SNAPSHOT_GRAPHQL_URL: 'https://hub.snapshot.org/graphql',
+    TEST_ENV: true,
+    NEXT_PUBLIC_SUBGRAPH_URL: 'https://api.studio.thegraph.com/query/83978/psydao-sepolia/version/latest',
+    NEXT_PUBLIC_MAINNET_SUBGRAPH_URL: 'https://api.studio.thegraph.com/query/83978/psydao-mainnet/version/latest',
+    NEXT_PUBLIC_CHAIN_ID: 1,
+    PINATA_JWT: 'test-jwt',
+    PINATA_API_KEY: 'test-key',
+    PINATA_SECRET_API_KEY: 'test-secret'
+  }
+}))
 
 // Mock all external dependencies
 vi.mock('./getPsycHolders')
@@ -54,25 +68,39 @@ describe('voteCounter main function', () => {
     vi.resetAllMocks()
   })
 
-  it('should return empty result when no proposals found', async () => {
+  it('should distribute tokens equally when no proposals exist', async () => {
+    const totalTokens = 767506.16 // Matching real distribution
+    const mockHoldersInPeriod: PsycHolder[] = [
+      { owner: '0xd9c0bb3476ce2ad2102d3ac07287bb802eea98f1' },
+      { owner: '0x5de3f8b1e1c758c3fe0b300aa376da229a732dc9' },
+      { owner: '0xf2217ba914d9c07b81c5e4b10a2eb2ec478d49aa' }
+    ]
+
     vi.mocked(getSnapshotProposals).mockResolvedValue([])
+    vi.mocked(getPsycHoldersByTimestamps).mockResolvedValue(mockHoldersInPeriod)
+    vi.mocked(uploadArrayToIpfs).mockResolvedValue('QmHash123')
 
     const result = await main(
       mockInput.startTimeStamp,
       mockInput.endTimeStamp,
-      mockInput.totalAmountOfTokens,
+      totalTokens,
       mockInput.batchId
     )
 
-    expect(result).toEqual({
-      balances: [],
-      merkleRoot: "0x",
-      ipfsHash: ""
+    expect(result.balances).toHaveLength(3)
+
+    // Each holder should get exactly 255,835.3866666667 tokens
+    const expectedTokensPerHolder = (totalTokens / 3).toFixed(10)
+    result.balances.forEach(balance => {
+      expect(parseFloat(balance.tokens)).toBeCloseTo(255835.3866666667, 4)
     })
-    expect(getSnapshotProposals).toHaveBeenCalledWith(
-      mockInput.startTimeStamp,
-      mockInput.endTimeStamp
+
+    // Total should be exactly 767,506.16
+    const totalDistributed = result.balances.reduce(
+      (sum, balance) => sum + parseFloat(balance.tokens),
+      0
     )
+    expect(totalDistributed).toBeCloseTo(767506.16, 4)
   })
 
   it('should calculate distribution correctly with valid inputs', async () => {
