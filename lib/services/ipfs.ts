@@ -1,4 +1,5 @@
 import axios from "axios";
+import { PinataMetadata, PinataSDK } from "pinata-web3";
 import { env } from "@/config/env.mjs";
 
 export interface Balance {
@@ -35,3 +36,36 @@ export const getIpfsHash = async (ipfsHash: string) => {
   );
   return response.data;
 };
+
+export async function pinListToIpfs(merkleList: Balance[]) {
+  try {
+    const pinata = new PinataSDK({
+      pinataJwt: process.env.PINATA_ADMIN_JWT!,
+      pinataGateway: "red-literary-tiglon-645.mypinata.cloud"
+    })
+
+    const options = {
+      pinataOptions: {
+        cidVersion: 0,
+        customPinPolicy: {
+          regions: [{ id: "FRA1", desiredReplicationCount: 1 }]
+        }
+      },
+      pinataMetadata: {
+        name: `PsyDAO Merkle Tree Data ${new Date().toISOString()}`,
+        keyvalues: {
+          type: "merkle-tree-data"
+        }
+      },
+      groupId: "fa33eb74-0699-443c-8f1b-a8bf15c74360" // PsyDao's groupId
+    };
+
+    const upload = await pinata.upload.json(merkleList, options);
+
+    const ipfsHash = upload.IpfsHash;
+
+    return ipfsHash;
+  } catch (error) {
+    console.error(error);
+  }
+}

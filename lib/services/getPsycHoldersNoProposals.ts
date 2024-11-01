@@ -1,7 +1,7 @@
 import { getPsycHoldersBeforeTimestamp } from "./getPsycHolders";
 import { keccak256, encodePacked, parseUnits, Address } from "viem";
 import { MerkleTree } from "merkletreejs";
-import { Balance, uploadArrayToIpfs } from "./ipfs";
+import { Balance, pinListToIpfs, uploadArrayToIpfs } from "./ipfs";
 import { userTestMapping } from "./config/test-mapping";
 import { TEST_ENV } from "@/constants/claims";
 
@@ -44,7 +44,8 @@ export const psycHoldersNoProposals = async (
   const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
   const merkleRoot = tree.getHexRoot();
 
-  const ipfsHash = await uploadArrayToIpfs(balances);
-
+  // const ipfsHash = await uploadArrayToIpfs(balances);
+  const ipfsHash = await pinListToIpfs(balances);
+  console.log("no proposal IPFS is ", ipfsHash);
   return { balances, merkleRoot, ipfsHash };
 };
