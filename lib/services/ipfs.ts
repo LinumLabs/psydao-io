@@ -41,8 +41,9 @@ export async function pinListToIpfs(merkleList: Balance[]) {
   try {
     const pinata = new PinataSDK({
       pinataJwt: process.env.PINATA_ADMIN_JWT!,
+      // @Bevan for me it only works with the prefix - please check :( otherwise all looks good!
       pinataGateway: "red-literary-tiglon-645.mypinata.cloud"
-    })
+    });
 
     const options = {
       pinataOptions: {
