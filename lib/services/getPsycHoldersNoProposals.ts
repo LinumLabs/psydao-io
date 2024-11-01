@@ -11,7 +11,7 @@ export const psycHoldersNoProposals = async (
   totalAmountOfTokens: number,
   batchId: number
 ) => {
-  let psycHolderTokenDistribution: Balance[] = [];
+  let balances: Balance[] = [];
   const sgData = await getPsycHoldersByTimestamps(startTimeStamp, endTimeStamp);
 
   const psycHolders = sgData.map((psycHolder) =>
@@ -22,14 +22,14 @@ export const psycHoldersNoProposals = async (
   const tokenPerHolder = totalAmountOfTokens / psycHolders.length;
 
   // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
-  psycHolderTokenDistribution = psycHolders.map((psycHolder) => {
+  balances = psycHolders.map((psycHolder) => {
     return {
       address: psycHolder as Address,
       tokens: tokenPerHolder.toString()
     };
   });
 
-  const leaves = psycHolderTokenDistribution.map((holder) =>
+  const leaves = balances.map((holder) =>
     keccak256(
       encodePacked(
         ["uint256", "uint256", "address"],
@@ -45,7 +45,7 @@ export const psycHoldersNoProposals = async (
   const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
   const merkleRoot = tree.getHexRoot();
 
-  const ipfsHash = await uploadArrayToIpfs(psycHolderTokenDistribution);
+  const ipfsHash = await uploadArrayToIpfs(balances);
 
-  return { psycHolderTokenDistribution, merkleRoot, ipfsHash };
+  return { balances, merkleRoot, ipfsHash };
 };

@@ -8,7 +8,7 @@ import { MerkleTree } from "merkletreejs";
 import { Balance, uploadArrayToIpfs } from "./ipfs";
 import { userTestMapping } from "./config/test-mapping";
 import { TEST_ENV } from "@/constants/claims";
-import { firstProposals } from "./firstProposalsApproved";
+
 import { psycHoldersNoProposals } from "./getPsycHoldersNoProposals";
 export const main = async (
   startTimeStamp: number,
