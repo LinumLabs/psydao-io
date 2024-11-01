@@ -91,7 +91,7 @@ export const main = async (
   }
 
   if (proposals?.length === 0) {
-    const emptyProposalsCalculation = await psycHoldersNoProposals(startTimeStamp, endTimeStamp, totalAmountOfTokens, batchId);
+    const emptyProposalsCalculation = await psycHoldersNoProposals(endTimeStamp, totalAmountOfTokens, batchId);
     return emptyProposalsCalculation;
   }
 

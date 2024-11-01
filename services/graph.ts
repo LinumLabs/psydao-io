@@ -193,13 +193,12 @@ export const getNFTHolders = gql`
  * The hardcoded address `0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d` 
  * is the NFT contract address on mainnet 
  */
-export const getNFTHoldersByTimestamps = gql`
-  query NFTHolders($startTimeStamp: Int!, $endTimeStamp: Int!) {
+export const getNFTHoldersBeforeTimestamp = gql`
+  query NFTHolders($endTimeStamp: Int!) {
     tokens(
       where: {
         tokenAddress: "0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d"
-        blockTimestamp_gte: $startTimeStamp
-        blockTimestamp_lt: $endTimeStamp
+        blockTimestamp_lte: $endTimeStamp
       }
       orderBy: tokenId
       orderDirection: asc
