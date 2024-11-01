@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { main } from './voteCounter'
-import { getPsycHolders, getPsycHoldersByTimestamps, PsycHolder } from './getPsycHolders'
+import { getPsycHolders, getPsycHoldersBeforeTimestamp, PsycHolder } from './getPsycHolders'
 import { getSnapshotProposals, getVotesOnProposalById, Proposal, type Vote } from './getSnapshotProposalsAndVotes'
 import { uploadArrayToIpfs } from './ipfs'
 
@@ -77,7 +77,7 @@ describe('voteCounter main function', () => {
     ]
 
     vi.mocked(getSnapshotProposals).mockResolvedValue([])
-    vi.mocked(getPsycHoldersByTimestamps).mockResolvedValue(mockHoldersInPeriod)
+    vi.mocked(getPsycHoldersBeforeTimestamp).mockResolvedValue(mockHoldersInPeriod)
     vi.mocked(uploadArrayToIpfs).mockResolvedValue('QmHash123')
 
     const result = await main(
