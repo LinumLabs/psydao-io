@@ -42,7 +42,7 @@ export const Claim = () => {
       top={{
         base: fullScreenWindow ? "0" : "60%",
         sm: fullScreenWindow ? "0" : "58%",
-        md: fullScreenWindow ? "0" : "50%"
+        md: fullScreenWindow ? "0" : "48%"
       }}
       left={{
         base: fullScreenWindow ? "0" : "40%",
