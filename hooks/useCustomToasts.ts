@@ -58,7 +58,7 @@ const ERROR_MESSAGES = {
   "Not Enough Psy In Contract": "Not enough PSY in contract to fulfill claim.",
   "All Psy Claimed": "All PSY has been claimed.",
   "Claim Period Ended": "The claim period has already ended.",
-  "Invalid Deadline": "The selected deadline is too close to the current date."
+  "Invalid Deadline": "The selected deadline is invalid."
 };
 
 export const customErrorMessage = (message: string): string => {
