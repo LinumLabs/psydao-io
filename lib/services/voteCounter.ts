@@ -5,7 +5,7 @@ import {
 } from "./getSnapshotProposalsAndVotes";
 import { keccak256, encodePacked, parseUnits, Address } from "viem";
 import { MerkleTree } from "merkletreejs";
-import { Balance, uploadArrayToIpfs } from "./ipfs";
+import { Balance, pinClaimsListToIpfs, uploadArrayToIpfs } from "./ipfs";
 import { userTestMapping } from "./config/test-mapping";
 import { TEST_ENV } from "@/constants/claims";
 
@@ -127,6 +127,7 @@ export const main = async (
   const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
   const merkleRoot = tree.getHexRoot();
 
-  const ipfsHash = await uploadArrayToIpfs(balances);
+  console.log("with proposals ipfs upload");
+  const ipfsHash = await pinClaimsListToIpfs(balances);
   return { balances, merkleRoot, ipfsHash };
 };

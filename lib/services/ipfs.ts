@@ -1,12 +1,19 @@
 import axios from "axios";
-import { PinataMetadata, PinataSDK } from "pinata-web3";
+import { PinataSDK, type UploadOptions } from "pinata";
 import { env } from "@/config/env.mjs";
+import { Address } from "viem";
 
 export interface Balance {
-  address: `0x${string}`;
+  address: Address;
   tokens: string;
 }
 
+/**
+ * Uploads an array of balances to IPFS
+ *
+ * @param {Balance[]} array - The array of balances to upload
+ * @returns {Promise<string>} - The IPFS hash of the uploaded data
+ */
 export const uploadArrayToIpfs = async (array: Balance[]) => {
   try {
     const fileToUpload = new Blob([JSON.stringify(array)], {
@@ -30,6 +37,12 @@ export const uploadArrayToIpfs = async (array: Balance[]) => {
   }
 };
 
+/**
+ * Get the data from IPFS
+ * 
+ * @param {string} ipfsHash - The IPFS hash to get the data from
+ * @returns {Promise<any>} - The data from IPFS
+ */
 export const getIpfsHash = async (ipfsHash: string) => {
   const response = await axios.get(
     `${env.NEXT_PUBLIC_PINATA_BASE_URL}/ipfs/${ipfsHash}`
@@ -37,7 +50,15 @@ export const getIpfsHash = async (ipfsHash: string) => {
   return response.data;
 };
 
-export async function pinListToIpfs(merkleList: Balance[]) {
+/**
+ * Uploads a list of balances<Balance[]> to IPFS
+ * Uses the Pinata SDK as well as the admin JWT
+ * Store the pins in the `psydaoClaims` group on Pinata, if its a new pin
+ *
+ * @param {Balance[]} balanceList - The list of balances to upload
+ * @returns {Promise<string>} - The IPFS hash of the uploaded data
+ */
+export async function pinClaimsListToIpfs(balanceList: Balance[]): Promise<string> {
   try {
     const pinata = new PinataSDK({
       pinataJwt: process.env.PINATA_ADMIN_JWT!,
@@ -45,28 +66,28 @@ export async function pinListToIpfs(merkleList: Balance[]) {
       pinataGateway: "red-literary-tiglon-645.mypinata.cloud"
     });
 
-    const options = {
-      pinataOptions: {
-        cidVersion: 0,
-        customPinPolicy: {
-          regions: [{ id: "FRA1", desiredReplicationCount: 1 }]
+    const psyDaoClaimsGroupId = "5bac7a60-6086-46cf-8adc-782fef1b522f"; // psydaoClaims groupId on Pinata
+
+    const options: UploadOptions = {
+      cidVersion: 0,
+      metadata: {
+        name: `PsyDAO Claims Distribution - ${new Date().toISOString()}`,
+        keyValues: {
+          type: "claims-distribution-balances"
         }
       },
-      pinataMetadata: {
-        name: `PsyDAO Merkle Tree Data ${new Date().toISOString()}`,
-        keyvalues: {
-          type: "merkle-tree-data"
-        }
-      },
-      groupId: "fa33eb74-0699-443c-8f1b-a8bf15c74360" // PsyDao's groupId
+      groupId: psyDaoClaimsGroupId
     };
 
-    const upload = await pinata.upload.json(merkleList, options);
+    const upload = await pinata.upload.json(balanceList, options);
 
     const ipfsHash = upload.IpfsHash;
 
+    console.log("ipfs hash", ipfsHash);
+
     return ipfsHash;
   } catch (error) {
-    console.error(error);
+    console.error("IPFS upload error: ", error);
+    throw error;
   }
 }
