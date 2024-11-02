@@ -84,6 +84,9 @@ export async function pinClaimsListToIpfs(balanceList: Balance[]): Promise<strin
     const ipfsHash = upload.IpfsHash;
 
     console.log("ipfs hash", ipfsHash);
+    if (upload.isDuplicate) {
+      console.log("Duplicate pin detected: ", ipfsHash);
+    }
 
     return ipfsHash;
   } catch (error) {
