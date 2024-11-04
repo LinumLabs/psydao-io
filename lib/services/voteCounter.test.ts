@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { main } from './voteCounter'
 import { getPsycHolders, getPsycHoldersBeforeTimestamp, PsycHolder } from './getPsycHolders'
 import { getSnapshotProposals, getVotesOnProposalById, Proposal, type Vote } from './getSnapshotProposalsAndVotes'
-import { uploadArrayToIpfs } from './ipfs'
+import { pinClaimsListToIpfs } from './ipfs'
 
 // Mock env before any other imports
 vi.mock('@/config/env.mjs', () => ({
@@ -78,7 +78,7 @@ describe('voteCounter main function', () => {
 
     vi.mocked(getSnapshotProposals).mockResolvedValue([])
     vi.mocked(getPsycHoldersBeforeTimestamp).mockResolvedValue(mockHoldersInPeriod)
-    vi.mocked(uploadArrayToIpfs).mockResolvedValue('QmHash123')
+    vi.mocked(pinClaimsListToIpfs).mockResolvedValue('QmHash123')
 
     const result = await main(
       mockInput.startTimeStamp,
@@ -110,7 +110,7 @@ describe('voteCounter main function', () => {
     vi.mocked(getSnapshotProposals).mockResolvedValue([mockProposal])
     vi.mocked(getPsycHolders).mockResolvedValue(mockPsycHolders as PsycHolder[])
     vi.mocked(getVotesOnProposalById).mockResolvedValue(mockVotes as Vote[])
-    vi.mocked(uploadArrayToIpfs).mockResolvedValue('QmHash123')
+    vi.mocked(pinClaimsListToIpfs).mockResolvedValue('QmHash123')
 
     const result = await main(
       mockInput.startTimeStamp,
@@ -152,7 +152,7 @@ describe('voteCounter main function', () => {
     // Mock getVotesOnProposalById to return empty array
     vi.mocked(getVotesOnProposalById).mockResolvedValue([])
     // Mock IPFS upload
-    vi.mocked(uploadArrayToIpfs).mockResolvedValue("")
+    vi.mocked(pinClaimsListToIpfs).mockResolvedValue("")
 
     const result = await main(
       mockInput.startTimeStamp,
@@ -262,7 +262,7 @@ describe('voteCounter main function', () => {
     vi.mocked(getSnapshotProposals).mockResolvedValue([mockProposal])
     vi.mocked(getPsycHolders).mockResolvedValue(mockPsycHolders as PsycHolder[])
     vi.mocked(getVotesOnProposalById).mockResolvedValue(mockVotes)
-    vi.mocked(uploadArrayToIpfs).mockRejectedValue(new Error('IPFS Error'))
+    vi.mocked(pinClaimsListToIpfs).mockRejectedValue(new Error('IPFS Error'))
 
     await expect(main(
       mockInput.startTimeStamp,
@@ -283,7 +283,7 @@ describe('voteCounter main function', () => {
     vi.mocked(getSnapshotProposals).mockResolvedValue([proposal])
     vi.mocked(getPsycHolders).mockResolvedValue([])  // No PSYC holders
     vi.mocked(getVotesOnProposalById).mockResolvedValue([])
-    vi.mocked(uploadArrayToIpfs).mockResolvedValue("")
+    vi.mocked(pinClaimsListToIpfs).mockResolvedValue("")
 
     const result = await main(
       mockInput.startTimeStamp,

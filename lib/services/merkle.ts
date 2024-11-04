@@ -18,7 +18,7 @@ export type Claim = {
 };
 
 export const sortOutData = async (data: Claim[], address: string) => {
-  if (data.length === 0 || !address || data === undefined) {
+  if (data === undefined || data.length === 0 || !address) {
     return [];
   }
   const batchSize = 50; // Adjust this value based on your needs
