@@ -241,6 +241,7 @@ export const SwapWidget = () => {
           : "translate(-48%, -50%)"
       }
       fullScreenWindow={fullScreenWindow}
+      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content p={2}>
