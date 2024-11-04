@@ -15,7 +15,7 @@ export function useGetBatchClaims() {
       });
       return data?.batchClaims ?? [];
     },
-    refetchInterval: 20000 // Refetch every 20 seconds
+    refetchInterval: 20_000 // Refetch every 20 seconds
   });
   return claims as BatchClaim[];
 }

@@ -28,7 +28,7 @@ import GeneralDashboard from "@/components/general-dashboard";
 import ShopifyWidget from "@/components/shopify-widget";
 import { Claim } from "@/components/windows/claim";
 import { ApolloProvider } from "@apollo/client";
-import { shopifyClient } from "@/config/apolloClients";
+import { shopifyApolloClient } from "@/config/apolloClients";
 // import SaleWidgetProvider from "@/providers/SaleWidgetContext";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
@@ -202,7 +202,7 @@ const Homepage: NextPage = () => {
                     <GeneralDashboard
                       triggerNftSaleUpdate={triggerNftSaleUpdate}
                     />
-                    <ApolloProvider client={shopifyClient}>
+                    <ApolloProvider client={shopifyApolloClient}>
                       <ShopifyWidget />
                     </ApolloProvider>
                     <Claim />

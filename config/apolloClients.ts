@@ -10,9 +10,9 @@ const httpLink = createHttpLink({
   uri: "/api/shopify-proxy"
 });
 
-const shopifyClient = new ApolloClient({
+const shopifyApolloClient = new ApolloClient({
   link: httpLink,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
-export { graphClient, shopifyClient };
+export { graphClient, shopifyApolloClient };

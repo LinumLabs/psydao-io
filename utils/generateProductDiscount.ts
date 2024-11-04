@@ -25,7 +25,7 @@ interface ShopifyResponse {
   };
 }
 
-const shopifyClient = shopifyApi({
+const shopifyApiClient = shopifyApi({
   apiKey: SHOPIFY_API_KEY,
   apiSecretKey: SHOPIFY_API_SECRET,
   adminApiAccessToken: SHOPIFY_API_ACCESS_TOKEN,
@@ -36,17 +36,17 @@ const shopifyClient = shopifyApi({
   isTesting: true
 });
 
-const session = shopifyClient.session.customAppSession(SHOPIFY_SHOP_NAME);
+const session = shopifyApiClient.session.customAppSession(SHOPIFY_SHOP_NAME);
 session.accessToken = SHOPIFY_API_ACCESS_TOKEN;
 
 export async function generateShopifyProductDiscount(
   ethAddress: Address
 ): Promise<string> {
   // generate a discount code for 100% off here
-  const session = shopifyClient.session.customAppSession(SHOPIFY_SHOP_NAME);
+  const session = shopifyApiClient.session.customAppSession(SHOPIFY_SHOP_NAME);
   session.accessToken = SHOPIFY_API_ACCESS_TOKEN;
 
-  const client = new shopifyClient.clients.Graphql({
+  const client = new shopifyApiClient.clients.Graphql({
     session,
     apiVersion: LATEST_API_VERSION
   });
