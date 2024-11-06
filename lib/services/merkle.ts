@@ -1,11 +1,7 @@
 import { encodePacked, formatUnits, keccak256, parseUnits } from "viem";
 import { Balance, getIpfsHash } from "./ipfs";
 import MerkleTree from "merkletreejs";
-
-export type ClaimDetail = {
-  account: string;
-  amount: bigint;
-};
+import { ClaimDetail } from "../types";
 
 export type Claim = {
   id: string;
@@ -22,7 +18,7 @@ export type Claim = {
 };
 
 export const sortOutData = async (data: Claim[], address: string) => {
-  if (data.length === 0 || !address || data === undefined) {
+  if (data === undefined || data.length === 0 || !address) {
     return [];
   }
   const batchSize = 50; // Adjust this value based on your needs

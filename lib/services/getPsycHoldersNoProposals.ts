@@ -1,23 +1,18 @@
-import { getPsycHoldersByTimestamps } from "./getPsycHolders";
+import { getPsycHoldersBeforeTimestamp } from "./getPsycHolders";
 import { keccak256, encodePacked, parseUnits, Address } from "viem";
 import { MerkleTree } from "merkletreejs";
-import { Balance, uploadArrayToIpfs } from "./ipfs";
-import { userTestMapping } from "./config/test-mapping";
-import { TEST_ENV } from "@/constants/claims";
+import { Balance, pinClaimsListToIpfs } from "./ipfs";
 
 export const psycHoldersNoProposals = async (
-  startTimeStamp: number,
   endTimeStamp: number,
   totalAmountOfTokens: number,
   batchId: number
 ) => {
   let balances: Balance[] = [];
-  const sgData = await getPsycHoldersByTimestamps(startTimeStamp, endTimeStamp);
+  const sgData = await getPsycHoldersBeforeTimestamp(endTimeStamp);
 
-  const psycHolders = sgData.map((psycHolder) =>
-    TEST_ENV
-      ? (userTestMapping[psycHolder.owner] ?? psycHolder.owner.toLowerCase() as Address)
-      : psycHolder.owner.toLowerCase() as Address
+  const psycHolders = sgData.map(
+    (psycHolder) => psycHolder.owner.toLowerCase() as Address
   );
   const tokenPerHolder = totalAmountOfTokens / psycHolders.length;
 
@@ -45,7 +40,8 @@ export const psycHoldersNoProposals = async (
   const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
   const merkleRoot = tree.getHexRoot();
 
-  const ipfsHash = await uploadArrayToIpfs(balances);
-
+  // const ipfsHash = await uploadArrayToIpfs(balances);
+  const ipfsHash = await pinClaimsListToIpfs(balances);
+  console.log("no proposal IPFS is ", ipfsHash);
   return { balances, merkleRoot, ipfsHash };
 };
