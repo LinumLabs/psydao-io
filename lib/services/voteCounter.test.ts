@@ -20,8 +20,6 @@ vi.mock("@/config/env.mjs", () => ({
     SNAPSHOT_GRAPHQL_URL: "https://hub.snapshot.org/graphql",
     NEXT_PUBLIC_SUBGRAPH_URL:
       "https://api.studio.thegraph.com/query/83978/psydao-sepolia/version/latest",
-    NEXT_PUBLIC_MAINNET_SUBGRAPH_URL:
-      "https://api.studio.thegraph.com/query/83978/psydao-mainnet/version/latest",
     NEXT_PUBLIC_CHAIN_ID: 1,
     PINATA_JWT: "test-jwt",
     PINATA_API_KEY: "test-key",
@@ -37,9 +35,7 @@ vi.mock("@/constants/claims", () => ({
   SNAPSHOT_GRAPHQL_URL: "https://hub.snapshot.org/graphql",
   PSYDAO_ENS: "psydao.eth",
   NEXT_PUBLIC_SUBGRAPH_URL:
-    "https://api.studio.thegraph.com/query/83978/psydao-sepolia/version/latest",
-  NEXT_PUBLIC_MAINNET_SUBGRAPH_URL:
-    "https://api.studio.thegraph.com/query/83978/psydao-mainnet/version/latest"
+    "https://api.studio.thegraph.com/query/83978/psydao-sepolia/version/latest"
 }));
 
 describe("voteCounter main function", () => {
