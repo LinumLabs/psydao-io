@@ -87,13 +87,7 @@ export const SwapWidget = () => {
 
   const ethPrice = useReadEthPrice();
   const { data: tokenPriceInDollar } = useReadTokenPriceInDollar();
-  const { data: totalTokensForSale } = useReadTotalTokensForSale();
-
-  const totalTokensForSaleValue = useMemo(() => {
-    if (totalTokensForSale) {
-      return formatUnits(BigInt(totalTokensForSale as number), 18);
-    }
-  }, [totalTokensForSale]);
+  const { data: totalTokensForSaleValue } = useReadTotalTokensForSale();
 
   const calculateTokenAmount = useCallback(
     (amountOfEth: string) => {
@@ -219,7 +213,7 @@ export const SwapWidget = () => {
     <Window
       id="swap"
       maxHeight={{
-        base: fullScreenWindow ? "100%" : "90%",
+        base: fullScreenWindow ? "100%" : "85%",
         sm: fullScreenWindow ? "100%" : "80%",
         md: fullScreenWindow ? "100%" : "650px"
       }}
@@ -230,18 +224,20 @@ export const SwapWidget = () => {
       }}
       width={"100%"}
       top={{
-        base: fullScreenWindow ? "0" : "56%",
+        base: fullScreenWindow ? "0" : "65%",
         sm: fullScreenWindow ? "0" : "60%",
         md: fullScreenWindow ? "0" : "50%"
       }}
-      left={fullScreenWindow && termsAndConditions ? "0" : "50%"}
+      left={{
+        base: fullScreenWindow && termsAndConditions ? "0" : "50%",
+        xl: fullScreenWindow && termsAndConditions ? "0" : "30%"
+      }}
       transform={
         fullScreenWindow && termsAndConditions
           ? "translate(0, 0)"
           : "translate(-48%, -50%)"
       }
       fullScreenWindow={fullScreenWindow}
-      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content p={2}>

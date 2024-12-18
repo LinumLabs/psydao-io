@@ -184,8 +184,6 @@ const CreateRewardClaim = () => {
     const deadlineTimeStamp = claimInput.claimDeadline?.getTime();
     const totalAmountOfTokens = claimInput.amount;
 
-    // This is messy. I will turn this into a util function or something.
-
     if (!startTimeStamp) {
       showCustomErrorToast("Start timestamp missing.", width);
       setLoading(false);

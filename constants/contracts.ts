@@ -33,9 +33,9 @@ export const psycSaleSepolia = "0xc0150e3eEF8230974f85779DEcF5cd4104Be9c4c";
 export const psycSaleMainnet = "0xe94828A923538709c58764159D6CD99C4381d82B";
 
 // psyClaims
-export const psyClaimsSepolia = "0x67106b7e6A0D29B42d3c7739d674DC9a97C50f15";
-export const psyClaimsMainnet = "0x82cD313da0eBA01D57C60da6738f3D5f55Ab7C50"; // add mainnet address
+export const psyClaimsSepolia = "0x62ae23BC177Dc53b0BfB169f5F7126EFa67cAF7d";
+export const psyClaimsMainnet = "0xAf5611967860f1315ff48d26B56997a04EAD837F";
 
 // psyToken
-export const psyTokenSepolia = "0x0CA0029C27755c65C0a074f6441e9D7ad26575e3";
-export const psyTokenMainnet = "0x0973F4c0B86f2EFCA3673864efccBd6090702321"; // add mainnet address
+export const psyTokenSepolia = "0x4B8F35db4e71492C81b381C6b52a131424241AFE";
+export const psyTokenMainnet = "0x2196B84EaCe74867b73fb003AfF93C11FcE1D47A";

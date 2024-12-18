@@ -31,8 +31,7 @@ const ERROR_MESSAGES = {
   "server error": "A server error has occurred. Please try again.",
   OwnableUnauthorizedAccount: "Invalid wallet address.",
   "Token Array Empty": "No tokens provided for sale.",
-  "Unable to decode signature":
-    "Please run 'mintNextBatch' first before creating a sale",
+  "Unable to decode signature": "A contract error has occurred.",
   "Size of bytes": "Invalid merkle root submitted",
   "Invalid Ceiling Price": "Floor price cannot be greater than ceiling price.",
   "TokenSale: Tokens Locked":
@@ -57,7 +56,8 @@ const ERROR_MESSAGES = {
   "Invalid Proof": "Invalid proof submitted.",
   "Not Enough Psy In Contract": "Not enough PSY in contract to fulfill claim.",
   "All Psy Claimed": "All PSY has been claimed.",
-  "Claim Period Ended": "The claim period has already ended."
+  "Claim Period Ended": "The claim period has already ended.",
+  "Invalid Deadline": "The selected deadline is invalid."
 };
 
 export const customErrorMessage = (message: string): string => {

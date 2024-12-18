@@ -1,4 +1,4 @@
-import { getPsycHolders } from "./getPsycHolders";
+import { getPsycHoldersBeforeTimestamp } from "./getPsycHolders";
 import {
   keccak256,
   encodePacked,
@@ -7,48 +7,46 @@ import {
   formatUnits
 } from "viem";
 import { MerkleTree } from "merkletreejs";
-import { Balance, uploadArrayToIpfs } from "./ipfs";
+import { Balance, pinClaimsListToIpfs } from "./ipfs";
 
-export const firstProposals = async (
+export const psycHoldersNoProposals = async (
   endTimeStamp: number,
   totalAmountOfTokens: number,
   batchId: number
 ) => {
-  let psycHolderTokenDistribution: Balance[] = [];
-  const sgData = await getPsycHolders(endTimeStamp);
+  let balances: Balance[] = [];
+  const sgData = await getPsycHoldersBeforeTimestamp(endTimeStamp);
 
   const psycHolders = new Set(
     sgData.map((psycHolder) => psycHolder.owner.toLowerCase() as Address)
   );
 
-  // Calculate exact token amount per holder with full precision
   const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.size);
 
   // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
-  psycHolderTokenDistribution = Array.from(psycHolders, (psycHolder) => ({
-    address: psycHolder as `0x${string}`,
+  balances = Array.from(psycHolders, (psycHolder) => ({
+    address: psycHolder as Address,
     tokens: tokenPerHolder.toString()
   }));
 
-  const leaves = psycHolderTokenDistribution.map((holder) => {
-    const tokenAmount = holder.tokens;
-
-    return keccak256(
+  const leaves = balances.map((holder) =>
+    keccak256(
       encodePacked(
         ["uint256", "uint256", "address"],
         [
           BigInt(batchId),
-          parseUnits(tokenAmount, 18),
-          holder.address as `0x${string}`
+          parseUnits(holder.tokens, 18),
+          holder.address as Address
         ]
       )
-    );
-  });
+    )
+  );
 
   const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
   const merkleRoot = tree.getHexRoot();
 
-  const ipfsHash = await uploadArrayToIpfs(psycHolderTokenDistribution);
-
-  return { psycHolderTokenDistribution, merkleRoot, ipfsHash };
+  // const ipfsHash = await uploadArrayToIpfs(balances);
+  const ipfsHash = await pinClaimsListToIpfs(balances);
+  console.log("no proposal IPFS is ", ipfsHash);
+  return { balances, merkleRoot, ipfsHash };
 };
