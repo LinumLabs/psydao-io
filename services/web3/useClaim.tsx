@@ -46,9 +46,6 @@ export const useClaim = (props: ClaimProps) => {
     const bnAmount = parseUnits(amount, 18);
     const currentTimestamp = new Date().getTime();
 
-    console.log("currentTimestamp", currentTimestamp / 1000);
-    console.log("deadlineTimestamp", deadline);
-
     if (Number(deadline) <= Math.floor(currentTimestamp / 1000)) {
       return writeContract({
         abi: psyClaimsAbi,
